@@ -1,13 +1,43 @@
 [
   {
-    "Code": "vi",
-    "Name": "Vietnamese",
-    "DisplayName": "Vietnamese (vi)"
-  },
-  {
     "Code": "en",
     "Name": "English",
     "DisplayName": "English (en)"
+  },
+  {
+    "Code": "fr",
+    "Name": "French",
+    "DisplayName": "French (fr)"
+  },
+  {
+    "Code": "de",
+    "Name": "German",
+    "DisplayName": "German (de)"
+  },
+  {
+    "Code": "es",
+    "Name": "Spanish",
+    "DisplayName": "Spanish (es)"
+  },
+  {
+    "Code": "it",
+    "Name": "Italian",
+    "DisplayName": "Italian (it)"
+  },
+  {
+    "Code": "pt",
+    "Name": "Portuguese",
+    "DisplayName": "Portuguese (pt)"
+  },
+  {
+    "Code": "ru",
+    "Name": "Russian",
+    "DisplayName": "Russian (ru)"
+  },
+  {
+    "Code": "vi",
+    "Name": "Vietnamese",
+    "DisplayName": "Vietnamese (vi)"
   },
   {
     "Code": "ch",

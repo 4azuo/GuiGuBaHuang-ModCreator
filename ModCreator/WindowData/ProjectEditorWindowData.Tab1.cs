@@ -3,6 +3,7 @@ using ModCreator.Helpers;
 using ModCreator.Models;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reflection;
 
@@ -16,7 +17,7 @@ namespace ModCreator.WindowData
         public ModProject Project { get; set; }
 
         // Language properties for translation
-        public ObservableCollection<Language> SourceLanguages { get; set; } = new ObservableCollection<Language>();
+        public List<Language> SourceLanguages { get; set; } = new List<Language>();
         public Language SelectedSourceLanguage { get; set; }
 
         public bool HasUnsavedChanges()
@@ -86,6 +87,8 @@ namespace ModCreator.WindowData
             EventCategoryList = cats["EventCategories"];
             ConditionCategoryList = cats["ConditionCategories"];
             ActionCategoryList = cats["ActionCategories"];
+
+            SelectedSourceLanguage = SourceLanguages[0];
         }
     }
 }

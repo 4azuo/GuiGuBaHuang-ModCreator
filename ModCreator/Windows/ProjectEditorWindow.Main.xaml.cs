@@ -162,7 +162,7 @@ namespace ModCreator.Windows
 
             // Build command arguments
             var projectPath = WindowData.Project.ProjectPath;
-            var sourceLanguage = WindowData.SelectedSourceLanguage.code;
+            var sourceLanguage = WindowData.SelectedSourceLanguage.Code;
             var arguments = $"\"{translateScriptPath}\" --project \"{projectPath}\" --path . --source_lan {sourceLanguage}";
 
             // Start translation process
@@ -176,7 +176,7 @@ namespace ModCreator.Windows
 
             Process.Start(processInfo);
             
-            MessageBox.Show($"Translation process started!\n\nProject: {WindowData.Project.ProjectName}\nSource Language: {WindowData.SelectedSourceLanguage.displayName}", 
+            MessageBox.Show($"Translation process started!\n\nProject: {WindowData.Project.ProjectName}\nSource Language: {WindowData.SelectedSourceLanguage.DisplayName}", 
                 "Translation Started", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
