@@ -1,87 +1,42 @@
 # ModCreator
 
-Tool WPF để tạo và quản lý mod projects cho GuiGuBaHuang.
+A visual WPF tool for creating and managing mods for the GuiGuBaHuang game. No coding required - intuitive interface for mod creation.
 
-## ✨ Tính năng
+## ✨ Features
 
-- ✅ Tạo project mới từ template
-- ✅ Quản lý danh sách projects (Dashboard)
-- ✅ Tìm kiếm, xem chi tiết, sửa, xóa projects
-- ✅ Tách biệt business logic và UI (CWindow pattern)
-- ✅ Styles tái sử dụng
+- ✅ **Project Management** - Create, edit, delete, and organize mod projects
+- ✅ **Guidelines** - Built-in documentation and best practices
+- ✅ **ModConf Editor** - Configure mod metadata and settings
+- ✅ **ModImg Manager** - Manage mod images and assets
+- ✅ **ModEvent Editor** - Create and edit game events visually
+- ✅ **User-Friendly** - No coding knowledge required
 
-## 🚀 Cài đặt & Chạy
+## 🚀 Installation & Running
 
-**Yêu cầu**: .NET Framework 4.7.2, Visual Studio 2019+
+**Requirements**: .NET 9, Visual Studio 2022+
 
-### Chạy nhanh
-```powershell
-.\run.ps1
-```
+### Installation Steps
 
-### Build & Run thủ công
+1. **Clone the main repository** (GuiGuBaHuang-ModLib, not ModCreator)
+   ```powershell
+   cd C:\git
+   git clone https://github.com/4azuo/GuiGuBaHuang-ModLib.git
+   cd GuiGuBaHuang-ModLib
+   git submodule update --init --recursive
+   ```
+
+2. **Configure settings**
+   - Edit `GuiGuBaHuang-ModCreator\ModCreator\Resources\embeded-settings.json`
+   - Update paths if needed (default is `C:\git\GuiGuBaHuang-ModLib`)
+
+3. **Run the application**
+   ```powershell
+   cd GuiGuBaHuang-ModCreator
+   .\run.ps1
+   ```
+
+### Build & Run Manually
 ```powershell
 .\build.ps1
 .\ModCreator\bin\Release\ModCreator.exe
 ```
-
-## 📖 Sử dụng
-
-### Tạo Project
-1. Click **"➕ Tạo Mới"**
-2. Nhập **Tên** và chọn **Thư mục đích** (Project ID tự động gen)
-3. Click **"Tạo"**
-
-### Quản lý
-- **Tìm kiếm**: Gõ từ khóa vào search box
-- **Sửa**: Chọn project → Click **"✏️"** 
-- **Xóa**: Click **"🗑️"** → Chọn Yes (xóa cả folder) hoặc No (giữ folder)
-- **Mở folder**: Click **"📂"**
-
-### Dữ liệu
-- Projects: `projects.json` (tại thư mục app)
-- Template: `../ProjectTemplate/ModProject_0hKMNX/`
-
-## 🏗️ Kiến trúc
-
-### CWindow Pattern - Tách biệt Business Logic và UI
-
-```
-MainWindow (UI)  →  MainWindowData (Business Logic)  →  Helpers/Models  →  JSON
-```
-
-**Cấu trúc**:
-- `Windows/` - UI Layer (XAML + Event handlers)
-- `WindowData/` - Business Logic Layer (Data + Methods)
-- `Styles/` - Tái sử dụng styles (Colors, Buttons, TextBlocks, etc.)
-- `Helpers/` - Utility functions
-- `Models/` - Data structures
-
-**AutoNotifiableObject**:
-```csharp
-[NotifyMethod(nameof(ValidateInput))]
-public string ProjectName { get; set; }
-// ValidateInput() tự động gọi khi ProjectName thay đổi
-```
-
-## 🛠️ Phát triển
-
-### Thêm Window mới
-```csharp
-// WindowData
-public class MyWindowData : CWindowData { ... }
-
-// Window
-public partial class MyWindow : CWindow<MyWindowData> { ... }
-```
-
-### Thêm Style
-Tạo file `.xaml` trong `Styles/` và thêm vào `AppStyles.xaml`
-
-## 🆘 Troubleshooting
-
-- **Template not found**: Check `../ProjectTemplate/ModProject_0hKMNX/` exists
-- **Build errors**: Restore NuGet packages, clean & rebuild
-- **Cannot create project**: Check write permissions, change target directory
-
----

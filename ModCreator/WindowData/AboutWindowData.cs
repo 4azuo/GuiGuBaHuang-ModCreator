@@ -1,8 +1,5 @@
 namespace ModCreator.WindowData
 {
-    /// <summary>
-    /// About window data layer
-    /// </summary>
     public class AboutWindowData : CWindowData
     {
         public string AppName => "ModCreator";

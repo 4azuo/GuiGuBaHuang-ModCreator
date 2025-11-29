@@ -12,6 +12,9 @@ namespace ModCreator.WindowData
 {
     public class AddConfWindowData : CWindowData
     {
+        private static readonly Regex JsonWithDescriptionPattern = new Regex(@"^-\s+\*\*(.+?\.json)\*\*\s+-\s+(.+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex JsonPattern = new Regex(@"^-\s+\*\*(.+?\.json)\*\*", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
         private List<ConfigFileInfo> _allConfigs;
         private Dictionary<string, string> _configDescriptions;
 
@@ -44,24 +47,19 @@ namespace ModCreator.WindowData
         {
             _allConfigs.Clear();
 
-            var sampleConfsPath = Path.GetFullPath(Path.Combine(
-                Constants.RootDir,
-                "3385996759", "SampleConfs"));
+            var sampleConfsPath = Path.GetFullPath(Path.Combine(Constants.RootDir, "3385996759", "SampleConfs"));
 
             if (Directory.Exists(sampleConfsPath))
             {
                 var jsonFiles = Directory.GetFiles(sampleConfsPath, "*.json");
-
                 foreach (var file in jsonFiles)
                 {
                     var fileName = Path.GetFileName(file);
-                    var description = GetConfigDescription(fileName);
-
                     _allConfigs.Add(new ConfigFileInfo
                     {
                         Name = fileName,
                         FilePath = file,
-                        Description = description
+                        Description = GetConfigDescription(fileName)
                     });
                 }
             }
@@ -72,44 +70,28 @@ namespace ModCreator.WindowData
         public void FilterConfigurations(object obj, PropertyInfo prop, object oldValue, object newValue)
         {
             FilteredConfigs.Clear();
-
             var filtered = string.IsNullOrWhiteSpace(SearchText)
                 ? _allConfigs
                 : _allConfigs.Where(c => c.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase));
 
             foreach (var config in filtered.OrderBy(c => c.Name))
-            {
                 FilteredConfigs.Add(config);
-            }
         }
 
         public string GetConfigDescription(string fileName)
         {
-            // Try to get description from loaded docs
             if (_configDescriptions.TryGetValue(fileName, out var description))
-            {
                 return description;
-            }
 
-            // Fallback to pattern matching
-            if (fileName.StartsWith("Battle"))
-                return $"Battle system configuration - {fileName}";
-            if (fileName.StartsWith("Item"))
-                return $"Item configuration - {fileName}";
-            if (fileName.StartsWith("Npc"))
-                return $"NPC configuration - {fileName}";
-            if (fileName.StartsWith("Role"))
-                return $"Character/Role configuration - {fileName}";
-            if (fileName.StartsWith("School"))
-                return $"School/Sect configuration - {fileName}";
-            if (fileName.StartsWith("Town"))
-                return $"Town configuration - {fileName}";
-            if (fileName.StartsWith("World"))
-                return $"World configuration - {fileName}";
-            if (fileName.StartsWith("Dungeon"))
-                return $"Dungeon configuration - {fileName}";
-            if (fileName.StartsWith("DLC"))
-                return $"DLC content configuration - {fileName}";
+            if (fileName.StartsWith("Battle")) return $"Battle system configuration - {fileName}";
+            if (fileName.StartsWith("Item")) return $"Item configuration - {fileName}";
+            if (fileName.StartsWith("Npc")) return $"NPC configuration - {fileName}";
+            if (fileName.StartsWith("Role")) return $"Character/Role configuration - {fileName}";
+            if (fileName.StartsWith("School")) return $"School/Sect configuration - {fileName}";
+            if (fileName.StartsWith("Town")) return $"Town configuration - {fileName}";
+            if (fileName.StartsWith("World")) return $"World configuration - {fileName}";
+            if (fileName.StartsWith("Dungeon")) return $"Dungeon configuration - {fileName}";
+            if (fileName.StartsWith("DLC")) return $"DLC content configuration - {fileName}";
 
             return $"Configuration file - {fileName}";
         }
@@ -117,47 +99,30 @@ namespace ModCreator.WindowData
         private void LoadDescriptionsFromDocs()
         {
             var docsPath = Path.Combine(Constants.DocsDir, "details");
-            
-            if (!Directory.Exists(docsPath))
-                return;
+            if (!Directory.Exists(docsPath)) return;
 
             var mdFiles = Directory.GetFiles(docsPath, "*.md");
-
             foreach (var mdFile in mdFiles)
-            {
                 ParseMarkdownFile(mdFile);
-            }
         }
 
         private void ParseMarkdownFile(string filePath)
         {
             var lines = File.ReadAllLines(filePath);
-            
-            // Pattern 1: - **FileName.json** - Description
-            var pattern1 = new Regex(@"^-\s+\*\*(.+?\.json)\*\*\s+-\s+(.+)$", RegexOptions.IgnoreCase);
-            
-            // Pattern 2: - **FileName.json**
-            var pattern2 = new Regex(@"^-\s+\*\*(.+?\.json)\*\*(?:\s+-\s+(.+))?$", RegexOptions.IgnoreCase);
 
             for (int i = 0; i < lines.Length; i++)
             {
                 var line = lines[i].Trim();
-                
-                // Try pattern 1 (with description on same line)
-                var match = pattern1.Match(line);
+                var match = JsonWithDescriptionPattern.Match(line);
                 if (match.Success)
                 {
                     var fileName = match.Groups[1].Value;
-                    var description = match.Groups[2].Value;
-                    
                     if (!_configDescriptions.ContainsKey(fileName))
-                        _configDescriptions[fileName] = description;
-                    
+                        _configDescriptions[fileName] = match.Groups[2].Value;
                     continue;
                 }
 
-                // Try pattern 2 (might have description or not)
-                match = pattern2.Match(line);
+                match = JsonPattern.Match(line);
                 if (match.Success)
                 {
                     var fileName = match.Groups[1].Value;
@@ -165,7 +130,6 @@ namespace ModCreator.WindowData
                         ? match.Groups[2].Value
                         : null;
 
-                    // If no description on same line, check if there's a paragraph after
                     if (description == null && i + 1 < lines.Length)
                     {
                         var nextLine = lines[i + 1].Trim();

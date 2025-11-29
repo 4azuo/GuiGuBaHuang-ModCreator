@@ -35,6 +35,11 @@
     "Desc": "Text value"
   },
   {
+    "Name": "Boolean Array",
+    "Type": "bool[]",
+    "Desc": "Array of boolean values"
+  },
+  {
     "Name": "Integer Array",
     "Type": "int[]",
     "Desc": "Array of 32-bit integers"
@@ -53,5 +58,10 @@
     "Name": "Double Array",
     "Type": "double[]",
     "Desc": "Array of double precision floats"
+  },
+  {
+    "Name": "String Array",
+    "Type": "string[]",
+    "Desc": "Array of string values"
   }
 ]

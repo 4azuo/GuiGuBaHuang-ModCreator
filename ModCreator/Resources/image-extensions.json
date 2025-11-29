@@ -5,7 +5,7 @@
     "Desc": "Portable Network Graphics - Lossless compression with transparency support"
   },
   {
-    "Name": "JPEG",
+    "Name": "JPG",
     "Extension": ".jpg",
     "Desc": "Joint Photographic Experts Group - Lossy compression, good for photos"
   },
