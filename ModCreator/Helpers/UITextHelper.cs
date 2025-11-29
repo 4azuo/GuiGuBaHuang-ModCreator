@@ -140,6 +140,14 @@ namespace ModCreator.Helpers
         public static string TooltipRenameConf => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipRenameConf");
         public static string TooltipRemoveConf => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipRemoveConf");
         public static string JsonEditor => MessageHelper.Get("Windows.ProjectEditorWindow.JsonEditor");
+        public static string SearchAndReplace => MessageHelper.Get("Windows.ProjectEditorWindow.SearchAndReplace");
+        public static string OpenInNotepad => MessageHelper.Get("Windows.ProjectEditorWindow.OpenInNotepad");
+        public static string Find => MessageHelper.Get("Windows.ProjectEditorWindow.Find");
+        public static string FindNext => MessageHelper.Get("Windows.ProjectEditorWindow.FindNext");
+        public static string Close => MessageHelper.Get("Windows.ProjectEditorWindow.Close");
+        public static string Replace => MessageHelper.Get("Windows.ProjectEditorWindow.Replace");
+        public static string ReplaceButton => MessageHelper.Get("Windows.ProjectEditorWindow.ReplaceButton");
+        public static string ReplaceAll => MessageHelper.Get("Windows.ProjectEditorWindow.ReplaceAll");
         public static string TabModImg => MessageHelper.Get("Windows.ProjectEditorWindow.TabModImg");
         public static string ImageFiles => MessageHelper.Get("Windows.ProjectEditorWindow.ImageFiles");
         public static string TooltipCreateImgFolder => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipCreateImgFolder");
@@ -149,6 +157,8 @@ namespace ModCreator.Helpers
         public static string TooltipRemoveImage => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipRemoveImage");
         public static string ImagePreview => MessageHelper.Get("Windows.ProjectEditorWindow.ImagePreview");
         public static string TabGlobalVariables => MessageHelper.Get("Windows.ProjectEditorWindow.TabGlobalVariables");
+        public static string GridView => MessageHelper.Get("Windows.ProjectEditorWindow.GridView");
+        public static string SourceView => MessageHelper.Get("Windows.ProjectEditorWindow.SourceView");
         public static string AddVariable => MessageHelper.Get("Windows.ProjectEditorWindow.AddVariable");
         public static string VariableName => MessageHelper.Get("Windows.ProjectEditorWindow.VariableName");
         public static string VariableType => MessageHelper.Get("Windows.ProjectEditorWindow.VariableType");
@@ -167,9 +177,33 @@ namespace ModCreator.Helpers
         public static string TooltipRenameModEvent => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipRenameModEvent");
         public static string TooltipDeleteModEvent => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipDeleteModEvent");
         public static string ModEventEditor => MessageHelper.Get("Windows.ProjectEditorWindow.ModEventEditor");
+        public static string GuiMode => MessageHelper.Get("Windows.ProjectEditorWindow.GuiMode");
+        public static string CodeMode => MessageHelper.Get("Windows.ProjectEditorWindow.CodeMode");
+        public static string SaveModEvent => MessageHelper.Get("Windows.ProjectEditorWindow.SaveModEvent");
+        public static string BasicSettings => MessageHelper.Get("Windows.ProjectEditorWindow.BasicSettings");
+        public static string Mode => MessageHelper.Get("Windows.ProjectEditorWindow.Mode");
+        public static string OrderIndex => MessageHelper.Get("Windows.ProjectEditorWindow.OrderIndex");
+        public static string CacheType => MessageHelper.Get("Windows.ProjectEditorWindow.CacheType");
+        public static string WorkOn => MessageHelper.Get("Windows.ProjectEditorWindow.WorkOn");
+        public static string EventMethodName => MessageHelper.Get("Windows.ProjectEditorWindow.EventMethodName");
+        public static string EventMethodNameTooltip => MessageHelper.Get("Windows.ProjectEditorWindow.EventMethodNameTooltip");
+        public static string Event => MessageHelper.Get("Windows.ProjectEditorWindow.Event");
+        public static string AddEvent => MessageHelper.Get("Windows.ProjectEditorWindow.AddEvent");
+        public static string Conditions => MessageHelper.Get("Windows.ProjectEditorWindow.Conditions");
+        public static string AddCondition => MessageHelper.Get("Windows.ProjectEditorWindow.AddCondition");
+        public static string Actions => MessageHelper.Get("Windows.ProjectEditorWindow.Actions");
+        public static string AddAction => MessageHelper.Get("Windows.ProjectEditorWindow.AddAction");
         public static string OpenInExplorer => MessageHelper.Get("Windows.ProjectEditorWindow.OpenInExplorer");
         public static string Refresh => MessageHelper.Get("Windows.ProjectEditorWindow.Refresh");
         public static string NoteDirectFileManagement => MessageHelper.Get("Windows.ProjectEditorWindow.NoteDirectFileManagement");
+        public static string IconFolder => MessageHelper.Get("Windows.ProjectEditorWindow.IconFolder");
+        public static string IconDelete => MessageHelper.Get("Windows.ProjectEditorWindow.IconDelete");
+        public static string IconAdd => MessageHelper.Get("Windows.ProjectEditorWindow.IconAdd");
+        public static string IconClone => MessageHelper.Get("Windows.ProjectEditorWindow.IconClone");
+        public static string IconEdit => MessageHelper.Get("Windows.ProjectEditorWindow.IconEdit");
+        public static string IconRemove => MessageHelper.Get("Windows.ProjectEditorWindow.IconRemove");
+        public static string IconImport => MessageHelper.Get("Windows.ProjectEditorWindow.IconImport");
+        public static string IconExport => MessageHelper.Get("Windows.ProjectEditorWindow.IconExport");
     }
 
     /// <summary>
@@ -184,5 +218,6 @@ namespace ModCreator.Helpers
         public static string Add => MessageHelper.Get("Windows.AddConfWindow.Add");
         public static string Cancel => MessageHelper.Get("Windows.AddConfWindow.Cancel");
         public static string SearchPlaceholder => MessageHelper.Get("Windows.AddConfWindow.SearchPlaceholder");
+        public static string Selected => MessageHelper.Get("Windows.AddConfWindow.Selected");
     }
 }

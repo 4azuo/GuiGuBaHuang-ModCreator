@@ -59,7 +59,7 @@
         </Grid>
         <Border Grid.Row="3" Background="#FFF5F5F5" Padding="10,5" BorderBrush="#FFDDDDDD" BorderThickness="0,1,0,0">
             <TextBlock FontSize="11" Foreground="Gray">
-                <Run Text="Selected: "/><Run Text="{Binding SelectedConfig.Name, Mode=OneWay}" FontWeight="SemiBold"/>
+                <Run Text="{x:Static helper:AddConfWindowText.Selected}"/><Run Text="{Binding SelectedConfig.Name, Mode=OneWay}" FontWeight="SemiBold"/>
             </TextBlock>
         </Border>
         <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
