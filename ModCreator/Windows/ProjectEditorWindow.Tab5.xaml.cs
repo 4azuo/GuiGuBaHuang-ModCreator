@@ -36,7 +36,11 @@ namespace ModCreator.Windows
             var inputWindow = new InputWindow
             {
                 Owner = this,
-                WindowData = { WindowTitle = "Create New ModEvent", Label = "Class name:", InputValue = "NewModEvent" }
+                WindowData = { 
+                    WindowTitle = MessageHelper.Get("Messages.Dialogs.CreateModEvent.Title"),
+                    Label = MessageHelper.Get("Messages.Dialogs.CreateModEvent.Label"),
+                    InputValue = MessageHelper.Get("Messages.Dialogs.CreateModEvent.DefaultValue")
+                }
             };
 
             if (inputWindow.ShowDialog() != true) return;
@@ -45,7 +49,7 @@ namespace ModCreator.Windows
             
             if (string.IsNullOrWhiteSpace(className) || !System.Text.RegularExpressions.Regex.IsMatch(className, @"^[A-Za-z_][A-Za-z0-9_]*$"))
             {
-                MessageBox.Show("Invalid class name! Must start with letter and contain only letters, numbers, and underscores.", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.Get("Messages.Error.InvalidClassName"), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -56,7 +60,7 @@ namespace ModCreator.Windows
             
             if (File.Exists(filePath))
             {
-                MessageBox.Show($"A ModEvent with name '{className}' already exists!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.GetFormat("Messages.Error.ClassNameExists", className), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -94,7 +98,7 @@ namespace ModCreator.Windows
             File.WriteAllText(filePath, WindowData.GenerateModEventCode(newEvent));
             WindowData.LoadModEventFiles();
             
-            MessageBox.Show($"ModEvent '{className}' created successfully!", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(MessageHelper.GetFormat("Messages.Success.ModEventCreated", className), MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void CloneModEvent_Click(object sender, RoutedEventArgs e)
@@ -234,7 +238,7 @@ namespace ModCreator.Windows
         private void SaveModEvent_Click(object sender, RoutedEventArgs e)
         {
             WindowData.SaveModEvent();
-            MessageBox.Show("ModEvent saved successfully!", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(MessageHelper.Get("Messages.Success.ModEventSaved"), MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void AddEvent_Click(object sender, RoutedEventArgs e)
@@ -603,12 +607,12 @@ namespace ModCreator.Windows
             if (index >= 0)
             {
                 editor.Select(index, searchText.Length);
-                editor.CaretOffset = index + searchText.Length;
-                editor.ScrollToLine(editor.Document.GetLineByOffset(index).LineNumber);
+                editor.Select(index, searchText.Length);
+                editor.ScrollTo(editor.Document.GetLineByOffset(index).LineNumber, 0);
             }
             else
             {
-                MessageBox.Show($"Cannot find '{searchText}'", "Find", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(MessageHelper.GetFormat("Messages.Info.CannotFind", searchText), MessageHelper.Get("Messages.Info.Find"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 

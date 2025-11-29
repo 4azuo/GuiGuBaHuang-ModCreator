@@ -38,7 +38,6 @@ namespace ModCreator.WindowData
         public List<string> CacheTypes { get; set; } = [];
         public List<string> WorkOnTypes { get; set; } = [];
         public List<string> EventModeOptions { get; set; } = new List<string> { "ModEvent", "NonEvent" };
-        public List<string> ConditionLogicOptions { get; set; } = new List<string> { "AND", "OR" };
 
         public void LoadModEventFiles()
         {

@@ -39,11 +39,6 @@ namespace ModCreator.Models
         public string SelectedEvent { get; set; }
 
         /// <summary>
-        /// Condition logic: "AND" or "OR"
-        /// </summary>
-        public string ConditionLogic { get; set; }
-
-        /// <summary>
         /// List of conditions for this event
         /// </summary>
         public List<EventCondition> Conditions { get; set; } = new List<EventCondition>();

@@ -35,7 +35,11 @@ namespace ModCreator.Windows
             var inputWindow = new InputWindow
             {
                 Owner = this,
-                WindowData = { WindowTitle = "Create New Folder", Label = "Folder name:", InputValue = "NewFolder" }
+                WindowData = { 
+                    WindowTitle = MessageHelper.Get("Messages.Dialogs.CreateFolder.Title"),
+                    Label = MessageHelper.Get("Messages.Dialogs.CreateFolder.Label"),
+                    InputValue = MessageHelper.Get("Messages.Dialogs.CreateFolder.DefaultValue")
+                }
             };
 
             if (inputWindow.ShowDialog() != true) return;

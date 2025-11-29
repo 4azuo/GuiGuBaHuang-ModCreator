@@ -77,15 +77,15 @@ namespace ModCreator.Windows
         {
             WindowData.SaveGlobalVariables();
 
-            if (WindowData.GlobalVariables == null || WindowData.GlobalVariables.Count == 0)
+            if (!WindowData.GlobalVariables.Any())
             {
-                MessageBox.Show("No variables to generate. Please add variables first.", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.Get("Messages.Error.NoVariablesToGenerate"), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (WindowData.GlobalVariables.Any(v => string.IsNullOrWhiteSpace(v.Name)))
             {
-                MessageBox.Show("All variables must have names. Please complete all variables before generating code.", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.Get("Messages.Error.AllVariablesMustHaveNames"), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -94,13 +94,13 @@ namespace ModCreator.Windows
 
             if (!File.Exists(varTemplatePath))
             {
-                MessageBox.Show($"Template file not found: {varTemplatePath}\n\nPlease ensure VarTemplate.tmp exists in the project root.", MessageHelper.Get("Messages.Error.Title"), MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(MessageHelper.GetFormat("Messages.Error.TemplateFileNotFound", varTemplatePath, "VarTemplate.tmp"), MessageHelper.Get("Messages.Error.Title"), MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (!File.Exists(varTemplateContentPath))
             {
-                MessageBox.Show($"Template file not found: {varTemplateContentPath}\n\nPlease ensure VarTemplateContent.tmp exists in the project root.", MessageHelper.Get("Messages.Error.Title"), MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(MessageHelper.GetFormat("Messages.Error.TemplateFileNotFound", varTemplateContentPath, "VarTemplateContent.tmp"), MessageHelper.Get("Messages.Error.Title"), MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 

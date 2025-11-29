@@ -87,6 +87,32 @@ namespace ModCreator.Helpers
     }
 
     /// <summary>
+    /// Input window UI texts helper for XAML bindings
+    /// </summary>
+    public static class InputWindowText
+    {
+        public static string DefaultTitle => MessageHelper.Get("Windows.InputWindow.DefaultTitle");
+        public static string DefaultLabel => MessageHelper.Get("Windows.InputWindow.DefaultLabel");
+        public static string OK => MessageHelper.Get("Windows.InputWindow.OK");
+        public static string Cancel => MessageHelper.Get("Windows.InputWindow.Cancel");
+    }
+
+    /// <summary>
+    /// ModEvent item select window UI texts helper for XAML bindings
+    /// </summary>
+    public static class ModEventItemSelectWindowText
+    {
+        public static string DefaultTitle => MessageHelper.Get("Windows.ModEventItemSelectWindow.DefaultTitle");
+        public static string Category => MessageHelper.Get("Windows.ModEventItemSelectWindow.Category");
+        public static string SearchPlaceholder => MessageHelper.Get("Windows.ModEventItemSelectWindow.SearchPlaceholder");
+        public static string SelectItem => MessageHelper.Get("Windows.ModEventItemSelectWindow.SelectItem");
+        public static string Description => MessageHelper.Get("Windows.ModEventItemSelectWindow.Description");
+        public static string Code => MessageHelper.Get("Windows.ModEventItemSelectWindow.Code");
+        public static string OK => MessageHelper.Get("Windows.ModEventItemSelectWindow.OK");
+        public static string Cancel => MessageHelper.Get("Windows.ModEventItemSelectWindow.Cancel");
+    }
+
+    /// <summary>
     /// Project editor window UI texts helper for XAML bindings
     /// </summary>
     public static class ProjectEditorWindowText
@@ -107,18 +133,20 @@ namespace ModCreator.Helpers
         public static string HeaderState => MessageHelper.Get("Windows.ProjectEditorWindow.HeaderState");
         public static string TabModConf => MessageHelper.Get("Windows.ProjectEditorWindow.TabModConf");
         public static string ConfFiles => MessageHelper.Get("Windows.ProjectEditorWindow.ConfFiles");
-        public static string CreateFolder => MessageHelper.Get("Windows.ProjectEditorWindow.CreateFolder");
-        public static string DeleteFolder => MessageHelper.Get("Windows.ProjectEditorWindow.DeleteFolder");
-        public static string AddConf => MessageHelper.Get("Windows.ProjectEditorWindow.AddConf");
-        public static string CloneConf => MessageHelper.Get("Windows.ProjectEditorWindow.CloneConf");
-        public static string RenameConf => MessageHelper.Get("Windows.ProjectEditorWindow.RenameConf");
-        public static string RemoveConf => MessageHelper.Get("Windows.ProjectEditorWindow.RemoveConf");
+        public static string TooltipCreateFolder => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipCreateFolder");
+        public static string TooltipDeleteFolder => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipDeleteFolder");
+        public static string TooltipAddConf => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipAddConf");
+        public static string TooltipCloneConf => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipCloneConf");
+        public static string TooltipRenameConf => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipRenameConf");
+        public static string TooltipRemoveConf => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipRemoveConf");
         public static string JsonEditor => MessageHelper.Get("Windows.ProjectEditorWindow.JsonEditor");
         public static string TabModImg => MessageHelper.Get("Windows.ProjectEditorWindow.TabModImg");
         public static string ImageFiles => MessageHelper.Get("Windows.ProjectEditorWindow.ImageFiles");
-        public static string ImportImage => MessageHelper.Get("Windows.ProjectEditorWindow.ImportImage");
-        public static string ExportImage => MessageHelper.Get("Windows.ProjectEditorWindow.ExportImage");
-        public static string RemoveImage => MessageHelper.Get("Windows.ProjectEditorWindow.RemoveImage");
+        public static string TooltipCreateImgFolder => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipCreateImgFolder");
+        public static string TooltipDeleteImgFolder => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipDeleteImgFolder");
+        public static string TooltipImportImage => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipImportImage");
+        public static string TooltipExportImage => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipExportImage");
+        public static string TooltipRemoveImage => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipRemoveImage");
         public static string ImagePreview => MessageHelper.Get("Windows.ProjectEditorWindow.ImagePreview");
         public static string TabGlobalVariables => MessageHelper.Get("Windows.ProjectEditorWindow.TabGlobalVariables");
         public static string AddVariable => MessageHelper.Get("Windows.ProjectEditorWindow.AddVariable");
@@ -128,12 +156,20 @@ namespace ModCreator.Helpers
         public static string VariableValue => MessageHelper.Get("Windows.ProjectEditorWindow.VariableValue");
         public static string VariableDescription => MessageHelper.Get("Windows.ProjectEditorWindow.VariableDescription");
         public static string HeaderActions => MessageHelper.Get("Windows.ProjectEditorWindow.HeaderActions");
+        public static string TooltipCloneVariable => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipCloneVariable");
+        public static string TooltipRemoveVariable => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipRemoveVariable");
         public static string GenerateCode => MessageHelper.Get("Windows.ProjectEditorWindow.GenerateCode");
         public static string GenerateCodeNote => MessageHelper.Get("Windows.ProjectEditorWindow.GenerateCodeNote");
         public static string TabModEvent => MessageHelper.Get("Windows.ProjectEditorWindow.TabModEvent");
-        public static string FeatureComingSoon => MessageHelper.Get("Windows.ProjectEditorWindow.FeatureComingSoon");
+        public static string ModEventFiles => MessageHelper.Get("Windows.ProjectEditorWindow.ModEventFiles");
+        public static string TooltipCreateModEvent => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipCreateModEvent");
+        public static string TooltipCloneModEvent => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipCloneModEvent");
+        public static string TooltipRenameModEvent => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipRenameModEvent");
+        public static string TooltipDeleteModEvent => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipDeleteModEvent");
+        public static string ModEventEditor => MessageHelper.Get("Windows.ProjectEditorWindow.ModEventEditor");
         public static string OpenInExplorer => MessageHelper.Get("Windows.ProjectEditorWindow.OpenInExplorer");
         public static string Refresh => MessageHelper.Get("Windows.ProjectEditorWindow.Refresh");
+        public static string NoteDirectFileManagement => MessageHelper.Get("Windows.ProjectEditorWindow.NoteDirectFileManagement");
     }
 
     /// <summary>

@@ -20,11 +20,11 @@
       "HeaderModified": "Modified",
       "HeaderActions": "Actions",
       "GridOpenFolder": "📁",
-      "TooltipOpenFolder": "Open Folder",
+      "TooltipOpenFolder": "Open project folder in Explorer",
       "GridEditInfo": "✏️",
-      "TooltipEditInfo": "Edit Info",
+      "TooltipEditInfo": "Edit project information",
       "GridDelete": "🗑️",
-      "TooltipDelete": "Delete",
+      "TooltipDelete": "Delete project",
       "ProjectDetails": "Project Details",
       "NoProjectSelected": "No project selected",
       "ProjectDetailsName": "Name:",
@@ -65,6 +65,22 @@
       "Create": "Create",
       "Cancel": "Cancel"
     },
+    "InputWindow": {
+      "DefaultTitle": "Input",
+      "DefaultLabel": "Value:",
+      "OK": "OK",
+      "Cancel": "Cancel"
+    },
+    "ModEventItemSelectWindow": {
+      "DefaultTitle": "Select Item",
+      "Category": "Category:",
+      "SearchPlaceholder": "Search by name or description...",
+      "SelectItem": "Select Item",
+      "Description": "Description",
+      "Code": "Code:",
+      "OK": "OK",
+      "Cancel": "Cancel"
+    },
     "ProjectEditorWindow": {
       "ProjectEditorTitle": "Project Editor",
       "ProjectIdLabel": "Project ID:",
@@ -82,18 +98,20 @@
       "HeaderState": "State:",
       "TabModConf": "ModConf",
       "ConfFiles": "Configuration Files",
-      "CreateFolder": "Create Folder",
-      "DeleteFolder": "Delete Folder",
-      "AddConf": "Add Conf",
-      "CloneConf": "Clone Conf",
-      "RenameConf": "Rename Conf",
-      "RemoveConf": "Remove Conf",
+      "TooltipCreateFolder": "Create Folder",
+      "TooltipDeleteFolder": "Delete Folder",
+      "TooltipAddConf": "Add Conf",
+      "TooltipCloneConf": "Clone Conf",
+      "TooltipRenameConf": "Rename Conf",
+      "TooltipRemoveConf": "Remove Conf",
       "JsonEditor": "JSON Editor",
       "TabModImg": "ModImg",
       "ImageFiles": "Image Files",
-      "ImportImage": "Import Image",
-      "ExportImage": "Export Image",
-      "RemoveImage": "Remove Image",
+      "TooltipCreateImgFolder": "Create Folder",
+      "TooltipDeleteImgFolder": "Delete Folder",
+      "TooltipImportImage": "Import Image",
+      "TooltipExportImage": "Export Image",
+      "TooltipRemoveImage": "Remove Image",
       "ImagePreview": "Image Preview",
       "TabGlobalVariables": "Global Variables",
       "AddVariable": "Add Variable",
@@ -103,12 +121,20 @@
       "VariableValue": "Value",
       "VariableDescription": "Description",
       "HeaderActions": "Actions",
+      "TooltipCloneVariable": "Clone Variable",
+      "TooltipRemoveVariable": "Remove Variable",
       "GenerateCode": "Generate Code",
       "GenerateCodeNote": "Generate C# code from variables",
       "TabModEvent": "ModEvent",
-      "FeatureComingSoon": "Feature coming soon...",
+      "ModEventFiles": "ModEvent Files",
+      "TooltipCreateModEvent": "Create New ModEvent",
+      "TooltipCloneModEvent": "Clone ModEvent",
+      "TooltipRenameModEvent": "Rename ModEvent",
+      "TooltipDeleteModEvent": "Delete ModEvent",
+      "ModEventEditor": "ModEvent Editor",
       "OpenInExplorer": "Open in Explorer",
-      "Refresh": "Refresh"
+      "Refresh": "Refresh",
+      "NoteDirectFileManagement": "Note: Changes are saved automatically (direct file management)"
     },
     "AddConfWindow": {
       "AddConfTitle": "Add Configuration File",
@@ -130,7 +156,14 @@
       "OpenedFolder": "Opened folder: {0}",
       "DeletedProject": "Deleted project: {0}",
       "ProjectDeleted": "Project deleted: {0}",
-      "WorkplacePathSaved": "Workplace path saved: {0}"
+      "WorkplacePathSaved": "Workplace path saved: {0}",
+      "ModEventCreated": "ModEvent '{0}' created successfully!",
+      "ModEventCloned": "ModEvent cloned successfully!",
+      "ModEventRenamed": "ModEvent renamed successfully!",
+      "ModEventDeleted": "ModEvent deleted successfully!",
+      "ModEventSaved": "ModEvent saved successfully!",
+      "GeneratedCode": "Variables code generated successfully!\n\nOutput file: {0}",
+      "ReplacedOccurrences": "Replaced {0} occurrence(s)"
     },
     "Error": {
       "Title": "Error",
@@ -145,23 +178,61 @@
       "ErrorWorkplaceNotSet": "Workplace path is not set!",
       "ErrorInitializingWindow": "Error initializing window {0}",
       "ErrorProjectFolderMissing": "Project folder does not exist: {0}",
-      "WorkplacePathNotFound": "Workplace path does not exist: {0}"
+      "WorkplacePathNotFound": "Workplace path does not exist: {0}",
+      "InvalidClassName": "Invalid class name! Must start with letter and contain only letters, numbers, and underscores.",
+      "ClassNameExists": "A ModEvent with name '{0}' already exists!",
+      "TemplateFileNotFound": "Template file not found: {0}\n\nPlease ensure {1} exists in the project root.",
+      "EmptyVariableName": "Variable name cannot be empty!",
+      "CompleteExistingVariable": "Please complete the existing variable with empty name before adding a new one!",
+      "NoVariablesToGenerate": "No variables to generate. Please add variables first.",
+      "AllVariablesMustHaveNames": "All variables must have names. Please complete all variables before generating code."
     },
     "Warning": {
       "Title": "Warning",
       "NoProjectSelected": "No project selected",
-      "PleaseSetWorkplacePath": "Please set workplace path first!"
+      "PleaseSetWorkplacePath": "Please set workplace path first!",
+      "InvalidClassName": "Invalid class name!",
+      "ClassNameExists": "A ModEvent with name '{0}' already exists!"
     },
     "Confirmation": {
       "Title": "Confirmation",
       "ProjectDeleteMessage": "Are you sure you want to delete project '{0}'?\n\nYes: Delete project data AND folder\nNo: Delete project data only (keep folder)\nCancel: Cancel deletion",
       "ProjectDeleteTitle": "Delete Project?",
-      "ProjectDeleteMessageNoFolder": "Project folder does not exist.\n\nDelete project data for '{0}'?\n\nOK: Delete project data\nCancel: Cancel deletion"
+      "ProjectDeleteMessageNoFolder": "Project folder does not exist.\n\nDelete project data for '{0}'?\n\nOK: Delete project data\nCancel: Cancel deletion",
+      "DeleteModEvent": "Are you sure you want to delete ModEvent '{0}'?",
+      "DeleteModEventTitle": "Delete ModEvent"
     },
     "Info": {
       "Title": "Info",
       "InitializationError": "Initialization Error",
-      "Ready": "Ready"
+      "Ready": "Ready",
+      "Find": "Find",
+      "ReplaceAll": "Replace All",
+      "CannotFind": "Cannot find '{0}'"
+    },
+    "Dialogs": {
+      "CreateModEvent": {
+        "Title": "Create New ModEvent",
+        "Label": "Class name:",
+        "DefaultValue": "NewModEvent"
+      },
+      "CloneModEvent": {
+        "Title": "Clone ModEvent",
+        "Label": "New class name:"
+      },
+      "RenameModEvent": {
+        "Title": "Rename ModEvent",
+        "Label": "New class name:"
+      },
+      "CreateFolder": {
+        "Title": "Create New Folder",
+        "Label": "Folder name:",
+        "DefaultValue": "NewFolder"
+      },
+      "RenameConf": {
+        "Title": "Rename Configuration",
+        "Label": "New file name:"
+      }
     }
   }
 }
