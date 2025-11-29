@@ -31,6 +31,82 @@ namespace ModCreator.Windows
             }
         }
 
+        private void CreateModEventFolder_Click(object sender, RoutedEventArgs e)
+        {
+            var modPath = Path.Combine(WindowData.Project.ProjectPath, "ModProject", "ModCode", "ModMain", "Mod");
+            
+            string parentPath = modPath;
+            if (WindowData.SelectedEventItem != null)
+            {
+                parentPath = WindowData.SelectedEventItem.IsFolder 
+                    ? WindowData.SelectedEventItem.FullPath 
+                    : Path.GetDirectoryName(WindowData.SelectedEventItem.FullPath);
+            }
+
+            var inputWindow = new InputWindow
+            {
+                Owner = this,
+                WindowData = { WindowTitle = "Create New Folder", Label = "Folder name:", InputValue = "NewFolder" }
+            };
+
+            if (inputWindow.ShowDialog() != true) return;
+
+            var folderName = inputWindow.WindowData.InputValue;
+
+            if (string.IsNullOrWhiteSpace(folderName))
+            {
+                MessageBox.Show("Folder name cannot be empty!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (folderName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+            {
+                MessageBox.Show("Folder name contains invalid characters!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var newFolderPath = Path.Combine(parentPath, folderName);
+
+            if (Directory.Exists(newFolderPath))
+            {
+                MessageBox.Show($"A folder with the name '{folderName}' already exists!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            Directory.CreateDirectory(newFolderPath);
+            WindowData.LoadModEventFiles();
+            MessageBox.Show($"Folder '{folderName}' created successfully!", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void DeleteModEventFolder_Click(object sender, RoutedEventArgs e)
+        {
+            if (WindowData.SelectedEventItem == null || !WindowData.SelectedEventItem.IsFolder) return;
+
+            var folderPath = WindowData.SelectedEventItem.FullPath;
+            var folderName = WindowData.SelectedEventItem.Name;
+
+            if (!Directory.Exists(folderPath))
+            {
+                MessageBox.Show($"Folder '{folderName}' does not exist!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                WindowData.LoadModEventFiles();
+                return;
+            }
+
+            var hasContents = Directory.GetFileSystemEntries(folderPath).Length > 0;
+            var warningMessage = hasContents
+                ? $"Are you sure you want to delete folder '{folderName}' and all its contents?"
+                : $"Are you sure you want to delete folder '{folderName}'?";
+
+            var result = MessageBox.Show(warningMessage, "Delete Folder", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                Directory.Delete(folderPath, true);
+                WindowData.LoadModEventFiles();
+                MessageBox.Show($"Folder '{folderName}' deleted successfully!", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
         private void CreateModEvent_Click(object sender, RoutedEventArgs e)
         {
             var inputWindow = new InputWindow
@@ -54,9 +130,18 @@ namespace ModCreator.Windows
             }
 
             var modPath = Path.Combine(WindowData.Project.ProjectPath, "ModProject", "ModCode", "ModMain", "Mod");
-            Directory.CreateDirectory(modPath);
+            
+            string targetPath = modPath;
+            if (WindowData.SelectedEventItem != null)
+            {
+                targetPath = WindowData.SelectedEventItem.IsFolder 
+                    ? WindowData.SelectedEventItem.FullPath 
+                    : Path.GetDirectoryName(WindowData.SelectedEventItem.FullPath);
+            }
+            
+            Directory.CreateDirectory(targetPath);
 
-            var filePath = Path.Combine(modPath, $"{className}.cs");
+            var filePath = Path.Combine(targetPath, $"{className}.cs");
             
             if (File.Exists(filePath))
             {

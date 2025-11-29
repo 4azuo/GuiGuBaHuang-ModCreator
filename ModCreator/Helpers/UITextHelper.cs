@@ -205,6 +205,10 @@ namespace ModCreator.Helpers
         public static string IconRemove => MessageHelper.Get("Windows.ProjectEditorWindow.IconRemove");
         public static string IconImport => MessageHelper.Get("Windows.ProjectEditorWindow.IconImport");
         public static string IconExport => MessageHelper.Get("Windows.ProjectEditorWindow.IconExport");
+        public static string IconFilter => MessageHelper.Get("Windows.ProjectEditorWindow.IconFilter");
+        public static string TooltipCreateEventFolder => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipCreateEventFolder");
+        public static string TooltipDeleteEventFolder => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipDeleteEventFolder");
+        public static string TooltipToggleFilterLocalText => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipToggleFilterLocalText");
     }
 
     /// <summary>

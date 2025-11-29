@@ -23,6 +23,14 @@ namespace ModCreator.WindowData
         public bool HasSelectedConfFile => !string.IsNullOrEmpty(SelectedConfFile);
         public bool HasSelectedConfItem => SelectedConfItem != null;
 
+        [NotifyMethod(nameof(OnFilterLocalTextChanged))]
+        public bool FilterLocalText { get; set; }
+
+        public void OnFilterLocalTextChanged(object obj, PropertyInfo prop, object oldValue, object newValue)
+        {
+            LoadConfFiles();
+        }
+
         public void LoadConfFiles()
         {
             ConfFiles.Clear();
@@ -77,15 +85,21 @@ namespace ModCreator.WindowData
                 foreach (var child in children)
                     folderItem.Children.Add(child);
 
-                items.Add(folderItem);
+                if (children.Count > 0)
+                    items.Add(folderItem);
             }
 
             var jsonFiles = Directory.GetFiles(currentPath, "*.json").OrderBy(f => f);
             foreach (var file in jsonFiles)
             {
+                var fileName = Path.GetFileName(file);
+                
+                if (FilterLocalText && !fileName.EndsWith("LocalText.json", System.StringComparison.OrdinalIgnoreCase))
+                    continue;
+
                 items.Add(new FileItem
                 {
-                    Name = Path.GetFileName(file),
+                    Name = fileName,
                     FullPath = file,
                     RelativePath = Path.GetRelativePath(rootPath, file),
                     IsFolder = false,

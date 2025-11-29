@@ -169,7 +169,11 @@
       "IconEdit": "✏️",
       "IconRemove": "❌",
       "IconImport": "📥",
-      "IconExport": "📤"
+      "IconExport": "📤",
+      "IconFilter": "🔍",
+      "TooltipCreateEventFolder": "Create New Folder",
+      "TooltipDeleteEventFolder": "Delete Folder",
+      "TooltipToggleFilterLocalText": "Toggle Filter *LocalText.json Files"
     },
     "AddConfWindow": {
       "AddConfTitle": "Add Configuration File",

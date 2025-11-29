@@ -6,6 +6,7 @@ using System.IO;
 using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using MessageBox = System.Windows.MessageBox;
 
 namespace ModCreator.Windows
@@ -450,6 +451,23 @@ namespace ModCreator.Windows
             var confPath = Path.Combine(WindowData.Project.ProjectPath, "ModProject", "ModConf");
             Directory.CreateDirectory(confPath);
             System.Diagnostics.Process.Start("explorer.exe", confPath);
+        }
+
+        [SupportedOSPlatform("windows6.1")]
+        private void ToggleFilterLocalText_Click(object sender, RoutedEventArgs e)
+        {
+            WindowData.FilterLocalText = !WindowData.FilterLocalText;
+
+            var btn = this.FindName("btnToggleFilterLocalText") as Button;
+            if (btn != null)
+            {
+                btn.Background = WindowData.FilterLocalText
+                    ? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2E5090"))
+                    : Brushes.White;
+                btn.Foreground = WindowData.FilterLocalText
+                    ? Brushes.White
+                    : new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF666666"));
+            }
         }
     }
 }
