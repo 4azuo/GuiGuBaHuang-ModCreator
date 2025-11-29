@@ -64,6 +64,7 @@
     <None Remove="Resources\var-types.json" />
     <None Remove="Resources\project-replacements.json" />
     <None Remove="Resources\image-extensions.json" />
+    <None Remove="Resources\languages.json" />
     <None Remove="Styles\Json.xshd" />
   </ItemGroup>
 
@@ -84,6 +85,9 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\image-extensions.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\languages.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Styles\Json.xshd">

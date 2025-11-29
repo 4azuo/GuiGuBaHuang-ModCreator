@@ -1,0 +1,32 @@
+[
+  {
+    "Code": "vi",
+    "Name": "Vietnamese",
+    "DisplayName": "Vietnamese (vi)"
+  },
+  {
+    "Code": "en",
+    "Name": "English",
+    "DisplayName": "English (en)"
+  },
+  {
+    "Code": "ch",
+    "Name": "Chinese Simplified",
+    "DisplayName": "Chinese Simplified (ch)"
+  },
+  {
+    "Code": "tc",
+    "Name": "Traditional Chinese",
+    "DisplayName": "Traditional Chinese (tc)"
+  },
+  {
+    "Code": "kr",
+    "Name": "Korean",
+    "DisplayName": "Korean (kr)"
+  },
+  {
+    "Code": "jp",
+    "Name": "Japanese",
+    "DisplayName": "Japanese (jp)"
+  }
+]

@@ -233,21 +233,5 @@ namespace ModCreator.WindowData
 
             return string.Join("\n", actions);
         }
-
-        public void LoadModEventResources()
-        {
-            var resourcePrefix = "ModCreator.Resources.";
-
-            EventCategories = ResourceHelper.ReadEmbeddedResource<List<EventCategory>>(resourcePrefix + "modevent-events.json");
-            AvailableConditions = ResourceHelper.ReadEmbeddedResource<List<ConditionInfo>>(resourcePrefix + "modevent-conditions.json");
-            AvailableActions = ResourceHelper.ReadEmbeddedResource<List<ActionInfo>>(resourcePrefix + "modevent-actions.json");
-            CacheTypes = ResourceHelper.ReadEmbeddedResource<List<string>>(resourcePrefix + "modevent-cachetype.json");
-            WorkOnTypes = ResourceHelper.ReadEmbeddedResource<List<string>>(resourcePrefix + "modevent-workon.json");
-
-            var cats = ResourceHelper.ReadEmbeddedResource<Dictionary<string, List<string>>>(resourcePrefix + "modevent-cats.json");
-            EventCategoryList = cats["EventCategories"];
-            ConditionCategoryList = cats["ConditionCategories"];
-            ActionCategoryList = cats["ActionCategories"];
-        }
     }
 }

@@ -28,6 +28,8 @@
                     </TextBlock>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <ComboBox x:Name="cmbSourceLanguage" ItemsSource="{Binding SourceLanguages}" SelectedItem="{Binding SelectedSourceLanguage, Mode=TwoWay}" DisplayMemberPath="displayName" SelectedValuePath="code" Width="200" Height="32" VerticalContentAlignment="Center" Margin="10,0,0,0"/>
+                    <Button Content="{x:Static helper:ProjectEditorWindowText.Translate}" Click="Translate_Click" Style="{StaticResource PrimaryButton}" Width="100" Margin="10,0,0,0"/>
                     <Button Content="{x:Static helper:ProjectEditorWindowText.Help}" Click="Help_Click" Style="{StaticResource HeaderButton}" Width="70" Margin="10,0,0,0"/>
                     <Button Content="{x:Static helper:ProjectEditorWindowText.Save}" Click="Save_Click" Style="{StaticResource PrimaryButton}" Width="100" Margin="10,0,0,0"/>
                     <Button Content="{x:Static helper:ProjectEditorWindowText.Cancel}" Click="Close_Click" Style="{StaticResource ActionButton}" Width="100" Margin="10,0,0,0"/>
@@ -115,8 +117,6 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,5">
-                                <Button Content="{x:Static helper:ProjectEditorWindowText.IconFolder}" ToolTip="{x:Static helper:ProjectEditorWindowText.TooltipCreateFolder}" Click="CreateFolder_Click" Style="{StaticResource ActionButton}" Width="30" Height="30" FontSize="14" Margin="0,0,2,0"/>
-                                <Button Content="{x:Static helper:ProjectEditorWindowText.IconDelete}" ToolTip="{x:Static helper:ProjectEditorWindowText.TooltipDeleteFolder}" Click="DeleteFolder_Click" Style="{StaticResource ActionButton}" Width="30" Height="30" FontSize="14" Margin="0,0,2,0" IsEnabled="{Binding SelectedConfItem.IsFolder, Mode=OneWay}"/>
                                 <Button Content="{x:Static helper:ProjectEditorWindowText.IconAdd}" ToolTip="{x:Static helper:ProjectEditorWindowText.TooltipAddConf}" Click="AddConf_Click" Style="{StaticResource ActionButton}" Width="30" Height="30" FontSize="14" Margin="0,0,2,0}"/>
                                 <Button Content="{x:Static helper:ProjectEditorWindowText.IconClone}" ToolTip="{x:Static helper:ProjectEditorWindowText.TooltipCloneConf}" Click="CloneConf_Click" Style="{StaticResource ActionButton}" Width="30" Height="30" FontSize="14" Margin="0,0,2,0" IsEnabled="{Binding HasSelectedConfFile, Mode=OneWay}"/>
                                 <Button Content="{x:Static helper:ProjectEditorWindowText.IconEdit}" ToolTip="{x:Static helper:ProjectEditorWindowText.TooltipRenameConf}" Click="RenameConf_Click" Style="{StaticResource ActionButton}" Width="30" Height="30" FontSize="14" Margin="0,0,2,0" IsEnabled="{Binding HasSelectedConfFile, Mode=OneWay}"/>

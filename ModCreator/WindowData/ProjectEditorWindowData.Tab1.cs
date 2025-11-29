@@ -3,6 +3,7 @@ using ModCreator.Helpers;
 using ModCreator.Models;
 using Newtonsoft.Json;
 using System;
+using System.Collections.ObjectModel;
 using System.Reflection;
 
 namespace ModCreator.WindowData
@@ -13,6 +14,10 @@ namespace ModCreator.WindowData
 
         [NotifyMethod(nameof(LoadProjectData))]
         public ModProject Project { get; set; }
+
+        // Language properties for translation
+        public ObservableCollection<Language> SourceLanguages { get; set; } = new ObservableCollection<Language>();
+        public Language SelectedSourceLanguage { get; set; }
 
         public bool HasUnsavedChanges()
         {
@@ -44,7 +49,7 @@ namespace ModCreator.WindowData
             LoadImageFiles();
             LoadGlobalVariables();
             LoadModEventFiles();
-            LoadModEventResources();
+            LoadModResources();
 
             BackupProject();
         }
@@ -65,6 +70,22 @@ namespace ModCreator.WindowData
 
             Project.LastModifiedDate = DateTime.Now;
             ProjectHelper.SaveProjects(ProjectHelper.LoadProjects());
+        }
+
+        public void LoadModResources()
+        {
+            var resourcePrefix = "ModCreator.Resources.";
+
+            SourceLanguages = ResourceHelper.ReadEmbeddedResource<List<Language>>($"{resourcePrefix}languages.json");
+            EventCategories = ResourceHelper.ReadEmbeddedResource<List<EventCategory>>($"{resourcePrefix}modevent-events.json");
+            AvailableConditions = ResourceHelper.ReadEmbeddedResource<List<ConditionInfo>>($"{resourcePrefix}modevent-conditions.json");
+            AvailableActions = ResourceHelper.ReadEmbeddedResource<List<ActionInfo>>($"{resourcePrefix}modevent-actions.json");
+            CacheTypes = ResourceHelper.ReadEmbeddedResource<List<string>>($"{resourcePrefix}modevent-cachetype.json");
+            WorkOnTypes = ResourceHelper.ReadEmbeddedResource<List<string>>($"{resourcePrefix}modevent-workon.json");
+            var cats = ResourceHelper.ReadEmbeddedResource<Dictionary<string, List<string>>>($"{resourcePrefix}modevent-cats.json");
+            EventCategoryList = cats["EventCategories"];
+            ConditionCategoryList = cats["ConditionCategories"];
+            ActionCategoryList = cats["ActionCategories"];
         }
     }
 }

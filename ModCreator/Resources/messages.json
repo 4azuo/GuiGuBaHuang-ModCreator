@@ -84,6 +84,7 @@
     "ProjectEditorWindow": {
       "ProjectEditorTitle": "Project Editor",
       "ProjectIdLabel": "Project ID:",
+      "Translate": "Translate",
       "Help": "Help",
       "Save": "Save",
       "Cancel": "Cancel",
