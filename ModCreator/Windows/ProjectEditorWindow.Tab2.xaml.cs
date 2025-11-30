@@ -1,7 +1,10 @@
 using ModCreator.Helpers;
 using ModCreator.Models;
 using ModCreator.WindowData;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.Versioning;
 using System.Windows;
@@ -474,6 +477,58 @@ namespace ModCreator.Windows
         {
             var patternWindow = new PatternSelectorWindow { Owner = this };
             patternWindow.ShowDialog();
+        }
+
+        private void Translate_Click(object sender, RoutedEventArgs e)
+        {
+            if (WindowData.SelectedSourceLanguage == null)
+            {
+                MessageBox.Show("Please select a source language!", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // Get translate script path from settings
+            var settingsJson = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "settings.json"));
+            var settings = JsonConvert.DeserializeObject<Dictionary<string, string>>(settingsJson);
+            
+            if (!settings.TryGetValue("translateScriptPath", out var translateScriptPath))
+            {
+                MessageBox.Show("Translate script path not found in settings!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!File.Exists(translateScriptPath))
+            {
+                MessageBox.Show($"Translate script not found at: {translateScriptPath}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            // Get python executable
+            var pythonPath = PythonHelper.FindPythonExecutable();
+            if (string.IsNullOrEmpty(pythonPath))
+            {
+                MessageBox.Show("Python executable not found! Please install Python 3 and add it to PATH.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            // Build command arguments
+            var projectPath = WindowData.Project.ProjectPath;
+            var sourceLanguage = WindowData.SelectedSourceLanguage.Code;
+            var arguments = $"/K {pythonPath} \"{translateScriptPath}\" --project \"{projectPath}\" --path . --source_lan {sourceLanguage}";
+
+            // Start translation process
+            var processInfo = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = arguments,
+                UseShellExecute = true,
+                CreateNoWindow = false
+            };
+
+            Process.Start(processInfo);
+            
+            MessageBox.Show($"Translation process started!\n\nProject: {WindowData.Project.ProjectName}\nSource Language: {WindowData.SelectedSourceLanguage.DisplayName}", 
+                "Translation Started", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }
