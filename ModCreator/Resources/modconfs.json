@@ -158,5 +158,32 @@
     "VarType": "string",
     "Enable": true,
     "Required": true
+  },
+  {
+    "Name": "RoleEffect.id",
+    "Type": "textbox",
+    "Label": "Effect ID",
+    "Description": "Unique identifier for the role effect",
+    "VarType": "string",
+    "Enable": true,
+    "Required": true
+  },
+  {
+    "Name": "RoleEffect.effectType",
+    "Type": "textbox",
+    "Label": "Effect Type",
+    "Description": "Type of the effect",
+    "VarType": "string",
+    "Enable": true,
+    "Required": true
+  },
+  {
+    "Name": "RoleEffect.value",
+    "Type": "textbox",
+    "Label": "Value",
+    "Description": "Effect value",
+    "VarType": "string",
+    "Enable": true,
+    "Required": true
   }
 ]

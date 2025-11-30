@@ -31,5 +31,19 @@
         ]
       }
     ]
+  },
+  {
+    "Name": "RoleEffect",
+    "Description": "Create role effect configuration",
+    "Files": [
+      {
+        "FileName": "RoleEffect.json",
+        "Elements": [
+          "RoleEffect.id",
+          "RoleEffect.effectType",
+          "RoleEffect.value"
+        ]
+      }
+    ]
   }
 ]
