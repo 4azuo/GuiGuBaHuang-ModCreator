@@ -13,16 +13,12 @@ namespace ModCreator.WindowData
 {
     public partial class ProjectEditorWindowData : CWindowData
     {
-        public List<string> ImageFiles { get; set; } = new List<string>();
-        public ObservableCollection<FileItem> ImageItems { get; set; } = new ObservableCollection<FileItem>();
+        public List<string> ImageFiles { get; set; } = [];
+        public ObservableCollection<FileItem> ImageItems { get; set; } = [];
         public List<ImageExtension> ImageExtensions { get; set; } = ResourceHelper.ReadEmbeddedResource<List<ImageExtension>>("ModCreator.Resources.image-extensions.json");
-
-        [NotifyMethod(nameof(OnSelectedImageChanged))]
         public string SelectedImageFile { get; set; }
-
         [NotifyMethod(nameof(OnImageItemSelected))]
         public FileItem SelectedImageItem { get; set; }
-
         public BitmapImage SelectedImagePath
         {
             get
@@ -47,10 +43,6 @@ namespace ModCreator.WindowData
             }
 
             SelectedImageFile = SelectedImageItem.RelativePath;
-        }
-
-        public void OnSelectedImageChanged(object obj, PropertyInfo prop, object oldValue, object newValue)
-        {
         }
 
         public void LoadImageFiles()

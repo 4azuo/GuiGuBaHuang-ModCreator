@@ -102,6 +102,7 @@
       "HeaderModified": "Modified:",
       "HeaderState": "State:",
       "HeaderTitleImg": "Title Image:",
+      "AutoSaveEvery30s": "Auto save every 30s",
       "TabModConf": "ModConf",
       "ConfFiles": "Configuration Files",
       "TooltipCreateFolder": "Create Folder",

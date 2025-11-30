@@ -75,6 +75,7 @@ namespace ModCreator.Windows
 
             Directory.CreateDirectory(newFolderPath);
             WindowData.LoadModEventFiles();
+            WindowData.StatusMessage = $"Created ModEvent folder: {folderName}";
             MessageBox.Show($"Folder '{folderName}' created successfully!", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
@@ -103,6 +104,7 @@ namespace ModCreator.Windows
             {
                 Directory.Delete(folderPath, true);
                 WindowData.LoadModEventFiles();
+                WindowData.StatusMessage = $"Deleted ModEvent folder: {folderName}";
                 MessageBox.Show($"Folder '{folderName}' deleted successfully!", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
@@ -182,6 +184,7 @@ namespace ModCreator.Windows
 
             File.WriteAllText(filePath, WindowData.GenerateModEventCode(newEvent));
             WindowData.LoadModEventFiles();
+            WindowData.StatusMessage = $"Created ModEvent: {className}";
             
             MessageBox.Show(MessageHelper.GetFormat("Messages.Success.ModEventCreated", className), MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
@@ -253,6 +256,7 @@ namespace ModCreator.Windows
 
             File.WriteAllText(newFilePath, WindowData.GenerateModEventCode(clonedEvent));
             WindowData.LoadModEventFiles();
+            WindowData.StatusMessage = $"Cloned ModEvent: {newClassName}";
 
             MessageBox.Show("ModEvent cloned successfully!", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
@@ -298,6 +302,7 @@ namespace ModCreator.Windows
                 File.Delete(oldFilePath);
 
             WindowData.LoadModEventFiles();
+            WindowData.StatusMessage = $"Renamed ModEvent: {oldClassName} → {newClassName}";
 
             MessageBox.Show("ModEvent renamed successfully!", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
@@ -311,11 +316,13 @@ namespace ModCreator.Windows
             if (result != MessageBoxResult.Yes) return;
 
             var filePath = WindowData.SelectedModEvent.FilePath;
+            var fileName = WindowData.SelectedModEvent.FileName;
             if (File.Exists(filePath))
                 File.Delete(filePath);
 
             WindowData.LoadModEventFiles();
             WindowData.SelectedModEvent = null;
+            WindowData.StatusMessage = $"Deleted ModEvent: {fileName}";
 
             MessageBox.Show("ModEvent deleted successfully!", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
@@ -323,6 +330,7 @@ namespace ModCreator.Windows
         private void SaveModEvent_Click(object sender, RoutedEventArgs e)
         {
             WindowData.SaveModEvent();
+            WindowData.StatusMessage = $"Saved ModEvent: {WindowData.SelectedModEvent?.FileName}";
             MessageBox.Show(MessageHelper.Get("Messages.Success.ModEventSaved"), MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
@@ -337,7 +345,10 @@ namespace ModCreator.Windows
             {
                 var selectedItem = selectWindow.WindowData.SelectedItem as EventInfoDisplay;
                 if (selectedItem != null)
+                {
                     WindowData.SelectedModEvent.SelectedEvent = selectedItem.Name;
+                    WindowData.StatusMessage = $"Added event: {selectedItem.DisplayName}";
+                }
             }
         }
 
@@ -361,6 +372,7 @@ namespace ModCreator.Windows
                         Code = conditionInfo.Code,
                         Order = WindowData.SelectedModEvent.Conditions.Count
                     });
+                    WindowData.StatusMessage = $"Added condition: {conditionInfo.DisplayName}";
                 }
             }
         }
@@ -371,6 +383,7 @@ namespace ModCreator.Windows
             if (condition == null || WindowData.SelectedModEvent == null) return;
 
             WindowData.SelectedModEvent.Conditions.Remove(condition);
+            WindowData.StatusMessage = $"Removed condition: {condition.DisplayName}";
         }
 
         private void AddAction_Click(object sender, RoutedEventArgs e)
@@ -393,6 +406,7 @@ namespace ModCreator.Windows
                         Code = actionInfo.Code,
                         Order = WindowData.SelectedModEvent.Actions.Count
                     });
+                    WindowData.StatusMessage = $"Added action: {actionInfo.DisplayName}";
                 }
             }
         }
@@ -406,6 +420,8 @@ namespace ModCreator.Windows
             
             for (int i = 0; i < WindowData.SelectedModEvent.Actions.Count; i++)
                 WindowData.SelectedModEvent.Actions[i].Order = i;
+            
+            WindowData.StatusMessage = $"Removed action: {action.DisplayName}";
         }
 
         private void OpenModEventFolder_Click(object sender, RoutedEventArgs e)
@@ -415,6 +431,7 @@ namespace ModCreator.Windows
             var modPath = Path.Combine(WindowData.Project.ProjectPath, "ModProject", "ModCode", "ModMain", "Mod");
             Directory.CreateDirectory(modPath);
             System.Diagnostics.Process.Start("explorer.exe", modPath);
+            WindowData.StatusMessage = $"Opened ModEvent folder: {modPath}";
         }
 
         [SupportedOSPlatform("windows6.1")]
@@ -435,6 +452,7 @@ namespace ModCreator.Windows
             btnGui.Foreground = Brushes.White;
             btnCode.Background = Brushes.White;
             btnCode.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF666666"));
+            WindowData.StatusMessage = "Switched to GUI mode";
         }
 
         [SupportedOSPlatform("windows6.1")]
@@ -457,6 +475,7 @@ namespace ModCreator.Windows
             btnCode.Foreground = Brushes.White;
             btnGui.Background = Brushes.White;
             btnGui.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF666666"));
+            WindowData.StatusMessage = "Switched to code mode";
         }
 
         [SupportedOSPlatform("windows6.1")]

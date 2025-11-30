@@ -2,13 +2,12 @@ using ModCreator.Helpers;
 using ModCreator.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace ModCreator.WindowData
 {
     public partial class ProjectEditorWindowData : CWindowData
     {
-        public ObservableCollection<GlobalVariable> GlobalVariables { get; set; } = new ObservableCollection<GlobalVariable>();
+        public ObservableCollection<GlobalVariable> GlobalVariables { get; set; } = [];
         public List<VarType> VarTypes { get; set; } = ResourceHelper.ReadEmbeddedResource<List<VarType>>("ModCreator.Resources.var-types.json");
 
         public void LoadGlobalVariables()
@@ -21,6 +20,7 @@ namespace ModCreator.WindowData
             if (Project == null) return;
 
             Project.GlobalVariables = new List<GlobalVariable>(GlobalVariables);
+            StatusMessage = $"Saved {GlobalVariables.Count} global variable(s)";
         }
     }
 }

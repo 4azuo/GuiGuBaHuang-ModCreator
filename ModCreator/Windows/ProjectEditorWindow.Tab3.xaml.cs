@@ -68,6 +68,7 @@ namespace ModCreator.Windows
 
             Directory.CreateDirectory(newFolderPath);
             WindowData.LoadImageFiles();
+            WindowData.StatusMessage = $"Created image folder: {folderName}";
             MessageBox.Show($"Folder '{folderName}' created successfully!", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
@@ -96,6 +97,7 @@ namespace ModCreator.Windows
             {
                 Directory.Delete(folderPath, true);
                 WindowData.LoadImageFiles();
+                WindowData.StatusMessage = $"Deleted image folder: {folderName}";
                 MessageBox.Show($"Folder '{folderName}' deleted successfully!", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
@@ -131,6 +133,7 @@ namespace ModCreator.Windows
                 }
 
                 WindowData.LoadImageFiles();
+                WindowData.StatusMessage = $"Imported {dialog.FileNames.Length} image(s)";
             }
         }
 
@@ -150,6 +153,7 @@ namespace ModCreator.Windows
 
                 var sourcePath = Path.Combine(WindowData.Project.ProjectPath, "ModProject", "ModImg", WindowData.SelectedImageFile);
                 File.Copy(sourcePath, dialog.FileName, true);
+                WindowData.StatusMessage = $"Exported image: {WindowData.SelectedImageFile}";
                 MessageBox.Show("Image exported successfully!", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
@@ -163,12 +167,14 @@ namespace ModCreator.Windows
             if (result == MessageBoxResult.Yes)
             {
                 var filePath = Path.Combine(WindowData.Project.ProjectPath, "ModProject", "ModImg", WindowData.SelectedImageFile);
+                var fileName = WindowData.SelectedImageFile;
                 WindowData.SelectedImageFile = null;
                 
                 if (File.Exists(filePath))
                 {
                     File.Delete(filePath);
                     WindowData.LoadImageFiles();
+                    WindowData.StatusMessage = $"Deleted image: {fileName}";
                 }
             }
         }
@@ -180,6 +186,7 @@ namespace ModCreator.Windows
             var imgPath = Path.Combine(WindowData.Project.ProjectPath, "ModProject", "ModImg");
             Directory.CreateDirectory(imgPath);
             System.Diagnostics.Process.Start("explorer.exe", imgPath);
+            WindowData.StatusMessage = $"Opened ModImg folder: {imgPath}";
         }
     }
 }

@@ -95,6 +95,7 @@
                         </Border>
                     </Grid>
                     <StackPanel Grid.Row="1" Margin="10" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <CheckBox Content="{x:Static helper:ProjectEditorWindowText.AutoSaveEvery30s}" IsChecked="{Binding Project.AutoSaveEnabled, Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,20,0" FontSize="13" Checked="AutoSave_Changed" Unchecked="AutoSave_Changed"/>
                         <Button Content="{x:Static helper:ProjectEditorWindowText.OpenInExplorer}" Click="OpenProjectFolder_Click" Style="{StaticResource ActionButton}" Width="150" Margin="0,0,5,0"/>
                         <Button Content="{x:Static helper:ProjectEditorWindowText.Refresh}" Click="RefreshTab_Click" Style="{StaticResource ActionButton}" Width="100"/>
                     </StackPanel>
@@ -505,7 +506,7 @@
             </TabItem>
         </TabControl>
         <Border Grid.Row="2" Background="#FFF0F0F0" Padding="10,5" BorderBrush="#FFDDDDDD" BorderThickness="0,1,0,0">
-            <TextBlock Text="{Binding Project.ProjectPath, Mode=OneWay}" FontSize="11" Foreground="Gray"/>
+            <TextBlock Text="{Binding StatusMessage, Mode=OneWay}" FontSize="11"/>
         </Border>
     </Grid>
 </local:CWindow>

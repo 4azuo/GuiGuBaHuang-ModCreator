@@ -100,6 +100,7 @@ namespace ModCreator.Windows
 
             Directory.CreateDirectory(newFolderPath);
             WindowData.LoadConfFiles();
+            WindowData.StatusMessage = $"Created folder: {folderName}";
             MessageBox.Show($"Folder '{folderName}' created successfully!", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
@@ -128,6 +129,7 @@ namespace ModCreator.Windows
             {
                 Directory.Delete(folderPath, true);
                 WindowData.LoadConfFiles();
+                WindowData.StatusMessage = $"Deleted folder: {folderName}";
                 MessageBox.Show($"Folder '{folderName}' deleted successfully!", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
@@ -159,6 +161,7 @@ namespace ModCreator.Windows
 
             WindowData.LoadConfFiles();
             WindowData.SelectedConfFile = Path.GetRelativePath(confPath, destPath);
+            WindowData.StatusMessage = $"Added configuration: {fileName}";
         }
 
         private void RemoveConf_Click(object sender, RoutedEventArgs e)
@@ -180,6 +183,7 @@ namespace ModCreator.Windows
             {
                 File.Delete(filePath);
                 WindowData.LoadConfFiles();
+                WindowData.StatusMessage = $"Deleted configuration: {WindowData.SelectedConfFile}";
             }
         }
 
@@ -214,6 +218,7 @@ namespace ModCreator.Windows
 
             WindowData.LoadConfFiles();
             WindowData.SelectedConfFile = Path.GetRelativePath(confPath, destFile);
+            WindowData.StatusMessage = $"Cloned configuration: {newFileName}";
 
             MessageBox.Show($"Configuration file cloned successfully!\n\nNew file: {newFileName}", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
@@ -271,6 +276,7 @@ namespace ModCreator.Windows
             File.Move(oldFilePath, newFilePath);
             WindowData.LoadConfFiles();
             WindowData.SelectedConfFile = newFileName;
+            WindowData.StatusMessage = $"Renamed: {oldFileName} → {newFileName}";
 
             MessageBox.Show($"Configuration file renamed successfully!\n\nOld: {oldFileName}\nNew: {newFileName}", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
@@ -454,6 +460,7 @@ namespace ModCreator.Windows
             var confPath = Path.Combine(WindowData.Project.ProjectPath, "ModProject", "ModConf");
             Directory.CreateDirectory(confPath);
             System.Diagnostics.Process.Start("explorer.exe", confPath);
+            WindowData.StatusMessage = $"Opened ModConf folder: {confPath}";
         }
 
         [SupportedOSPlatform("windows6.1")]
@@ -526,6 +533,7 @@ namespace ModCreator.Windows
             };
 
             Process.Start(processInfo);
+            WindowData.StatusMessage = $"Translation started from {WindowData.SelectedSourceLanguage.DisplayName}";
             
             MessageBox.Show($"Translation process started!\n\nProject: {WindowData.Project.ProjectName}\nSource Language: {WindowData.SelectedSourceLanguage.DisplayName}", 
                 "Translation Started", MessageBoxButton.OK, MessageBoxImage.Information);

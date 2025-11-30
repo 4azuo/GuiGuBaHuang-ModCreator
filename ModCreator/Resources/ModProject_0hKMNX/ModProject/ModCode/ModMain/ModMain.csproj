@@ -187,6 +187,9 @@
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\鬼谷八荒\MelonLoader\Managed\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="ModLib">
+      <HintPath>CodeArtifacts\ModLib.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.CompilerServices.SymbolWriter">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\鬼谷八荒\MelonLoader\Managed\Mono.CompilerServices.SymbolWriter.dll</HintPath>
       <Private>False</Private>

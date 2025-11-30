@@ -6,6 +6,7 @@ using System;
 using System.ComponentModel;
 using System.Runtime.Versioning;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace ModCreator.Windows
 {
@@ -16,6 +17,9 @@ namespace ModCreator.Windows
         private ModImgBusiness _modImgBusiness;
         private GlobalVariablesBusiness _globalVariablesBusiness;
         private ModEventBusiness _modEventBusiness;
+
+        // Auto-save timer
+        private DispatcherTimer _autoSaveTimer;
 
         /// <summary>
         /// Project to edit - set before showing dialog
@@ -60,14 +64,62 @@ namespace ModCreator.Windows
                 
                 // Populate Events ComboBox
                 PopulateEventsComboBox();
+
+                // Initialize auto-save timer
+                InitializeAutoSaveTimer();
             }
 
             // Subscribe to Closed event to notify parent window
             Closed += ProjectEditorWindow_Closed;
         }
 
+        private void InitializeAutoSaveTimer()
+        {
+            _autoSaveTimer = new DispatcherTimer();
+            _autoSaveTimer.Interval = TimeSpan.FromSeconds(30);
+            _autoSaveTimer.Tick += AutoSaveTimer_Tick;
+
+            if (WindowData?.Project?.AutoSaveEnabled == true)
+            {
+                _autoSaveTimer.Start();
+            }
+        }
+
+        private void AutoSaveTimer_Tick(object sender, EventArgs e)
+        {
+            if (WindowData?.Project?.AutoSaveEnabled == true)
+            {
+                WindowData.SaveProject();
+                WindowData.StatusMessage = "Auto-saved project";
+            }
+        }
+
+        private void AutoSave_Changed(object sender, RoutedEventArgs e)
+        {
+            if (_autoSaveTimer == null) return;
+
+            if (WindowData?.Project?.AutoSaveEnabled == true)
+            {
+                _autoSaveTimer.Start();
+                WindowData.StatusMessage = "Auto-save enabled (every 30s)";
+            }
+            else
+            {
+                _autoSaveTimer.Stop();
+                WindowData.StatusMessage = "Auto-save disabled";
+            }
+        }
+
         private void ProjectEditorWindow_Closed(object sender, EventArgs e)
         {
+            // Dispose auto-save timer
+            if (_autoSaveTimer != null)
+            {
+                _autoSaveTimer.Stop();
+                _autoSaveTimer.Tick -= AutoSaveTimer_Tick;
+                _autoSaveTimer = null;
+            }
+
             // Notify parent window to refresh project list
             ProjectUpdated?.Invoke(this, EventArgs.Empty);
         }
@@ -98,6 +150,7 @@ namespace ModCreator.Windows
             if (result != MessageBoxResult.Yes) return;
 
             WindowData.SaveProject();
+            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.UpdatedProject", WindowData.Project.ProjectName);
             MessageBox.Show(
                 MessageHelper.GetFormat("Messages.Success.UpdatedProject", WindowData.Project.ProjectName), 
                 MessageHelper.Get("Messages.Success.Title"), 
@@ -138,16 +191,17 @@ namespace ModCreator.Windows
             if (tabControl == null || WindowData == null)
             {
                 WindowData?.ReloadProjectData();
+                WindowData.StatusMessage = MessageHelper.Get("Messages.Info.Ready");
                 return;
             }
 
             switch (tabControl.SelectedIndex)
             {
-                case 1: WindowData.LoadConfFiles(); break;
-                case 2: WindowData.LoadImageFiles(); break;
-                case 3: WindowData.LoadGlobalVariables(); break;
-                case 4: WindowData.LoadModEventFiles(); break;
-                default: WindowData.ReloadProjectData(); break;
+                case 1: WindowData.LoadConfFiles(); WindowData.StatusMessage = "Refreshed configuration files"; break;
+                case 2: WindowData.LoadImageFiles(); WindowData.StatusMessage = "Refreshed image files"; break;
+                case 3: WindowData.LoadGlobalVariables(); WindowData.StatusMessage = "Refreshed global variables"; break;
+                case 4: WindowData.LoadModEventFiles(); WindowData.StatusMessage = "Refreshed mod event files"; break;
+                default: WindowData.ReloadProjectData(); WindowData.StatusMessage = MessageHelper.Get("Messages.Info.Ready"); break;
             }
         }
     }

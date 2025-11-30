@@ -11,7 +11,7 @@ namespace ModCreator.WindowData
     {
         public string WindowTitle { get; set; } = "Select Item";
         public string ItemType { get; set; }
-        public ObservableCollection<string> Categories { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<string> Categories { get; set; } = [];
 
         [NotifyMethod(nameof(OnCategoryChanged))]
         public string SelectedCategory { get; set; }
@@ -19,8 +19,8 @@ namespace ModCreator.WindowData
         [NotifyMethod(nameof(OnSearchTextChanged))]
         public string SearchText { get; set; } = string.Empty;
 
-        public List<object> AllItems { get; set; } = new List<object>();
-        public ObservableCollection<object> FilteredItems { get; set; } = new ObservableCollection<object>();
+        public List<object> AllItems { get; set; } = [];
+        public ObservableCollection<object> FilteredItems { get; set; } = [];
         public object SelectedItem { get; set; }
         public bool HasSelectedItem => SelectedItem != null;
 

@@ -85,6 +85,7 @@ namespace ModCreator
             WindowData.AllProjects.Add(newProject);
             ProjectHelper.SaveProjects(WindowData.AllProjects);
             WindowData.UpdateFilteredProjects(WindowData, null, null, null);
+            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.CreatedProject", newProject.ProjectName);
             MessageBox.Show(MessageHelper.GetFormat("Messages.Success.ProjectSuccessMessage", newProject.ProjectPath), 
                 MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
             
@@ -100,6 +101,7 @@ namespace ModCreator
         private void RefreshProjects_Click(object sender, RoutedEventArgs e)
         {
             WindowData.LoadProjects();
+            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.LoadedProjects", WindowData.AllProjects.Count);
         }
 
         private void OpenFolder_Click(object sender, RoutedEventArgs e)
@@ -111,6 +113,7 @@ namespace ModCreator
                     MessageHelper.Get("Messages.Error.Title"),
                     MessageBoxButton.OK,
                     MessageBoxImage.Warning);
+                WindowData.StatusMessage = "Project folder not found";
                 return;
             }
             WindowData.OpenProjectFolder();
@@ -127,6 +130,7 @@ namespace ModCreator
                     MessageHelper.Get("Messages.Error.Title"),
                     MessageBoxButton.OK,
                     MessageBoxImage.Warning);
+                WindowData.StatusMessage = "Project folder not found";
                 return;
             }
             
@@ -136,6 +140,7 @@ namespace ModCreator
                 ProjectToEdit = WindowData.SelectedProject
             };
             editorWindow.Show();
+            WindowData.StatusMessage = $"Opening project editor for {WindowData.SelectedProject.ProjectName}";
         }
 
         private void DeleteProject_Click(object sender, RoutedEventArgs e)
@@ -161,18 +166,21 @@ namespace ModCreator
         {
             if (WindowData.SelectedProject == null) return;
             WindowData.BuildProject();
+            WindowData.StatusMessage = "Building project...";
         }
 
         private void DeployToSteamWorkshop_Click(object sender, RoutedEventArgs e)
         {
             if (WindowData.SelectedProject == null) return;
             WindowData.DeployProject();
+            WindowData.StatusMessage = "Deploying to Steam Workshop...";
         }
 
         private void CopyToModExportData_Click(object sender, RoutedEventArgs e)
         {
             if (WindowData.SelectedProject == null) return;
             WindowData.CopyToModExportData();
+            WindowData.StatusMessage = "Copying to ModExportData...";
         }
 
         [SupportedOSPlatform("windows6.1")]

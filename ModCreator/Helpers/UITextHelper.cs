@@ -137,6 +137,7 @@ namespace ModCreator.Helpers
         public static string HeaderModified => MessageHelper.Get("Windows.ProjectEditorWindow.HeaderModified");
         public static string HeaderState => MessageHelper.Get("Windows.ProjectEditorWindow.HeaderState");
         public static string HeaderTitleImg => MessageHelper.Get("Windows.ProjectEditorWindow.HeaderTitleImg");
+        public static string AutoSaveEvery30s => MessageHelper.Get("Windows.ProjectEditorWindow.AutoSaveEvery30s");
         public static string TabModConf => MessageHelper.Get("Windows.ProjectEditorWindow.TabModConf");
         public static string ConfFiles => MessageHelper.Get("Windows.ProjectEditorWindow.ConfFiles");
         public static string TooltipCreateFolder => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipCreateFolder");

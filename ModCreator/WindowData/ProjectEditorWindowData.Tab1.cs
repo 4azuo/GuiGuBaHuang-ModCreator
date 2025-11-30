@@ -4,7 +4,6 @@ using ModCreator.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Reflection;
 
 namespace ModCreator.WindowData
@@ -12,13 +11,20 @@ namespace ModCreator.WindowData
     public partial class ProjectEditorWindowData : CWindowData
     {
         internal ModProject _originalProject;
+        private string _statusMessage;
 
         [NotifyMethod(nameof(LoadProjectData))]
         public ModProject Project { get; set; }
 
         // Language properties for translation
-        public List<Language> SourceLanguages { get; set; } = new List<Language>();
+        public List<Language> SourceLanguages { get; set; } = [];
         public Language SelectedSourceLanguage { get; set; }
+
+        public string StatusMessage
+        {
+            get => _statusMessage;
+            set => _statusMessage = $"{DateTime.Now:HH:mm:ss} - {value}";
+        }
 
         public bool HasUnsavedChanges()
         {
@@ -53,6 +59,7 @@ namespace ModCreator.WindowData
             LoadModResources();
 
             BackupProject();
+            StatusMessage = MessageHelper.GetFormat("Messages.Success.LoadedProjects", Project.ProjectName);
         }
 
         public void ReloadProjectData()

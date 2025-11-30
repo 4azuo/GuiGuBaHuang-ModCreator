@@ -10,8 +10,8 @@ namespace ModCreator.WindowData
 {
     public partial class ProjectEditorWindowData : CWindowData
     {
-        public List<string> ConfFiles { get; set; } = new List<string>();
-        public ObservableCollection<FileItem> ConfItems { get; set; } = new ObservableCollection<FileItem>();
+        public List<string> ConfFiles { get; set; } = [];
+        public ObservableCollection<FileItem> ConfItems { get; set; } = [];
 
         [NotifyMethod(nameof(LoadConfContent))]
         public string SelectedConfFile { get; set; }
@@ -140,6 +140,7 @@ namespace ModCreator.WindowData
 
             var filePath = Path.Combine(Project.ProjectPath, "ModProject", "ModConf", SelectedConfFile);
             File.WriteAllText(filePath, SelectedConfContent);
+            StatusMessage = $"Saved configuration file: {SelectedConfFile}";
         }
     }
 }

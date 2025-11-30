@@ -57,6 +57,7 @@ namespace ModCreator.Windows
                 Value = "",
                 Description = ""
             });
+            WindowData.StatusMessage = "Added new variable";
         }
 
         private void DataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
@@ -215,6 +216,7 @@ namespace ModCreator.Windows
             
             Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
             File.WriteAllText(outputPath, generatedCode);
+            WindowData.StatusMessage = $"Generated variables code: {WindowData.GlobalVariables.Count} variables";
 
             MessageBox.Show($"Variables code generated successfully!\n\nOutput file: {outputPath}", MessageHelper.Get("Messages.Info.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
@@ -275,6 +277,8 @@ namespace ModCreator.Windows
                 WindowData.GlobalVariables.Insert(index + 1, clonedVar);
             else
                 WindowData.GlobalVariables.Add(clonedVar);
+            
+            WindowData.StatusMessage = $"Cloned variable: {variable.Name}";
         }
 
         private void RemoveVariable_Click(object sender, RoutedEventArgs e)
@@ -285,7 +289,10 @@ namespace ModCreator.Windows
             var result = MessageBox.Show($"Are you sure you want to remove variable '{variable.Name}'?", "Confirm Remove", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (result == MessageBoxResult.Yes)
+            {
                 WindowData.GlobalVariables.Remove(variable);
+                WindowData.StatusMessage = $"Removed variable: {variable.Name}";
+            }
         }
 
         [SupportedOSPlatform("windows7.0")]
@@ -305,6 +312,7 @@ namespace ModCreator.Windows
             btnGrid.Foreground = Brushes.White;
             btnSource.Background = Brushes.White;
             btnSource.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF666666"));
+            WindowData.StatusMessage = "Switched to grid view";
         }
 
         [SupportedOSPlatform("windows7.0")]
@@ -326,6 +334,7 @@ namespace ModCreator.Windows
             btnSource.Foreground = Brushes.White;
             btnGrid.Background = Brushes.White;
             btnGrid.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF666666"));
+            WindowData.StatusMessage = "Switched to source view";
         }
     }
 }

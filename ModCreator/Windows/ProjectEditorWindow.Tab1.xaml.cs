@@ -16,6 +16,7 @@ namespace ModCreator.Windows
             var projectPath = Path.Combine(WindowData.Project.ProjectPath, "ModProject");
             var folderToOpen = Directory.Exists(projectPath) ? projectPath : WindowData.Project.ProjectPath;
             System.Diagnostics.Process.Start("explorer.exe", folderToOpen);
+            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.OpenedFolder", folderToOpen);
         }
     }
 }
