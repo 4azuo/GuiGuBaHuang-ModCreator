@@ -16,7 +16,8 @@
     "VarType": "int",
     "Enable": true,
     "Required": true,
-    "Options": ["FeatureTypes"]
+    "Options": ["FeatureTypes"],
+    "Value": "1"
   },
   {
     "Name": "RoleCreateFeature.group",
@@ -35,7 +36,8 @@
     "VarType": "int",
     "Enable": true,
     "Required": true,
-    "Options": ["FeatureLevels"]
+    "Options": ["FeatureLevels"],
+    "Value": "1"
   },
   {
     "Name": "RoleCreateFeature.duration",
@@ -54,7 +56,8 @@
     "VarType": "int",
     "Enable": true,
     "Required": false,
-    "Options": ["ConcealTypes"]
+    "Options": ["ConcealTypes"],
+    "Value": "1"
   },
   {
     "Name": "RoleCreateFeature.refreshType",

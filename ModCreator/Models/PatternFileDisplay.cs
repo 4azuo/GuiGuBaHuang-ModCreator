@@ -8,12 +8,12 @@ namespace ModCreator.Models
     {
         public string FileName { get; set; }
         public List<PatternElement> Elements { get; set; }
-        public ObservableCollection<Dictionary<string, string>> Rows { get; set; }
+        public ObservableCollection<RowDisplay> Rows { get; set; }
 
         public PatternFileDisplay()
         {
             Elements = new List<PatternElement>();
-            Rows = new ObservableCollection<Dictionary<string, string>>();
+            Rows = new ObservableCollection<RowDisplay>();
         }
 
         public void AddRow()
@@ -21,12 +21,12 @@ namespace ModCreator.Models
             var newRow = new Dictionary<string, string>();
             foreach (var element in Elements)
             {
-                newRow[element.Name] = string.Empty;
+                newRow[element.Name] = element.Value ?? string.Empty;
             }
-            Rows.Add(newRow);
+            Rows.Add(new RowDisplay(newRow, Elements));
         }
 
-        public void RemoveRow(Dictionary<string, string> row)
+        public void RemoveRow(RowDisplay row)
         {
             Rows.Remove(row);
         }

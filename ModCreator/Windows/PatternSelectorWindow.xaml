@@ -75,45 +75,67 @@
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <GroupBox Header="{Binding FileName}" Margin="0,0,0,10" BorderBrush="#FF2E5090" BorderThickness="2">
-                                        <ScrollViewer HorizontalScrollBarVisibility="Auto">
-                                            <Grid>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="Auto"/>
-                                                    <RowDefinition Height="Auto"/>
-                                                </Grid.RowDefinitions>
-                                                <ItemsControl Grid.Row="0" ItemsSource="{Binding Elements}">
-                                                    <ItemsControl.ItemsPanel>
-                                                        <ItemsPanelTemplate>
-                                                            <StackPanel Orientation="Horizontal"/>
-                                                        </ItemsPanelTemplate>
-                                                    </ItemsControl.ItemsPanel>
-                                                    <ItemsControl.ItemTemplate>
-                                                        <DataTemplate>
-                                                            <Border BorderBrush="#FFCCCCCC" BorderThickness="0,0,1,1" Padding="5" MinWidth="150">
-                                                                <TextBlock Text="{Binding Label}" TextAlignment="Center"/>
-                                                            </Border>
-                                                        </DataTemplate>
-                                                    </ItemsControl.ItemTemplate>
-                                                </ItemsControl>
-                                                <ItemsControl Grid.Row="1" ItemsSource="{Binding Elements}">
-                                                    <ItemsControl.ItemsPanel>
-                                                        <ItemsPanelTemplate>
-                                                            <StackPanel Orientation="Horizontal"/>
-                                                        </ItemsPanelTemplate>
-                                                    </ItemsControl.ItemsPanel>
-                                                    <ItemsControl.ItemTemplate>
-                                                        <DataTemplate>
-                                                            <Border BorderBrush="#FFCCCCCC" BorderThickness="0,0,1,1" Padding="5" MinWidth="150">
-                                                                <Grid>
-                                                                    <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Type, Converter={StaticResource TextBoxVisibilityConverter}}"/>
-                                                                    <ComboBox ItemsSource="{Binding Options}" SelectedValue="{Binding Value, Mode=TwoWay}" SelectedValuePath="Value" DisplayMemberPath="DisplayName" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Type, Converter={StaticResource ComboBoxVisibilityConverter}}"/>
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+                                            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto">
+                                                <StackPanel>
+                                                    <Grid Margin="0,0,0,10">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Button Grid.Column="0" Content="➕" Click="AddRow_Click" Tag="{Binding}" Margin="0,0,5,0" Padding="10,5" Background="#FF2E5090" Foreground="White" BorderThickness="0" Cursor="Hand"/>
+                                                        <ItemsControl Grid.Column="1" ItemsSource="{Binding Elements}">
+                                                            <ItemsControl.ItemsPanel>
+                                                                <ItemsPanelTemplate>
+                                                                    <StackPanel Orientation="Horizontal"/>
+                                                                </ItemsPanelTemplate>
+                                                            </ItemsControl.ItemsPanel>
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <Border BorderBrush="#FFCCCCCC" BorderThickness="0,0,1,1" Padding="5" MinWidth="150" Background="#FFE8EAF6">
+                                                                        <TextBlock Text="{Binding Label}" TextAlignment="Center" FontWeight="SemiBold"/>
+                                                                    </Border>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                    </Grid>
+                                                    <ItemsControl ItemsSource="{Binding Rows}">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Grid Margin="0,0,0,5">
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="Auto"/>
+                                                                        <ColumnDefinition Width="*"/>
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <Button Grid.Column="0" Content="{x:Static helper:PatternSelectorWindowText.RemoveRow}" Click="RemoveRow_Click" Tag="{Binding}" Margin="0,0,5,0" Padding="10,5" Background="#FFCC0000" Foreground="White" BorderThickness="0" Cursor="Hand"/>
+                                                                    <ItemsControl Grid.Column="1" ItemsSource="{Binding Bindings}">
+                                                                        <ItemsControl.ItemsPanel>
+                                                                            <ItemsPanelTemplate>
+                                                                                <StackPanel Orientation="Horizontal"/>
+                                                                            </ItemsPanelTemplate>
+                                                                        </ItemsControl.ItemsPanel>
+                                                                        <ItemsControl.ItemTemplate>
+                                                                            <DataTemplate>
+                                                                                <Border BorderBrush="#FFCCCCCC" BorderThickness="0,0,1,1" Padding="5" MinWidth="150">
+                                                                                    <Grid>
+                                                                                        <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Element.Type, Converter={StaticResource TextBoxVisibilityConverter}}"/>
+                                                                                        <ComboBox ItemsSource="{Binding Element.Options}" SelectedValue="{Binding Value, Mode=TwoWay}" SelectedValuePath="Value" DisplayMemberPath="DisplayName" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Element.Type, Converter={StaticResource ComboBoxVisibilityConverter}}"/>
+                                                                                    </Grid>
+                                                                                </Border>
+                                                                            </DataTemplate>
+                                                                        </ItemsControl.ItemTemplate>
+                                                                    </ItemsControl>
                                                                 </Grid>
-                                                            </Border>
-                                                        </DataTemplate>
-                                                    </ItemsControl.ItemTemplate>
-                                                </ItemsControl>
-                                            </Grid>
-                                        </ScrollViewer>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </StackPanel>
+                                            </ScrollViewer>
+                                        </Grid>
                                     </GroupBox>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>

@@ -98,6 +98,7 @@ namespace ModCreator.WindowData
                     if (element != null && element.Enable)
                         displayFile.Elements.Add(element);
                 }
+                displayFile.AddRow();
                 DisplayFiles.Add(displayFile);
             }
 
@@ -134,15 +135,39 @@ namespace ModCreator.WindowData
                 if (string.IsNullOrEmpty(jsonContent))
                     continue;
 
-                var jsonObject = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonContent);
-                if (jsonObject == null)
-                    continue;
-
-                foreach (var element in file.Elements)
+                if (jsonContent.TrimStart().StartsWith("["))
                 {
-                    if (jsonObject.ContainsKey(element.Name))
+                    var jsonArray = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(jsonContent);
+                    if (jsonArray != null && jsonArray.Count > 0)
                     {
-                        element.Value = jsonObject[element.Name]?.ToString() ?? string.Empty;
+                        file.Rows.Clear();
+                        foreach (var jsonObject in jsonArray)
+                        {
+                            var row = new Dictionary<string, string>();
+                            foreach (var element in file.Elements)
+                            {
+                                if (jsonObject.ContainsKey(element.Name))
+                                    row[element.Name] = jsonObject[element.Name]?.ToString() ?? string.Empty;
+                                else
+                                    row[element.Name] = element.Value ?? string.Empty;
+                            }
+                            file.Rows.Add(new RowDisplay(row, file.Elements));
+                        }
+                    }
+                }
+                else
+                {
+                    var jsonObject = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonContent);
+                    if (jsonObject != null && file.Rows.Count > 0)
+                    {
+                        var firstRow = file.Rows[0];
+                        foreach (var element in file.Elements)
+                        {
+                            if (jsonObject.ContainsKey(element.Name))
+                            {
+                                firstRow.RowData[element.Name] = jsonObject[element.Name]?.ToString() ?? string.Empty;
+                            }
+                        }
                     }
                 }
             }

@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using MessageBox = System.Windows.MessageBox;
 
@@ -44,15 +45,19 @@ namespace ModCreator.Windows
             var validationErrors = new List<string>();
             foreach (var file in WindowData.DisplayFiles)
             {
-                foreach (var element in file.Elements)
+                foreach (var row in file.Rows)
                 {
-                    if (element.Required && string.IsNullOrWhiteSpace(element.Value))
+                    foreach (var element in file.Elements)
                     {
-                        validationErrors.Add($"{file.FileName}: {element.Label} is required");
-                    }
-                    else if (!string.IsNullOrWhiteSpace(element.Value) && !element.ValidateValue(element.Value, element.VarType))
-                    {
-                        validationErrors.Add($"{file.FileName}: {element.Label} - {element.ValidationError}");
+                        var value = row.RowData.ContainsKey(element.Name) ? row.RowData[element.Name] : string.Empty;
+                        if (element.Required && string.IsNullOrWhiteSpace(value))
+                        {
+                            validationErrors.Add($"{file.FileName}: {element.Label} is required");
+                        }
+                        else if (!string.IsNullOrWhiteSpace(value) && !element.ValidateValue(value, element.VarType))
+                        {
+                            validationErrors.Add($"{file.FileName}: {element.Label} - {element.ValidationError}");
+                        }
                     }
                 }
             }
@@ -78,15 +83,44 @@ namespace ModCreator.Windows
 
                 var filePath = Path.Combine(confPath, fileName);
                 
-                var jsonObject = new Dictionary<string, object>();
-                foreach (var element in file.Elements)
+                if (file.Rows.Count > 1)
                 {
-                    if (!string.IsNullOrWhiteSpace(element.Value))
-                        jsonObject[element.Name] = element.Value;
+                    var jsonArray = new List<Dictionary<string, object>>();
+                    
+                    foreach (var row in file.Rows)
+                    {
+                        var jsonObject = new Dictionary<string, object>();
+                        foreach (var element in file.Elements)
+                        {
+                            if (row.RowData.ContainsKey(element.Name) && !string.IsNullOrWhiteSpace(row.RowData[element.Name]))
+                                jsonObject[element.Name] = row.RowData[element.Name];
+                        }
+                        if (jsonObject.Count > 0)
+                            jsonArray.Add(jsonObject);
+                    }
+                    
+                    if (jsonArray.Count > 0)
+                    {
+                        var jsonContent = JsonConvert.SerializeObject(jsonArray, Formatting.Indented);
+                        FileHelper.WriteTextFile(filePath, jsonContent);
+                    }
                 }
+                else if (file.Rows.Count == 1)
+                {
+                    var jsonObject = new Dictionary<string, object>();
+                    var row = file.Rows[0];
+                    foreach (var element in file.Elements)
+                    {
+                        if (row.RowData.ContainsKey(element.Name) && !string.IsNullOrWhiteSpace(row.RowData[element.Name]))
+                            jsonObject[element.Name] = row.RowData[element.Name];
+                    }
 
-                var jsonContent = JsonConvert.SerializeObject(jsonObject, Formatting.Indented);
-                FileHelper.WriteTextFile(filePath, jsonContent);
+                    if (jsonObject.Count > 0)
+                    {
+                        var jsonContent = JsonConvert.SerializeObject(jsonObject, Formatting.Indented);
+                        FileHelper.WriteTextFile(filePath, jsonContent);
+                    }
+                }
             }
 
             projectEditorWindow.WindowData.LoadConfFiles();
@@ -114,15 +148,19 @@ namespace ModCreator.Windows
             var validationErrors = new List<string>();
             foreach (var file in WindowData.DisplayFiles)
             {
-                foreach (var element in file.Elements)
+                foreach (var row in file.Rows)
                 {
-                    if (element.Required && string.IsNullOrWhiteSpace(element.Value))
+                    foreach (var element in file.Elements)
                     {
-                        validationErrors.Add($"{file.FileName}: {element.Label} is required");
-                    }
-                    else if (!string.IsNullOrWhiteSpace(element.Value) && !element.ValidateValue(element.Value, element.VarType))
-                    {
-                        validationErrors.Add($"{file.FileName}: {element.Label} - {element.ValidationError}");
+                        var value = row.RowData.ContainsKey(element.Name) ? row.RowData[element.Name] : string.Empty;
+                        if (element.Required && string.IsNullOrWhiteSpace(value))
+                        {
+                            validationErrors.Add($"{file.FileName}: {element.Label} is required");
+                        }
+                        else if (!string.IsNullOrWhiteSpace(value) && !element.ValidateValue(value, element.VarType))
+                        {
+                            validationErrors.Add($"{file.FileName}: {element.Label} - {element.ValidationError}");
+                        }
                     }
                 }
             }
@@ -150,15 +188,44 @@ namespace ModCreator.Windows
                 if (!File.Exists(filePath))
                     continue;
 
-                var jsonObject = new Dictionary<string, object>();
-                foreach (var element in file.Elements)
+                if (file.Rows.Count > 1)
                 {
-                    if (!string.IsNullOrWhiteSpace(element.Value))
-                        jsonObject[element.Name] = element.Value;
+                    var jsonArray = new List<Dictionary<string, object>>();
+                    
+                    foreach (var row in file.Rows)
+                    {
+                        var jsonObject = new Dictionary<string, object>();
+                        foreach (var element in file.Elements)
+                        {
+                            if (row.RowData.ContainsKey(element.Name) && !string.IsNullOrWhiteSpace(row.RowData[element.Name]))
+                                jsonObject[element.Name] = row.RowData[element.Name];
+                        }
+                        if (jsonObject.Count > 0)
+                            jsonArray.Add(jsonObject);
+                    }
+                    
+                    if (jsonArray.Count > 0)
+                    {
+                        var jsonContent = JsonConvert.SerializeObject(jsonArray, Formatting.Indented);
+                        FileHelper.WriteTextFile(filePath, jsonContent);
+                    }
                 }
+                else if (file.Rows.Count == 1)
+                {
+                    var jsonObject = new Dictionary<string, object>();
+                    var row = file.Rows[0];
+                    foreach (var element in file.Elements)
+                    {
+                        if (row.RowData.ContainsKey(element.Name) && !string.IsNullOrWhiteSpace(row.RowData[element.Name]))
+                            jsonObject[element.Name] = row.RowData[element.Name];
+                    }
 
-                var jsonContent = JsonConvert.SerializeObject(jsonObject, Formatting.Indented);
-                FileHelper.WriteTextFile(filePath, jsonContent);
+                    if (jsonObject.Count > 0)
+                    {
+                        var jsonContent = JsonConvert.SerializeObject(jsonObject, Formatting.Indented);
+                        FileHelper.WriteTextFile(filePath, jsonContent);
+                    }
+                }
             }
 
             projectEditorWindow.WindowData.LoadConfFiles();
@@ -172,6 +239,23 @@ namespace ModCreator.Windows
         {
             DialogResult = false;
             Close();
+        }
+
+        private void AddRow_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is System.Windows.Controls.Button button && button.Tag is PatternFileDisplay file)
+            {
+                file.AddRow();
+            }
+        }
+
+        private void RemoveRow_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is System.Windows.Controls.Button button && button.Tag is RowDisplay row)
+            {
+                var file = WindowData.DisplayFiles.FirstOrDefault(f => f.Rows.Contains(row));
+                file?.RemoveRow(row);
+            }
         }
     }
 }

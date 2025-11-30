@@ -194,7 +194,9 @@
       "SelectPattern": "Select Pattern:",
       "PatternDetails": "Pattern Details",
       "Create": "Create",
-      "Cancel": "Cancel"
+      "Cancel": "Cancel",
+      "AddRow": "➕ Add Row",
+      "RemoveRow": "➖"
     }
   },
   "Messages": {

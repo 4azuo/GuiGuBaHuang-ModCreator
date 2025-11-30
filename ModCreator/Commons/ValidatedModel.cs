@@ -17,15 +17,7 @@ namespace ModCreator.Commons
 
         private static void LoadVarTypes()
         {
-            var json = ResourceHelper.ReadEmbeddedResource("ModCreator.Resources.var-types.json");
-            if (!string.IsNullOrEmpty(json))
-            {
-                _varTypes = Newtonsoft.Json.JsonConvert.DeserializeObject<List<VarType>>(json) ?? new List<VarType>();
-            }
-            else
-            {
-                _varTypes = new List<VarType>();
-            }
+            _varTypes = ResourceHelper.ReadEmbeddedResource<List<VarType>>("ModCreator.Resources.var-types.json");
         }
 
         public string ValidationError { get; set; }
