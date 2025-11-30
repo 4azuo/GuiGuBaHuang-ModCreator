@@ -15,17 +15,17 @@
     </Style>
 
     <!-- Standard TextBox -->
-    <Style TargetType="TextBox" x:Key="StandardTextBox" BasedOn="{StaticResource BaseTextBox}">
+    <Style TargetType="TextBox" BasedOn="{StaticResource BaseTextBox}">
         <Setter Property="Margin" Value="0,5"/>
     </Style>
 
     <!-- Search TextBox -->
-    <Style TargetType="TextBox" x:Key="SearchTextBox" BasedOn="{StaticResource BaseTextBox}">
+    <Style TargetType="TextBox" x:Key="SearchTextBox" BasedOn="{StaticResource {x:Type TextBox}}">
         <Setter Property="MinWidth" Value="150"/>
     </Style>
 
     <!-- Multiline TextBox -->
-    <Style TargetType="TextBox" x:Key="MultilineTextBox" BasedOn="{StaticResource BaseTextBox}">
+    <Style TargetType="TextBox" x:Key="MultilineTextBox" BasedOn="{StaticResource {x:Type TextBox}}">
         <Setter Property="AcceptsReturn" Value="True"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
         <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
@@ -34,7 +34,7 @@
     </Style>
 
     <!-- ReadOnly TextBox -->
-    <Style TargetType="TextBox" x:Key="ReadOnlyTextBox" BasedOn="{StaticResource BaseTextBox}">
+    <Style TargetType="TextBox" x:Key="ReadOnlyTextBox" BasedOn="{StaticResource {x:Type TextBox}}">
         <Setter Property="IsReadOnly" Value="True"/>
         <Setter Property="Background" Value="{StaticResource BackgroundColor}"/>
     </Style>

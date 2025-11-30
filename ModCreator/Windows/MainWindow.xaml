@@ -37,7 +37,7 @@
         <GroupBox Grid.Row="1" Header="{x:Static helper:MainWindowText.Workplace}" Margin="0,0,0,10">
             <DockPanel>
                 <Button Content="{x:Static helper:MainWindowText.Browse}" Click="BrowseWorkplace_Click" Style="{StaticResource ActionButton}" Width="80" DockPanel.Dock="Right" Margin="10,0,0,0"/>
-                <TextBox Text="{Binding WorkplacePath, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Style="{StaticResource StandardTextBox}" DockPanel.Dock="Left"/>
+                <TextBox Text="{Binding WorkplacePath, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" DockPanel.Dock="Left"/>
             </DockPanel>
         </GroupBox>
         <!-- Main Content -->

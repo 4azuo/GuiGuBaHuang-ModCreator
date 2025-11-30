@@ -6,6 +6,7 @@
         <ResourceDictionary Source="Buttons.xaml"/>
         <ResourceDictionary Source="TextBlocks.xaml"/>
         <ResourceDictionary Source="TextBoxes.xaml"/>
+        <ResourceDictionary Source="ComboBoxes.xaml"/>
         <ResourceDictionary Source="Containers.xaml"/>
         <ResourceDictionary Source="DataGrids.xaml"/>
         <ResourceDictionary Source="TabControls.xaml"/>

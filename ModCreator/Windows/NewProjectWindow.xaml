@@ -12,11 +12,11 @@
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0">
                 <TextBlock Text="{x:Static helper:NewProjectWindowText.ProjectFieldAuthor}" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
-                <TextBox Text="{Binding Author, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource StandardTextBox}" Height="32"/>
+                <TextBox Text="{Binding Author, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="32"/>
             </StackPanel>
             <StackPanel Grid.Row="1">
                 <TextBlock Text="{x:Static helper:NewProjectWindowText.ProjectFieldName}" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>
-                <TextBox Text="{Binding ProjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource StandardTextBox}" Height="32"/>
+                <TextBox Text="{Binding ProjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="32"/>
             </StackPanel>
             <StackPanel Grid.Row="2">
                 <TextBlock Text="{x:Static helper:NewProjectWindowText.ProjectFieldDescription}" Style="{StaticResource LabelText}" Margin="0,0,0,4"/>

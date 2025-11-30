@@ -13,7 +13,7 @@
         <Grid Grid.Row="1" Margin="16">
             <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="10"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
             <TextBlock Grid.Row="0" Text="{Binding Label}" FontSize="13" FontWeight="SemiBold"/>
-            <TextBox Grid.Row="2" Name="txtInput" Text="{Binding InputValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource StandardTextBox}"/>
+            <TextBox Grid.Row="2" Name="txtInput" Text="{Binding InputValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="12">
             <Button Content="{x:Static helper:InputWindowText.OK}" Click="OK_Click" Style="{StaticResource PrimaryButton}" Width="100" IsDefault="True"/>
