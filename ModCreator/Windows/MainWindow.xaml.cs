@@ -157,6 +157,42 @@ namespace ModCreator
                 WindowData.DeleteProject(folderExists && result == MessageBoxResult.Yes);
         }
 
+        private void Build_Click(object sender, RoutedEventArgs e)
+        {
+            if (WindowData.SelectedProject == null) return;
+            WindowData.BuildProject();
+        }
+
+        private void DeployToSteamWorkshop_Click(object sender, RoutedEventArgs e)
+        {
+            if (WindowData.SelectedProject == null) return;
+            WindowData.DeployProject();
+        }
+
+        private void CopyToModExportData_Click(object sender, RoutedEventArgs e)
+        {
+            if (WindowData.SelectedProject == null) return;
+            WindowData.CopyToModExportData();
+        }
+
+        [SupportedOSPlatform("windows6.1")]
+        private void Publish_Click(object sender, RoutedEventArgs e)
+        {
+            if (WindowData.SelectedProject == null) return;
+            
+            using (var dialog = new SaveFileDialog())
+            {
+                dialog.FileName = $"Mod_{WindowData.SelectedProject.ProjectId}.zip";
+                dialog.Filter = "ZIP Archive|*.zip";
+                dialog.Title = "Publish Mod";
+                
+                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    WindowData.PublishProject(dialog.FileName);
+                }
+            }
+        }
+
         [SupportedOSPlatform("windows6.1")]
         private void BrowseWorkplace_Click(object sender, RoutedEventArgs e)
         {
@@ -192,35 +228,17 @@ namespace ModCreator
 
         private void GridOpenFolder_Click(object sender, RoutedEventArgs e)
         {
-            var button = sender as System.Windows.Controls.Button;
-            var project = button?.DataContext as ModProject;
-            if (project != null)
-            {
-                WindowData.SelectedProject = project;
-                OpenFolder_Click(sender, e);
-            }
+            OpenFolder_Click(sender, e);
         }
 
         private void GridEditProject_Click(object sender, RoutedEventArgs e)
         {
-            var button = sender as System.Windows.Controls.Button;
-            var project = button?.DataContext as ModProject;
-            if (project != null)
-            {
-                WindowData.SelectedProject = project;
-                EditProject_Click(sender, e);
-            }
+            EditProject_Click(sender, e);
         }
 
         private void GridDeleteProject_Click(object sender, RoutedEventArgs e)
         {
-            var button = sender as System.Windows.Controls.Button;
-            var project = button?.DataContext as ModProject;
-            if (project != null)
-            {
-                WindowData.SelectedProject = project;
-                DeleteProject_Click(sender, e);
-            }
+            DeleteProject_Click(sender, e);
         }
 
         #endregion

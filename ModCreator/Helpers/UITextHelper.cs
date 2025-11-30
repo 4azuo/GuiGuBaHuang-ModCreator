@@ -42,6 +42,10 @@ namespace ModCreator.Helpers
         public static string OpenFolder => MessageHelper.Get("Windows.MainWindow.OpenFolder");
         public static string EditInfo => MessageHelper.Get("Windows.MainWindow.EditInfo");
         public static string RemoveProject => MessageHelper.Get("Windows.MainWindow.RemoveProject");
+        public static string Build => MessageHelper.Get("Windows.MainWindow.Build");
+        public static string DeployToSteamWorkshop => MessageHelper.Get("Windows.MainWindow.DeployToSteamWorkshop");
+        public static string CopyToModExportData => MessageHelper.Get("Windows.MainWindow.CopyToModExportData");
+        public static string Publish => MessageHelper.Get("Windows.MainWindow.Publish");
         public static string Info => MessageHelper.Get("Windows.MainWindow.Info");
         public static string TotalProjects => MessageHelper.Get("Windows.MainWindow.TotalProjects");
         public static string Template => MessageHelper.Get("Windows.MainWindow.Template");

@@ -1,7 +1,8 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace ModCreator.Helpers
 {
@@ -19,6 +20,36 @@ namespace ModCreator.Helpers
             var random = new Random();
             return new string(Enumerable.Repeat(chars, 6)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        /// <summary>
+        /// Attempts to delete the specified folder and its contents, retrying multiple times if necessary.
+        /// </summary>
+        public static bool DeleteFolderSafe(string path, int retry = 5, int delayMs = 200)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+                return false;
+
+            if (!Directory.Exists(path))
+                return true;
+
+            for (int i = 0; i < retry; i++)
+            {
+                try
+                {
+                    Directory.Delete(path, recursive: true);
+
+                    // Nếu xóa thành công
+                    if (!Directory.Exists(path))
+                        return true;
+                }
+                catch (Exception)
+                {
+                    Thread.Sleep(delayMs);
+                }
+            }
+
+            return false;
         }
 
         /// <summary>

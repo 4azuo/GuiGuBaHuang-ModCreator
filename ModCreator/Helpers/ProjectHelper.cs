@@ -84,12 +84,6 @@ namespace ModCreator.Helpers
                 throw new InvalidOperationException($"Project directory already exists: {projectPath}");
             }
 
-            // Copy template
-            FileHelper.CopyDirectory(templatePath, projectPath);
-
-            // Apply replacements based on project-replacements.json
-            ApplyProjectReplacements(projectPath, projectId);
-
             // Create project object
             var project = new ModProject
             {
@@ -112,13 +106,19 @@ namespace ModCreator.Helpers
                 ]
             };
 
+            // Copy template
+            FileHelper.CopyDirectory(templatePath, projectPath);
+
+            // Apply replacements based on project-replacements.json
+            ApplyProjectReplacements(projectPath, project);
+
             return project;
         }
 
         /// <summary>
         /// Apply replacements to project files based on project-replacements.json
         /// </summary>
-        private static void ApplyProjectReplacements(string projectPath, string projectId)
+        private static void ApplyProjectReplacements(string projectPath, ModProject project)
         {
             try
             {
@@ -168,7 +168,7 @@ namespace ModCreator.Helpers
                         var propertyPath = kvp.Value; // e.g., "ModCreator.Models.ModProject.ProjectId"
                         
                         // Get the replacement value based on property path
-                        var replacementValue = GetReplacementValue(propertyPath, projectId);
+                        var replacementValue = GetReplacementValue(propertyPath, project);
                         
                         // Replace in content
                         content = content.Replace(placeholder, replacementValue);
@@ -187,17 +187,21 @@ namespace ModCreator.Helpers
         /// <summary>
         /// Get replacement value based on property path
         /// </summary>
-        private static string GetReplacementValue(string propertyPath, string projectId)
+        private static string GetReplacementValue(string propertyPath, ModProject project)
         {
-            // Property path format: "ModCreator.Models.ModProject.ProjectId"
-            // For now, we only support ProjectId
-            if (propertyPath.EndsWith(".ProjectId"))
+            var value = propertyPath switch
             {
-                return projectId;
+                "Constants.SteamWorkshopDir" => Constants.SteamWorkshopDir,
+                _ => project.GetValue(propertyPath, true).Parse<string>() ?? string.Empty
+            };
+
+            // Format backslashes for file paths/URLs in string literals
+            if (!string.IsNullOrEmpty(value) && value.Contains('\\'))
+            {
+                value = value.Replace("\\", "\\\\");
             }
 
-            // Add more property mappings as needed
-            return string.Empty;
+            return value;
         }
 
         /// <summary>
@@ -219,7 +223,7 @@ namespace ModCreator.Helpers
 
             if (deleteFiles && Directory.Exists(project.ProjectPath))
             {
-                Directory.Delete(project.ProjectPath, true);
+                FileHelper.DeleteFolderSafe(project.ProjectPath);
             }
         }
 

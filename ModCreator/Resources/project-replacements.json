@@ -1,14 +1,17 @@
 {
-    "Position": [
-        ".vscode/settings.json",
-        "ModProject/ModCode/ModMain/ModMain.cs",
-        "ModProject/ModCode/ModMain/ModMain.csproj",
-        "ModProject/ModData.cache",
-        "ModProject/ModProject.cache"
-    ],
-    "KeyValues": {
-        "#PROJECTID#": "ModCreator.Models.ModProject.ProjectId",
-        "#PROJECTPATH#": "ModCreator.Models.ModProject.ProjectPath",
-        "#STEAMWORKSHOPPATH#": "Constants.SteamWorkshopDir"
-    }
+  "Position": [
+    ".vscode/settings.json",
+    "ModProject/ModCode/ModMain/ModMain.cs",
+    "ModProject/ModCode/ModMain/ModMain.csproj",
+    "ModProject/ModData.cache",
+    "ModProject/ModProject.cache"
+  ],
+  "KeyValues": {
+    "#PROJECTID#": "ProjectId",
+    "#PROJECTNAME#": "ProjectName",
+    "#PROJECTPATH#": "ProjectPath",
+    "#PROJECTAUTHOR#": "Author",
+    "#PROJECTDESC#": "Description",
+    "#STEAMWORKSHOPPATH#": "Constants.SteamWorkshopDir"
+  }
 }

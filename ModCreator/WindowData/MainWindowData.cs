@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 
@@ -166,6 +167,183 @@ namespace ModCreator.WindowData
             Properties.Settings.Default.WorkplacePath = WorkplacePath;
             Properties.Settings.Default.Save();
             StatusMessage = MessageHelper.GetFormat("Messages.Success.WorkplacePathSaved", WorkplacePath);
+        }
+
+        public void BuildProject()
+        {
+            if (SelectedProject == null) return;
+
+            var scriptPath = Path.Combine(SelectedProject.ProjectPath, ".vscode", "rebuild-project.ps1");
+            if (!File.Exists(scriptPath))
+            {
+                System.Windows.MessageBox.Show(
+                    MessageHelper.GetFormat("Messages.Error.BuildScriptNotFound", scriptPath),
+                    MessageHelper.Get("Messages.Error.Title"),
+                    System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Error);
+                return;
+            }
+
+            var processInfo = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = $"-NoProfile -ExecutionPolicy Bypass -NoExit -File \"{scriptPath}\"",
+                UseShellExecute = true,
+                WorkingDirectory = SelectedProject.ProjectPath
+            };
+
+            var process = System.Diagnostics.Process.Start(processInfo);
+            StatusMessage = MessageHelper.Get("Messages.Success.ProjectBuilt");
+        }
+
+        public void DeployProject()
+        {
+            if (SelectedProject == null) return;
+
+            var scriptPath = Path.Combine(SelectedProject.ProjectPath, ".vscode", "rebuild-and-deploy.ps1");
+            if (!File.Exists(scriptPath))
+            {
+                System.Windows.MessageBox.Show(
+                    MessageHelper.GetFormat("Messages.Error.DeployScriptNotFound", scriptPath),
+                    MessageHelper.Get("Messages.Error.Title"),
+                    System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Error);
+                return;
+            }
+
+            var processInfo = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = $"-NoProfile -ExecutionPolicy Bypass -NoExit -File \"{scriptPath}\"",
+                UseShellExecute = true,
+                WorkingDirectory = SelectedProject.ProjectPath
+            };
+
+            var process = System.Diagnostics.Process.Start(processInfo);
+            StatusMessage = MessageHelper.Get("Messages.Success.ProjectDeployed");
+        }
+
+        public void PublishProject(string targetPath)
+        {
+            if (SelectedProject == null) return;
+
+            var scriptPath = Path.Combine(SelectedProject.ProjectPath, ".vscode", "rebuild-project.ps1");
+            if (!File.Exists(scriptPath))
+            {
+                System.Windows.MessageBox.Show(
+                    MessageHelper.GetFormat("Messages.Error.BuildScriptNotFound", scriptPath),
+                    MessageHelper.Get("Messages.Error.Title"),
+                    System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Error);
+                return;
+            }
+
+            var processInfo = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = $"-NoProfile -ExecutionPolicy Bypass -File \"{scriptPath}\"",
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                WorkingDirectory = SelectedProject.ProjectPath
+            };
+
+            var process = System.Diagnostics.Process.Start(processInfo);
+            process.WaitForExit();
+                    
+            if (process.ExitCode != 0)
+            {
+                System.Windows.MessageBox.Show(
+                    MessageHelper.Get("Messages.Error.BuildFailed"),
+                    MessageHelper.Get("Messages.Error.Title"),
+                    System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Error);
+                return;
+            }
+
+            var sourceFolder = Path.Combine(SelectedProject.ProjectPath, "debug", $"Mod_{SelectedProject.ProjectId}");
+            if (!Directory.Exists(sourceFolder))
+            {
+                System.Windows.MessageBox.Show(
+                    MessageHelper.GetFormat("Messages.Error.PublishSourceNotFound", sourceFolder),
+                    MessageHelper.Get("Messages.Error.Title"),
+                    System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Error);
+                return;
+            }
+
+            if (File.Exists(targetPath))
+                File.Delete(targetPath);
+
+            System.IO.Compression.ZipFile.CreateFromDirectory(sourceFolder, targetPath, System.IO.Compression.CompressionLevel.Optimal, false);
+            StatusMessage = MessageHelper.GetFormat("Messages.Success.ProjectPublished", targetPath);
+            System.Windows.MessageBox.Show(
+                MessageHelper.GetFormat("Messages.Success.ProjectPublished", targetPath),
+                MessageHelper.Get("Messages.Success.Title"),
+                System.Windows.MessageBoxButton.OK,
+                System.Windows.MessageBoxImage.Information);
+        }
+
+        public void CopyToModExportData()
+        {
+            if (SelectedProject == null) return;
+
+            var scriptPath = Path.Combine(SelectedProject.ProjectPath, ".vscode", "rebuild-project.ps1");
+            if (!File.Exists(scriptPath))
+            {
+                System.Windows.MessageBox.Show(
+                    MessageHelper.GetFormat("Messages.Error.BuildScriptNotFound", scriptPath),
+                    MessageHelper.Get("Messages.Error.Title"),
+                    System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Error);
+                return;
+            }
+
+            var processInfo = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = $"-NoProfile -ExecutionPolicy Bypass -File \"{scriptPath}\"",
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                WorkingDirectory = SelectedProject.ProjectPath
+            };
+
+            var process = System.Diagnostics.Process.Start(processInfo);
+            process.WaitForExit();
+                
+            if (process.ExitCode != 0)
+            {
+                System.Windows.MessageBox.Show(
+                    MessageHelper.Get("Messages.Error.BuildFailed"),
+                    MessageHelper.Get("Messages.Error.Title"),
+                    System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Error);
+                return;
+            }
+
+            var sourceFolder = Path.Combine(SelectedProject.ProjectPath, "debug", $"Mod_{SelectedProject.ProjectId}");
+            if (!Directory.Exists(sourceFolder))
+            {
+                System.Windows.MessageBox.Show(
+                    MessageHelper.GetFormat("Messages.Error.PublishSourceNotFound", sourceFolder),
+                    MessageHelper.Get("Messages.Error.Title"),
+                    System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Error);
+                return;
+            }
+
+            var targetFolder = Path.Combine(Constants.GameFolderPath, "ModExportData", $"Mod_{SelectedProject.ProjectId}");
+                
+            if (Directory.Exists(targetFolder))
+                Directory.Delete(targetFolder, true);
+
+            FileHelper.CopyDirectory(sourceFolder, targetFolder);
+                
+            StatusMessage = MessageHelper.GetFormat("Messages.Success.CopiedToModExportData", targetFolder);
+            System.Windows.MessageBox.Show(
+                MessageHelper.GetFormat("Messages.Success.CopiedToModExportData", targetFolder),
+                MessageHelper.Get("Messages.Success.Title"),
+                System.Windows.MessageBoxButton.OK,
+                System.Windows.MessageBoxImage.Information);
         }
     }
 }

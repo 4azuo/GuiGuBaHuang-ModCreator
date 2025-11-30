@@ -36,6 +36,10 @@
       "OpenFolder": "Open Folder",
       "EditInfo": "Edit Info",
       "RemoveProject": "Remove Project",
+      "Build": "Build",
+      "DeployToSteamWorkshop": "Build & Deploy to SteamWorkshop",
+      "CopyToModExportData": "Copy to ModExportData",
+      "Publish": "Publish",
       "Info": "Info",
       "TotalProjects": "Total Projects:",
       "Template": "Double-click to edit project",
@@ -217,7 +221,11 @@
       "ModEventSaved": "ModEvent saved successfully!",
       "GeneratedCode": "Variables code generated successfully!\n\nOutput file: {0}",
       "ReplacedOccurrences": "Replaced {0} occurrence(s)",
-      "PatternCreated": "Pattern '{0}' created successfully!"
+      "PatternCreated": "Pattern '{0}' created successfully!",
+      "ProjectBuilt": "Project built successfully!",
+      "ProjectDeployed": "Project deployed to SteamWorkshop successfully!",
+      "CopiedToModExportData": "Project built and copied to ModExportData successfully!\n{0}",
+      "ProjectPublished": "Project published successfully to:\n{0}"
     },
     "Error": {
       "Title": "Error",
@@ -240,7 +248,14 @@
       "CompleteExistingVariable": "Please complete the existing variable with empty name before adding a new one!",
       "NoVariablesToGenerate": "No variables to generate. Please add variables first.",
       "AllVariablesMustHaveNames": "All variables must have names. Please complete all variables before generating code.",
-      "NoProject": "No project is open!"
+      "NoProject": "No project is open!",
+      "BuildScriptNotFound": "Build script not found: {0}",
+      "BuildFailed": "Build failed! Check the terminal output for details.",
+      "DeployScriptNotFound": "Deploy script not found: {0}",
+      "DeployFailed": "Deploy failed! Check the terminal output for details.",
+      "PublishSourceNotFound": "Publish source folder not found: {0}",
+      "PublishFailed": "Failed to publish project: {0}",
+      "CopyFailed": "Failed to copy to ModExportData: {0}"
     },
     "Warning": {
       "Title": "Warning",

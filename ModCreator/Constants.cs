@@ -18,6 +18,11 @@ namespace ModCreator
         /// Steam Workshop directory
         /// </summary>
         public static string SteamWorkshopDir => SettingHelper.TryGet("steamWorkshopDir", @"C:/Program Files (x86)/Steam/steamapps/workshop/content/1468810");
+
+        /// <summary>
+        /// Game folder directory
+        /// </summary>
+        public static string GameFolderPath => SettingHelper.TryGet("gameFolderPath", @"C:/Program Files (x86)/Steam/steamapps/common/鬼谷八荒");
         
         /// <summary>
         /// Documentation directory (.github/docs)

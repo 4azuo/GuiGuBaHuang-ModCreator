@@ -174,17 +174,7 @@
                                 <TextBlock Text="{Binding Description, Mode=OneWay}" TextWrapping="Wrap" Margin="5"/>
                             </StackPanel>
                             <Border BorderBrush="#CCCCCC" BorderThickness="1" Margin="0,10,0,0" CornerRadius="3">
-                                <Image Source="{Binding TitleImg, Mode=OneWay, Converter={StaticResource FilePathToImageConverter}}" Stretch="Uniform" MaxHeight="300" Margin="5">
-                                    <Image.Style>
-                                        <Style TargetType="Image">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding TitleImg, Converter={StaticResource FilePathToImageConverter}}" Value="{x:Null}">
-                                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Image.Style>
-                                </Image>
+                                <Image Source="{Binding TitleImg, Mode=OneWay, Converter={StaticResource FilePathToImageConverter}}" Stretch="Uniform" MaxHeight="300" Margin="5"/>
                             </Border>
                         </StackPanel>
                     </StackPanel>
@@ -193,6 +183,11 @@
                     <StackPanel x:Name="pnlActions" IsEnabled="{Binding IsSelectedProjectValid}">
                         <Button Content="{x:Static helper:MainWindowText.OpenFolder}" Click="OpenFolder_Click" Margin="5"/>
                         <Button Content="{x:Static helper:MainWindowText.EditInfo}" Click="EditProject_Click" Margin="5"/>
+                        <Separator Margin="5,10"/>
+                        <Button Content="{x:Static helper:MainWindowText.Build}" Click="Build_Click" Margin="5" Background="#FF4CAF50" Foreground="White"/>
+                        <Button Content="{x:Static helper:MainWindowText.DeployToSteamWorkshop}" Click="DeployToSteamWorkshop_Click" Margin="5" Background="#FF2196F3" Foreground="White"/>
+                        <Button Content="{x:Static helper:MainWindowText.CopyToModExportData}" Click="CopyToModExportData_Click" Margin="5" Background="#FF9C27B0" Foreground="White"/>
+                        <Button Content="{x:Static helper:MainWindowText.Publish}" Click="Publish_Click" Margin="5" Background="#FFFF9800" Foreground="White"/>
                         <Separator Margin="5,10"/>
                         <Button Content="{x:Static helper:MainWindowText.RemoveProject}" Click="DeleteProject_Click" Margin="5"/>
                     </StackPanel>

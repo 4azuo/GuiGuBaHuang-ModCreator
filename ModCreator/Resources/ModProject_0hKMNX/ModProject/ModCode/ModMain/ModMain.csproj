@@ -32,7 +32,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ModMain.cs" />
-    <Compile Include="Mod\EventTemplate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -655,4 +654,16 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+		rd "$(ProjectDir)obj" /s /q
+		rd "$(ProjectDir)\..\..\..\debug\Mod_#PROJECTID#\ModCode\dll" /s /q
+		rd "$(ProjectDir)\..\..\..\debug\Mod_#PROJECTID#\ModConf" /s /q
+		rd "$(ProjectDir)\..\..\..\debug\Mod_#PROJECTID#\ModImg" /s /q
+		xcopy "$(ProjectDir)\CodeArtifacts\*.dll" "$(ProjectDir)\..\..\..\debug\Mod_#PROJECTID#\ModCode\dll\" /y /i
+		xcopy "$(ProjectDir)\bin\Release\*.dll" "$(ProjectDir)\..\..\..\debug\Mod_#PROJECTID#\ModCode\dll\" /y /i
+		xcopy "$(ProjectDir)\..\..\ModConf\*.*" "$(ProjectDir)\..\..\..\debug\Mod_#PROJECTID#\ModConf\" /y /i /e /h /c
+		xcopy "$(ProjectDir)\..\..\ModImg\*.*" "$(ProjectDir)\..\..\..\debug\Mod_#PROJECTID#\ModImg\" /y /i /e /h /c
+	</PostBuildEvent>
+  </PropertyGroup>
 </Project>
