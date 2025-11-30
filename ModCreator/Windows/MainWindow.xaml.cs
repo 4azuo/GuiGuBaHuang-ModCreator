@@ -113,7 +113,7 @@ namespace ModCreator
                     MessageHelper.Get("Messages.Error.Title"),
                     MessageBoxButton.OK,
                     MessageBoxImage.Warning);
-                WindowData.StatusMessage = "Project folder not found";
+                WindowData.StatusMessage = MessageHelper.Get("Messages.Success.ProjectFolderNotFound");
                 return;
             }
             WindowData.OpenProjectFolder();
@@ -130,7 +130,7 @@ namespace ModCreator
                     MessageHelper.Get("Messages.Error.Title"),
                     MessageBoxButton.OK,
                     MessageBoxImage.Warning);
-                WindowData.StatusMessage = "Project folder not found";
+                WindowData.StatusMessage = MessageHelper.Get("Messages.Success.ProjectFolderNotFound");
                 return;
             }
             
@@ -140,7 +140,7 @@ namespace ModCreator
                 ProjectToEdit = WindowData.SelectedProject
             };
             editorWindow.Show();
-            WindowData.StatusMessage = $"Opening project editor for {WindowData.SelectedProject.ProjectName}";
+            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.OpeningProjectEditor", WindowData.SelectedProject.ProjectName);
         }
 
         private void DeleteProject_Click(object sender, RoutedEventArgs e)
@@ -166,21 +166,21 @@ namespace ModCreator
         {
             if (WindowData.SelectedProject == null) return;
             WindowData.BuildProject();
-            WindowData.StatusMessage = "Building project...";
+            WindowData.StatusMessage = MessageHelper.Get("Messages.Success.BuildingProject");
         }
 
         private void DeployToSteamWorkshop_Click(object sender, RoutedEventArgs e)
         {
             if (WindowData.SelectedProject == null) return;
             WindowData.DeployProject();
-            WindowData.StatusMessage = "Deploying to Steam Workshop...";
+            WindowData.StatusMessage = MessageHelper.Get("Messages.Success.DeployingToSteamWorkshop");
         }
 
         private void CopyToModExportData_Click(object sender, RoutedEventArgs e)
         {
             if (WindowData.SelectedProject == null) return;
             WindowData.CopyToModExportData();
-            WindowData.StatusMessage = "Copying to ModExportData...";
+            WindowData.StatusMessage = MessageHelper.Get("Messages.Success.CopyingToModExportData");
         }
 
         [SupportedOSPlatform("windows6.1")]

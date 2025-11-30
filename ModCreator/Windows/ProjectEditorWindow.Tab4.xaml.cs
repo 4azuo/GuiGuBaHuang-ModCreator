@@ -46,7 +46,7 @@ namespace ModCreator.Windows
         {
             if (WindowData.GlobalVariables.Any(v => string.IsNullOrWhiteSpace(v.Name)))
             {
-                MessageBox.Show("Please complete the existing variable with empty name before adding a new one!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.Get("Messages.Error.CompleteExistingVariable"), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -57,7 +57,7 @@ namespace ModCreator.Windows
                 Value = "",
                 Description = ""
             });
-            WindowData.StatusMessage = "Added new variable";
+            WindowData.StatusMessage = MessageHelper.Get("Messages.Success.AddedNewVariable");
         }
 
         private void DataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
@@ -71,7 +71,7 @@ namespace ModCreator.Windows
             if (string.IsNullOrWhiteSpace(variable.Name))
             {
                 e.Cancel = true;
-                MessageBox.Show("Variable name cannot be empty!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.Get("Messages.Error.EmptyVariableName"), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 
                 if (string.IsNullOrWhiteSpace(variable.Type) && string.IsNullOrWhiteSpace(variable.Value) && string.IsNullOrWhiteSpace(variable.Description))
                     WindowData.GlobalVariables.Remove(variable);
@@ -82,7 +82,7 @@ namespace ModCreator.Windows
             if (!System.CodeDom.Compiler.CodeGenerator.IsValidLanguageIndependentIdentifier(variable.Name))
             {
                 e.Cancel = true;
-                MessageBox.Show($"Variable name '{variable.Name}' is not a valid C# identifier!\nUse only letters, digits, and underscores. Must start with a letter or underscore.", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.GetFormat("Messages.Error.VariableNameInvalidIdentifier", variable.Name), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -91,7 +91,7 @@ namespace ModCreator.Windows
             if (duplicates.Any())
             {
                 e.Cancel = true;
-                MessageBox.Show($"Variable name '{variable.Name}' already exists!\nPlease use a unique name.", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.GetFormat("Messages.Error.VariableNameDuplicate", variable.Name), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -99,7 +99,7 @@ namespace ModCreator.Windows
             if (string.IsNullOrWhiteSpace(variable.Type))
             {
                 e.Cancel = true;
-                MessageBox.Show("Variable type cannot be empty!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.Get("Messages.Error.EmptyVariableType"), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -109,7 +109,7 @@ namespace ModCreator.Windows
                 if (!variable.ValidateValue(variable.Value, variable.Type))
                 {
                     e.Cancel = true;
-                    MessageBox.Show($"Invalid value for type '{variable.Type}'!\n\nError: {variable.ValidationError}", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show(MessageHelper.GetFormat("Messages.Error.InvalidValueForType", variable.Type, variable.ValidationError), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
             }
@@ -216,9 +216,9 @@ namespace ModCreator.Windows
             
             Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
             File.WriteAllText(outputPath, generatedCode);
-            WindowData.StatusMessage = $"Generated variables code: {WindowData.GlobalVariables.Count} variables";
+            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.GeneratedVariablesCode", WindowData.GlobalVariables.Count);
 
-            MessageBox.Show($"Variables code generated successfully!\n\nOutput file: {outputPath}", MessageHelper.Get("Messages.Info.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(MessageHelper.GetFormat("Messages.Success.VariablesCodeGenerated", outputPath), MessageHelper.Get("Messages.Info.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         /// <summary>
@@ -278,7 +278,7 @@ namespace ModCreator.Windows
             else
                 WindowData.GlobalVariables.Add(clonedVar);
             
-            WindowData.StatusMessage = $"Cloned variable: {variable.Name}";
+            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.ClonedVariable", variable.Name);
         }
 
         private void RemoveVariable_Click(object sender, RoutedEventArgs e)
@@ -286,12 +286,12 @@ namespace ModCreator.Windows
             var variable = (sender as Button)?.Tag as GlobalVariable;
             if (variable == null) return;
 
-            var result = MessageBox.Show($"Are you sure you want to remove variable '{variable.Name}'?", "Confirm Remove", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            var result = MessageBox.Show(MessageHelper.GetFormat("Messages.Confirmation.RemoveVariable", variable.Name), MessageHelper.Get("Messages.Confirmation.Title"), MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (result == MessageBoxResult.Yes)
             {
                 WindowData.GlobalVariables.Remove(variable);
-                WindowData.StatusMessage = $"Removed variable: {variable.Name}";
+                WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.RemovedVariable", variable.Name);
             }
         }
 
@@ -312,7 +312,7 @@ namespace ModCreator.Windows
             btnGrid.Foreground = Brushes.White;
             btnSource.Background = Brushes.White;
             btnSource.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF666666"));
-            WindowData.StatusMessage = "Switched to grid view";
+            WindowData.StatusMessage = MessageHelper.Get("Messages.Success.SwitchedToGridView");
         }
 
         [SupportedOSPlatform("windows7.0")]
@@ -334,7 +334,7 @@ namespace ModCreator.Windows
             btnSource.Foreground = Brushes.White;
             btnGrid.Background = Brushes.White;
             btnGrid.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF666666"));
-            WindowData.StatusMessage = "Switched to source view";
+            WindowData.StatusMessage = MessageHelper.Get("Messages.Success.SwitchedToSourceView");
         }
     }
 }

@@ -20,7 +20,7 @@ namespace ModCreator.WindowData
             if (Project == null) return;
 
             Project.GlobalVariables = new List<GlobalVariable>(GlobalVariables);
-            StatusMessage = $"Saved {GlobalVariables.Count} global variable(s)";
+            StatusMessage = MessageHelper.GetFormat("Messages.Success.SavedGlobalVariables", GlobalVariables.Count);
         }
     }
 }

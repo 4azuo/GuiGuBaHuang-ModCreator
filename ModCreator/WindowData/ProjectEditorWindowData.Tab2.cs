@@ -1,4 +1,5 @@
 using ModCreator.Attributes;
+using ModCreator.Helpers;
 using ModCreator.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -140,7 +141,7 @@ namespace ModCreator.WindowData
 
             var filePath = Path.Combine(Project.ProjectPath, "ModProject", "ModConf", SelectedConfFile);
             File.WriteAllText(filePath, SelectedConfContent);
-            StatusMessage = $"Saved configuration file: {SelectedConfFile}";
+            StatusMessage = MessageHelper.GetFormat("Messages.Success.SavedConfigurationFile", SelectedConfFile);
         }
     }
 }

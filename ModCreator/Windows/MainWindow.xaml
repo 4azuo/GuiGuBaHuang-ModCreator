@@ -51,7 +51,7 @@
                     <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
                         <Button Content="{x:Static helper:MainWindowText.CreateNewProject}" Style="{StaticResource PrimaryButton}" Click="CreateProject_Click" Foreground="White"/>
                         <Button Content="{x:Static helper:MainWindowText.RefreshList}" Style="{StaticResource ActionButton}" Click="RefreshProjects_Click"/>
-                        <TextBlock Grid.Column="0" Text="🔍" FontSize="16" VerticalAlignment="Center" Margin="40,0,10,0"/>
+                        <TextBlock Grid.Column="0" Text="{x:Static helper:MainWindowText.SearchIcon}" FontSize="16" VerticalAlignment="Center" Margin="40,0,10,0"/>
                         <TextBox Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="200" Margin="5" VerticalContentAlignment="Center">
                             <TextBox.Style>
                                 <Style TargetType="TextBox">

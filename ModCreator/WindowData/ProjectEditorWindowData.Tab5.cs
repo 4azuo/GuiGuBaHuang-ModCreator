@@ -174,7 +174,7 @@ namespace ModCreator.WindowData
 
             var content = IsGuiMode ? GenerateModEventCode(SelectedModEvent) : EventSourceContent;
             File.WriteAllText(SelectedModEvent.FilePath, content);
-            StatusMessage = $"Saved mod event: {Path.GetFileName(SelectedModEvent.FilePath)}";
+            StatusMessage = MessageHelper.GetFormat("Messages.Success.SavedModEventFile", Path.GetFileName(SelectedModEvent.FilePath));
         }
 
         public string GenerateModEventCode(ModEventItem modEvent)

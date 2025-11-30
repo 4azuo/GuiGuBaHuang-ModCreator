@@ -55,13 +55,13 @@ namespace ModCreator.Windows
 
             if (string.IsNullOrWhiteSpace(folderName))
             {
-                MessageBox.Show("Folder name cannot be empty!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.Get("Messages.Error.FolderNameEmpty"), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (folderName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
             {
-                MessageBox.Show("Folder name contains invalid characters!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.Get("Messages.Error.FolderNameInvalidChars"), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -69,14 +69,14 @@ namespace ModCreator.Windows
 
             if (Directory.Exists(newFolderPath))
             {
-                MessageBox.Show($"A folder with the name '{folderName}' already exists!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.GetFormat("Messages.Error.FolderAlreadyExists", folderName), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             Directory.CreateDirectory(newFolderPath);
             WindowData.LoadModEventFiles();
-            WindowData.StatusMessage = $"Created ModEvent folder: {folderName}";
-            MessageBox.Show($"Folder '{folderName}' created successfully!", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
+            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.CreatedModEventFolder", folderName);
+            MessageBox.Show(MessageHelper.GetFormat("Messages.Success.FolderCreated", folderName), MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void DeleteModEventFolder_Click(object sender, RoutedEventArgs e)
@@ -88,24 +88,24 @@ namespace ModCreator.Windows
 
             if (!Directory.Exists(folderPath))
             {
-                MessageBox.Show($"Folder '{folderName}' does not exist!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.GetFormat("Messages.Error.FolderDoesNotExist", folderName), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 WindowData.LoadModEventFiles();
                 return;
             }
 
             var hasContents = Directory.GetFileSystemEntries(folderPath).Length > 0;
             var warningMessage = hasContents
-                ? $"Are you sure you want to delete folder '{folderName}' and all its contents?"
-                : $"Are you sure you want to delete folder '{folderName}'?";
+                ? MessageHelper.GetFormat("Messages.Confirmation.DeleteFolder", folderName)
+                : MessageHelper.GetFormat("Messages.Confirmation.DeleteFolderEmpty", folderName);
 
-            var result = MessageBox.Show(warningMessage, "Delete Folder", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            var result = MessageBox.Show(warningMessage, MessageHelper.Get("Messages.Confirmation.Title"), MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (result == MessageBoxResult.Yes)
             {
                 Directory.Delete(folderPath, true);
                 WindowData.LoadModEventFiles();
-                WindowData.StatusMessage = $"Deleted ModEvent folder: {folderName}";
-                MessageBox.Show($"Folder '{folderName}' deleted successfully!", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
+                WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.DeletedModEventFolder", folderName);
+                MessageBox.Show(MessageHelper.GetFormat("Messages.Success.FolderDeleted", folderName), MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -184,7 +184,7 @@ namespace ModCreator.Windows
 
             File.WriteAllText(filePath, WindowData.GenerateModEventCode(newEvent));
             WindowData.LoadModEventFiles();
-            WindowData.StatusMessage = $"Created ModEvent: {className}";
+            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.CreatedModEvent", className);
             
             MessageBox.Show(MessageHelper.GetFormat("Messages.Success.ModEventCreated", className), MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
@@ -256,9 +256,9 @@ namespace ModCreator.Windows
 
             File.WriteAllText(newFilePath, WindowData.GenerateModEventCode(clonedEvent));
             WindowData.LoadModEventFiles();
-            WindowData.StatusMessage = $"Cloned ModEvent: {newClassName}";
+            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.ClonedModEvent", newClassName);
 
-            MessageBox.Show("ModEvent cloned successfully!", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(MessageHelper.Get("Messages.Success.ModEventCloned"), MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void RenameModEvent_Click(object sender, RoutedEventArgs e)
@@ -281,7 +281,7 @@ namespace ModCreator.Windows
 
             if (string.IsNullOrWhiteSpace(newClassName) || !System.Text.RegularExpressions.Regex.IsMatch(newClassName, @"^[A-Za-z_][A-Za-z0-9_]*$"))
             {
-                MessageBox.Show("Invalid class name!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.Get("Messages.Error.InvalidClassName"), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -291,7 +291,7 @@ namespace ModCreator.Windows
 
             if (File.Exists(newFilePath))
             {
-                MessageBox.Show($"A ModEvent with name '{newClassName}' already exists!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.GetFormat("Messages.Error.ClassNameExists", newClassName), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -302,16 +302,16 @@ namespace ModCreator.Windows
                 File.Delete(oldFilePath);
 
             WindowData.LoadModEventFiles();
-            WindowData.StatusMessage = $"Renamed ModEvent: {oldClassName} → {newClassName}";
+            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.RenamedModEvent", oldClassName, newClassName);
 
-            MessageBox.Show("ModEvent renamed successfully!", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(MessageHelper.Get("Messages.Success.ModEventRenamed"), MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void DeleteModEvent_Click(object sender, RoutedEventArgs e)
         {
             if (WindowData.SelectedModEvent == null) return;
 
-            var result = MessageBox.Show($"Are you sure you want to delete ModEvent '{WindowData.SelectedModEvent.FileName}'?", "Delete ModEvent", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            var result = MessageBox.Show(MessageHelper.GetFormat("Messages.Confirmation.DeleteModEvent", WindowData.SelectedModEvent.FileName), MessageHelper.Get("Messages.Confirmation.Title"), MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (result != MessageBoxResult.Yes) return;
 
@@ -322,15 +322,15 @@ namespace ModCreator.Windows
 
             WindowData.LoadModEventFiles();
             WindowData.SelectedModEvent = null;
-            WindowData.StatusMessage = $"Deleted ModEvent: {fileName}";
+            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.DeletedModEvent", fileName);
 
-            MessageBox.Show("ModEvent deleted successfully!", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(MessageHelper.Get("Messages.Success.ModEventDeleted"), MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void SaveModEvent_Click(object sender, RoutedEventArgs e)
         {
             WindowData.SaveModEvent();
-            WindowData.StatusMessage = $"Saved ModEvent: {WindowData.SelectedModEvent?.FileName}";
+            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.SavedModEvent", WindowData.SelectedModEvent?.FileName);
             MessageBox.Show(MessageHelper.Get("Messages.Success.ModEventSaved"), MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
@@ -347,7 +347,7 @@ namespace ModCreator.Windows
                 if (selectedItem != null)
                 {
                     WindowData.SelectedModEvent.SelectedEvent = selectedItem.Name;
-                    WindowData.StatusMessage = $"Added event: {selectedItem.DisplayName}";
+                    WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.AddedEvent", selectedItem.DisplayName);
                 }
             }
         }
@@ -372,7 +372,7 @@ namespace ModCreator.Windows
                         Code = conditionInfo.Code,
                         Order = WindowData.SelectedModEvent.Conditions.Count
                     });
-                    WindowData.StatusMessage = $"Added condition: {conditionInfo.DisplayName}";
+                    WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.AddedCondition", conditionInfo.DisplayName);
                 }
             }
         }
@@ -383,7 +383,7 @@ namespace ModCreator.Windows
             if (condition == null || WindowData.SelectedModEvent == null) return;
 
             WindowData.SelectedModEvent.Conditions.Remove(condition);
-            WindowData.StatusMessage = $"Removed condition: {condition.DisplayName}";
+            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.RemovedCondition", condition.DisplayName);
         }
 
         private void AddAction_Click(object sender, RoutedEventArgs e)
@@ -406,7 +406,7 @@ namespace ModCreator.Windows
                         Code = actionInfo.Code,
                         Order = WindowData.SelectedModEvent.Actions.Count
                     });
-                    WindowData.StatusMessage = $"Added action: {actionInfo.DisplayName}";
+                    WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.AddedAction", actionInfo.DisplayName);
                 }
             }
         }
@@ -421,7 +421,7 @@ namespace ModCreator.Windows
             for (int i = 0; i < WindowData.SelectedModEvent.Actions.Count; i++)
                 WindowData.SelectedModEvent.Actions[i].Order = i;
             
-            WindowData.StatusMessage = $"Removed action: {action.DisplayName}";
+            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.RemovedAction", action.DisplayName);
         }
 
         private void OpenModEventFolder_Click(object sender, RoutedEventArgs e)
@@ -431,7 +431,7 @@ namespace ModCreator.Windows
             var modPath = Path.Combine(WindowData.Project.ProjectPath, "ModProject", "ModCode", "ModMain", "Mod");
             Directory.CreateDirectory(modPath);
             System.Diagnostics.Process.Start("explorer.exe", modPath);
-            WindowData.StatusMessage = $"Opened ModEvent folder: {modPath}";
+            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.OpenedModEventFolder", modPath);
         }
 
         [SupportedOSPlatform("windows6.1")]
@@ -452,7 +452,7 @@ namespace ModCreator.Windows
             btnGui.Foreground = Brushes.White;
             btnCode.Background = Brushes.White;
             btnCode.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF666666"));
-            WindowData.StatusMessage = "Switched to GUI mode";
+            WindowData.StatusMessage = MessageHelper.Get("Messages.Success.SwitchedToGuiMode");
         }
 
         [SupportedOSPlatform("windows6.1")]
@@ -475,7 +475,7 @@ namespace ModCreator.Windows
             btnCode.Foreground = Brushes.White;
             btnGui.Background = Brushes.White;
             btnGui.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF666666"));
-            WindowData.StatusMessage = "Switched to code mode";
+            WindowData.StatusMessage = MessageHelper.Get("Messages.Success.SwitchedToCodeMode");
         }
 
         [SupportedOSPlatform("windows6.1")]
@@ -766,7 +766,7 @@ namespace ModCreator.Windows
                 count++;
             }
 
-            MessageBox.Show($"Replaced {count} occurrence(s)", "Replace All", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(MessageHelper.GetFormat("Messages.Success.ReplaceAll", count), MessageHelper.Get("Messages.Info.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void CloseEventReplacePanel_Click(object sender, RoutedEventArgs e)

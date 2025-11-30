@@ -17,6 +17,7 @@ namespace ModCreator.Helpers
         public static string ProjectList => MessageHelper.Get("Windows.MainWindow.ProjectList");
         public static string CreateNewProject => MessageHelper.Get("Windows.MainWindow.CreateNewProject");
         public static string RefreshList => MessageHelper.Get("Windows.MainWindow.RefreshList");
+        public static string SearchIcon => MessageHelper.Get("Windows.MainWindow.SearchIcon");
         public static string SearchPlaceholder => MessageHelper.Get("Windows.MainWindow.SearchPlaceholder");
         public static string HeaderProjectName => MessageHelper.Get("Windows.MainWindow.HeaderProjectName");
         public static string HeaderDescription => MessageHelper.Get("Windows.MainWindow.HeaderDescription");
@@ -108,6 +109,7 @@ namespace ModCreator.Helpers
     {
         public static string DefaultTitle => MessageHelper.Get("Windows.ModEventItemSelectWindow.DefaultTitle");
         public static string Category => MessageHelper.Get("Windows.ModEventItemSelectWindow.Category");
+        public static string SearchIcon => MessageHelper.Get("Windows.ModEventItemSelectWindow.SearchIcon");
         public static string SearchPlaceholder => MessageHelper.Get("Windows.ModEventItemSelectWindow.SearchPlaceholder");
         public static string SelectItem => MessageHelper.Get("Windows.ModEventItemSelectWindow.SelectItem");
         public static string Description => MessageHelper.Get("Windows.ModEventItemSelectWindow.Description");
@@ -226,7 +228,9 @@ namespace ModCreator.Helpers
     {
         public static string AddConfTitle => MessageHelper.Get("Windows.AddConfWindow.AddConfTitle");
         public static string SelectConf => MessageHelper.Get("Windows.AddConfWindow.SelectConf");
+        public static string SearchIcon => MessageHelper.Get("Windows.AddConfWindow.SearchIcon");
         public static string Prefix => MessageHelper.Get("Windows.AddConfWindow.Prefix");
+        public static string PrefixSeparator => MessageHelper.Get("Windows.AddConfWindow.PrefixSeparator");
         public static string Description => MessageHelper.Get("Windows.AddConfWindow.Description");
         public static string Add => MessageHelper.Get("Windows.AddConfWindow.Add");
         public static string Cancel => MessageHelper.Get("Windows.AddConfWindow.Cancel");
@@ -241,9 +245,12 @@ namespace ModCreator.Helpers
     {
         public static string WindowTitle => MessageHelper.Get("Windows.PatternSelectorWindow.WindowTitle");
         public static string SearchPlaceholder => MessageHelper.Get("Windows.PatternSelectorWindow.SearchPlaceholder");
+        public static string SearchIcon => MessageHelper.Get("Windows.PatternSelectorWindow.SearchIcon");
+        public static string Prefix => MessageHelper.Get("Windows.PatternSelectorWindow.Prefix");
         public static string SelectPattern => MessageHelper.Get("Windows.PatternSelectorWindow.SelectPattern");
         public static string PatternDetails => MessageHelper.Get("Windows.PatternSelectorWindow.PatternDetails");
         public static string Create => MessageHelper.Get("Windows.PatternSelectorWindow.Create");
+        public static string Update => MessageHelper.Get("Windows.PatternSelectorWindow.Update");
         public static string Cancel => MessageHelper.Get("Windows.PatternSelectorWindow.Cancel");
         public static string AddRow => MessageHelper.Get("Windows.PatternSelectorWindow.AddRow");
         public static string RemoveRow => MessageHelper.Get("Windows.PatternSelectorWindow.RemoveRow");

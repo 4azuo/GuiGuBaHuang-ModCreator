@@ -90,7 +90,7 @@ namespace ModCreator.Windows
             if (WindowData?.Project?.AutoSaveEnabled == true)
             {
                 WindowData.SaveProject();
-                WindowData.StatusMessage = "Auto-saved project";
+                WindowData.StatusMessage = MessageHelper.Get("Messages.Success.AutoSavedProject");
             }
         }
 
@@ -101,12 +101,12 @@ namespace ModCreator.Windows
             if (WindowData?.Project?.AutoSaveEnabled == true)
             {
                 _autoSaveTimer.Start();
-                WindowData.StatusMessage = "Auto-save enabled (every 30s)";
+                WindowData.StatusMessage = MessageHelper.Get("Messages.Success.AutoSaveEnabled");
             }
             else
             {
                 _autoSaveTimer.Stop();
-                WindowData.StatusMessage = "Auto-save disabled";
+                WindowData.StatusMessage = MessageHelper.Get("Messages.Success.AutoSaveDisabled");
             }
         }
 
@@ -197,10 +197,10 @@ namespace ModCreator.Windows
 
             switch (tabControl.SelectedIndex)
             {
-                case 1: WindowData.LoadConfFiles(); WindowData.StatusMessage = "Refreshed configuration files"; break;
-                case 2: WindowData.LoadImageFiles(); WindowData.StatusMessage = "Refreshed image files"; break;
-                case 3: WindowData.LoadGlobalVariables(); WindowData.StatusMessage = "Refreshed global variables"; break;
-                case 4: WindowData.LoadModEventFiles(); WindowData.StatusMessage = "Refreshed mod event files"; break;
+                case 1: WindowData.LoadConfFiles(); WindowData.StatusMessage = MessageHelper.Get("Messages.Success.RefreshedConfFiles"); break;
+                case 2: WindowData.LoadImageFiles(); WindowData.StatusMessage = MessageHelper.Get("Messages.Success.RefreshedImageFiles"); break;
+                case 3: WindowData.LoadGlobalVariables(); WindowData.StatusMessage = MessageHelper.Get("Messages.Success.RefreshedGlobalVariables"); break;
+                case 4: WindowData.LoadModEventFiles(); WindowData.StatusMessage = MessageHelper.Get("Messages.Success.RefreshedModEventFiles"); break;
                 default: WindowData.ReloadProjectData(); WindowData.StatusMessage = MessageHelper.Get("Messages.Info.Ready"); break;
             }
         }

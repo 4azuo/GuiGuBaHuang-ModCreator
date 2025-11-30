@@ -48,13 +48,13 @@ namespace ModCreator.Windows
 
             if (string.IsNullOrWhiteSpace(folderName))
             {
-                MessageBox.Show("Folder name cannot be empty!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.Get("Messages.Error.FolderNameEmpty"), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (folderName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
             {
-                MessageBox.Show("Folder name contains invalid characters!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.Get("Messages.Error.FolderNameInvalidChars"), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -62,14 +62,14 @@ namespace ModCreator.Windows
 
             if (Directory.Exists(newFolderPath))
             {
-                MessageBox.Show($"A folder with the name '{folderName}' already exists!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.GetFormat("Messages.Error.FolderAlreadyExists", folderName), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             Directory.CreateDirectory(newFolderPath);
             WindowData.LoadImageFiles();
-            WindowData.StatusMessage = $"Created image folder: {folderName}";
-            MessageBox.Show($"Folder '{folderName}' created successfully!", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
+            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.CreatedImageFolder", folderName);
+            MessageBox.Show(MessageHelper.GetFormat("Messages.Success.FolderCreated", folderName), MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void DeleteImageFolder_Click(object sender, RoutedEventArgs e)
@@ -81,7 +81,7 @@ namespace ModCreator.Windows
 
             if (!Directory.Exists(folderPath))
             {
-                MessageBox.Show($"Folder '{folderName}' does not exist!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.GetFormat("Messages.Error.FolderDoesNotExist", folderName), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 WindowData.LoadImageFiles();
                 return;
             }
@@ -97,8 +97,8 @@ namespace ModCreator.Windows
             {
                 Directory.Delete(folderPath, true);
                 WindowData.LoadImageFiles();
-                WindowData.StatusMessage = $"Deleted image folder: {folderName}";
-                MessageBox.Show($"Folder '{folderName}' deleted successfully!", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
+                WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.DeletedImageFolder", folderName);
+                MessageBox.Show(MessageHelper.GetFormat("Messages.Success.FolderDeleted", folderName), MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -133,7 +133,7 @@ namespace ModCreator.Windows
                 }
 
                 WindowData.LoadImageFiles();
-                WindowData.StatusMessage = $"Imported {dialog.FileNames.Length} image(s)";
+                WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.ImportedImages", dialog.FileNames.Length);
             }
         }
 
@@ -153,8 +153,8 @@ namespace ModCreator.Windows
 
                 var sourcePath = Path.Combine(WindowData.Project.ProjectPath, "ModProject", "ModImg", WindowData.SelectedImageFile);
                 File.Copy(sourcePath, dialog.FileName, true);
-                WindowData.StatusMessage = $"Exported image: {WindowData.SelectedImageFile}";
-                MessageBox.Show("Image exported successfully!", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
+                WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.ExportedImage", WindowData.SelectedImageFile);
+                MessageBox.Show(MessageHelper.Get("Messages.Success.ImageExported"), MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -162,7 +162,7 @@ namespace ModCreator.Windows
         {
             if (string.IsNullOrEmpty(WindowData.SelectedImageFile)) return;
 
-            var result = MessageBox.Show($"Are you sure you want to delete '{WindowData.SelectedImageFile}'?", "Delete Image", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            var result = MessageBox.Show(MessageHelper.GetFormat("Messages.Confirmation.DeleteImage", WindowData.SelectedImageFile), MessageHelper.Get("Messages.Confirmation.Title"), MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (result == MessageBoxResult.Yes)
             {
@@ -174,7 +174,7 @@ namespace ModCreator.Windows
                 {
                     File.Delete(filePath);
                     WindowData.LoadImageFiles();
-                    WindowData.StatusMessage = $"Deleted image: {fileName}";
+                    WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.DeletedImage", fileName);
                 }
             }
         }
@@ -186,7 +186,7 @@ namespace ModCreator.Windows
             var imgPath = Path.Combine(WindowData.Project.ProjectPath, "ModProject", "ModImg");
             Directory.CreateDirectory(imgPath);
             System.Diagnostics.Process.Start("explorer.exe", imgPath);
-            WindowData.StatusMessage = $"Opened ModImg folder: {imgPath}";
+            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.OpenedModImgFolder", imgPath);
         }
     }
 }

@@ -227,7 +227,7 @@ namespace ModCreator.Windows
             }
 
             projectEditorWindow.WindowData.LoadConfFiles();
-            MessageBox.Show("Files updated successfully", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(MessageHelper.Get("Messages.Success.PatternUpdated"), MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
             
             DialogResult = true;
             Close();

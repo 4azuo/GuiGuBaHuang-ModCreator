@@ -80,13 +80,13 @@ namespace ModCreator.Windows
 
             if (string.IsNullOrWhiteSpace(folderName))
             {
-                MessageBox.Show("Folder name cannot be empty!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.Get("Messages.Error.FolderNameEmpty"), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (folderName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
             {
-                MessageBox.Show("Folder name contains invalid characters!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.Get("Messages.Error.FolderNameInvalidChars"), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -94,14 +94,14 @@ namespace ModCreator.Windows
 
             if (Directory.Exists(newFolderPath))
             {
-                MessageBox.Show($"A folder with the name '{folderName}' already exists!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.GetFormat("Messages.Error.FolderAlreadyExists", folderName), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             Directory.CreateDirectory(newFolderPath);
             WindowData.LoadConfFiles();
-            WindowData.StatusMessage = $"Created folder: {folderName}";
-            MessageBox.Show($"Folder '{folderName}' created successfully!", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
+            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.CreatedFolder", folderName);
+            MessageBox.Show(MessageHelper.GetFormat("Messages.Success.FolderCreated", folderName), MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void DeleteFolder_Click(object sender, RoutedEventArgs e)
@@ -113,7 +113,7 @@ namespace ModCreator.Windows
 
             if (!Directory.Exists(folderPath))
             {
-                MessageBox.Show($"Folder '{folderName}' does not exist!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.GetFormat("Messages.Error.FolderDoesNotExist", folderName), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 WindowData.LoadConfFiles();
                 return;
             }
@@ -129,8 +129,8 @@ namespace ModCreator.Windows
             {
                 Directory.Delete(folderPath, true);
                 WindowData.LoadConfFiles();
-                WindowData.StatusMessage = $"Deleted folder: {folderName}";
-                MessageBox.Show($"Folder '{folderName}' deleted successfully!", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
+                WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.DeletedFolder", folderName);
+                MessageBox.Show(MessageHelper.GetFormat("Messages.Success.FolderDeleted", folderName), MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -161,7 +161,7 @@ namespace ModCreator.Windows
 
             WindowData.LoadConfFiles();
             WindowData.SelectedConfFile = Path.GetRelativePath(confPath, destPath);
-            WindowData.StatusMessage = $"Added configuration: {fileName}";
+            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.AddedConfiguration", fileName);
         }
 
         private void RemoveConf_Click(object sender, RoutedEventArgs e)
@@ -172,18 +172,18 @@ namespace ModCreator.Windows
             
             if (!File.Exists(filePath))
             {
-                MessageBox.Show($"File '{WindowData.SelectedConfFile}' does not exist!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.GetFormat("Messages.Error.FileDoesNotExist", WindowData.SelectedConfFile), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 WindowData.LoadConfFiles();
                 return;
             }
 
-            var result = MessageBox.Show($"Are you sure you want to delete '{WindowData.SelectedConfFile}'?", "Delete Configuration", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            var result = MessageBox.Show(MessageHelper.GetFormat("Messages.Confirmation.DeleteConfiguration", WindowData.SelectedConfFile), MessageHelper.Get("Messages.Confirmation.Title"), MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (result == MessageBoxResult.Yes)
             {
                 File.Delete(filePath);
                 WindowData.LoadConfFiles();
-                WindowData.StatusMessage = $"Deleted configuration: {WindowData.SelectedConfFile}";
+                WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.DeletedConfiguration", WindowData.SelectedConfFile);
             }
         }
 
@@ -196,7 +196,7 @@ namespace ModCreator.Windows
             
             if (!File.Exists(sourceFile))
             {
-                MessageBox.Show($"Source file '{WindowData.SelectedConfFile}' does not exist!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.GetFormat("Messages.Error.SourceFileDoesNotExist", WindowData.SelectedConfFile), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 WindowData.LoadConfFiles();
                 return;
             }
@@ -218,9 +218,9 @@ namespace ModCreator.Windows
 
             WindowData.LoadConfFiles();
             WindowData.SelectedConfFile = Path.GetRelativePath(confPath, destFile);
-            WindowData.StatusMessage = $"Cloned configuration: {newFileName}";
+            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.ClonedConfiguration", newFileName);
 
-            MessageBox.Show($"Configuration file cloned successfully!\n\nNew file: {newFileName}", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(MessageHelper.GetFormat("Messages.Success.ConfigurationCloned", newFileName), MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void RenameConf_Click(object sender, RoutedEventArgs e)
@@ -233,7 +233,7 @@ namespace ModCreator.Windows
 
             if (!File.Exists(oldFilePath))
             {
-                MessageBox.Show($"Source file '{oldFileName}' does not exist!", MessageHelper.Get("Messages.Error.Title"), MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(MessageHelper.GetFormat("Messages.Error.SourceFileDoesNotExist", oldFileName), MessageHelper.Get("Messages.Error.Title"), MessageBoxButton.OK, MessageBoxImage.Error);
                 WindowData.LoadConfFiles();
                 return;
             }
@@ -250,13 +250,13 @@ namespace ModCreator.Windows
 
             if (string.IsNullOrWhiteSpace(newFileName))
             {
-                MessageBox.Show("File name cannot be empty!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.Get("Messages.Error.FileNameEmpty"), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (newFileName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
             {
-                MessageBox.Show("File name contains invalid characters!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.Get("Messages.Error.FileNameInvalidChars"), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -269,16 +269,16 @@ namespace ModCreator.Windows
 
             if (File.Exists(newFilePath))
             {
-                MessageBox.Show($"A file with the name '{newFileName}' already exists!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.GetFormat("Messages.Error.FileAlreadyExists", newFileName), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             File.Move(oldFilePath, newFilePath);
             WindowData.LoadConfFiles();
             WindowData.SelectedConfFile = newFileName;
-            WindowData.StatusMessage = $"Renamed: {oldFileName} → {newFileName}";
+            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.RenamedFile", oldFileName, newFileName);
 
-            MessageBox.Show($"Configuration file renamed successfully!\n\nOld: {oldFileName}\nNew: {newFileName}", MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(MessageHelper.GetFormat("Messages.Success.ConfigurationRenamed", oldFileName, newFileName), MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         [SupportedOSPlatform("windows6.1")]
@@ -419,7 +419,7 @@ namespace ModCreator.Windows
             
             if (!File.Exists(filePath))
             {
-                MessageBox.Show($"File '{WindowData.SelectedConfFile}' does not exist!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.GetFormat("Messages.Error.FileDoesNotExist", WindowData.SelectedConfFile), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -447,7 +447,7 @@ namespace ModCreator.Windows
             }
             else
             {
-                var result = MessageBox.Show("Notepad++ not found. Would you like to open with Notepad instead?", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.YesNo, MessageBoxImage.Question);
+                var result = MessageBox.Show(MessageHelper.Get("Messages.Error.NotepadPlusPlusNotFound"), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)
                     System.Diagnostics.Process.Start("notepad.exe", filePath);
             }
@@ -460,7 +460,7 @@ namespace ModCreator.Windows
             var confPath = Path.Combine(WindowData.Project.ProjectPath, "ModProject", "ModConf");
             Directory.CreateDirectory(confPath);
             System.Diagnostics.Process.Start("explorer.exe", confPath);
-            WindowData.StatusMessage = $"Opened ModConf folder: {confPath}";
+            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.OpenedModConfFolder", confPath);
         }
 
         [SupportedOSPlatform("windows6.1")]
@@ -490,7 +490,7 @@ namespace ModCreator.Windows
         {
             if (WindowData.SelectedSourceLanguage == null)
             {
-                MessageBox.Show("Please select a source language!", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MessageHelper.Get("Messages.Error.PleaseSelectSourceLanguage"), MessageHelper.Get("Messages.Error.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -500,13 +500,13 @@ namespace ModCreator.Windows
             
             if (!settings.TryGetValue("translateScriptPath", out var translateScriptPath))
             {
-                MessageBox.Show("Translate script path not found in settings!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(MessageHelper.Get("Messages.Error.TranslateScriptPathNotFound"), MessageHelper.Get("Messages.Error.Title"), MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (!File.Exists(translateScriptPath))
             {
-                MessageBox.Show($"Translate script not found at: {translateScriptPath}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(MessageHelper.GetFormat("Messages.Error.TranslateScriptNotFound", translateScriptPath), MessageHelper.Get("Messages.Error.Title"), MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -514,7 +514,7 @@ namespace ModCreator.Windows
             var pythonPath = PythonHelper.FindPythonExecutable();
             if (string.IsNullOrEmpty(pythonPath))
             {
-                MessageBox.Show("Python executable not found! Please install Python 3 and add it to PATH.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(MessageHelper.Get("Messages.Error.PythonNotFound"), MessageHelper.Get("Messages.Error.Title"), MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -533,9 +533,9 @@ namespace ModCreator.Windows
             };
 
             Process.Start(processInfo);
-            WindowData.StatusMessage = $"Translation started from {WindowData.SelectedSourceLanguage.DisplayName}";
+            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.TranslationStarted", WindowData.SelectedSourceLanguage.DisplayName);
             
-            MessageBox.Show($"Translation process started!\n\nProject: {WindowData.Project.ProjectName}\nSource Language: {WindowData.SelectedSourceLanguage.DisplayName}", 
+            MessageBox.Show(MessageHelper.GetFormat("Messages.Success.TranslationStartedDetail", WindowData.Project.ProjectName, WindowData.SelectedSourceLanguage.DisplayName), 
                 "Translation Started", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }

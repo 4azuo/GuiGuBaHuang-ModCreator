@@ -25,7 +25,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Text="🔍" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <TextBlock Grid.Column="0" Text="{x:Static helper:PatternSelectorWindowText.SearchIcon}" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0"/>
             <TextBox Grid.Column="1" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" BorderBrush="#FFCCCCCC" BorderThickness="1" Padding="8" FontSize="13">
                 <TextBox.Style>
                     <Style TargetType="TextBox">
@@ -56,7 +56,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <GroupBox Grid.Row="0" Header="Prefix" Margin="0,0,10,5">
+                <GroupBox Grid.Row="0" Header="{x:Static helper:PatternSelectorWindowText.Prefix}" Margin="0,0,10,5">
                     <TextBox Text="{Binding Prefix, UpdateSourceTrigger=PropertyChanged}" Padding="5" VerticalContentAlignment="Center"/>
                 </GroupBox>
                 <GroupBox Grid.Row="1" Header="{x:Static helper:PatternSelectorWindowText.SelectPattern}" Margin="0,0,10,0">
@@ -87,7 +87,7 @@
                                                             <ColumnDefinition Width="Auto"/>
                                                             <ColumnDefinition Width="*"/>
                                                         </Grid.ColumnDefinitions>
-                                                        <Button Grid.Column="0" Content="➕" Click="AddRow_Click" Tag="{Binding}" Margin="0,0,5,0" Padding="10,5" Background="#FF2E5090" Foreground="White" BorderThickness="0" Cursor="Hand"/>
+                                                        <Button Grid.Column="0" Content="{x:Static helper:PatternSelectorWindowText.AddRow}" Click="AddRow_Click" Tag="{Binding}" Margin="0,0,5,0" Padding="10,5" Background="#FF2E5090" Foreground="White" BorderThickness="0" Cursor="Hand"/>
                                                         <ItemsControl Grid.Column="1" ItemsSource="{Binding DisplayElements}">
                                                             <ItemsControl.ItemsPanel>
                                                                 <ItemsPanelTemplate>
@@ -157,7 +157,7 @@
         </Grid>
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
             <Button Content="{x:Static helper:PatternSelectorWindowText.Create}" Click="Create_Click" Style="{StaticResource PrimaryButton}" Width="100" IsEnabled="{Binding HasSelectedPattern}"/>
-            <Button Content="Update" Click="Update_Click" Style="{StaticResource PrimaryButton}" Width="100" Margin="10,0,0,0" IsEnabled="{Binding HasExistingFiles}"/>
+            <Button Content="{x:Static helper:PatternSelectorWindowText.Update}" Click="Update_Click" Style="{StaticResource PrimaryButton}" Width="100" Margin="10,0,0,0" IsEnabled="{Binding HasExistingFiles}"/>
             <Button Content="{x:Static helper:PatternSelectorWindowText.Cancel}" Click="Cancel_Click" Style="{StaticResource ActionButton}" Width="100" Margin="10,0,0,0"/>
         </StackPanel>
     </Grid>

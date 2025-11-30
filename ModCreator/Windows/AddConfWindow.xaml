@@ -14,7 +14,7 @@
         </Border>
         <Grid Grid.Row="1" Margin="10">
             <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Text="🔍" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <TextBlock Grid.Column="0" Text="{x:Static helper:AddConfWindowText.SearchIcon}" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0"/>
             <TextBox Grid.Column="1" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" BorderBrush="#FFCCCCCC" BorderThickness="1" Padding="8" FontSize="13">
                 <TextBox.Style>
                     <Style TargetType="TextBox">
@@ -46,7 +46,7 @@
                     <Grid Margin="10">
                         <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                         <TextBox Grid.Column="0" Text="{Binding FilePrefix, UpdateSourceTrigger=PropertyChanged}" Width="150" Padding="8" FontSize="13" VerticalContentAlignment="Center"/>
-                        <TextBlock Grid.Column="1" Text="_" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0"/>
+                        <TextBlock Grid.Column="1" Text="{x:Static helper:AddConfWindowText.PrefixSeparator}" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0"/>
                         <TextBlock Grid.Column="2" Text="{Binding SelectedConfig.Name}" FontSize="13" VerticalAlignment="Center" Foreground="Gray"/>
                     </Grid>
                 </GroupBox>
