@@ -21,5 +21,6 @@ namespace ModCreator.Models
         public ProjectState State { get; set; } = ProjectState.Valid;
         public bool AutoSaveEnabled { get; set; }
         public List<GlobalVariable> GlobalVariables { get; set; } = new List<GlobalVariable>();
+        public List<ModEventItem> ModEvents { get; set; } = new List<ModEventItem>();
     }
 }

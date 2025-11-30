@@ -31,7 +31,7 @@
                 <StackPanel Grid.Column="0">
                     <TextBox Text="{Binding Project.ProjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="20" FontWeight="Bold" Foreground="White" Background="Transparent" BorderBrush="White" BorderThickness="0,0,0,1" Padding="5,2" CaretBrush="White"/>
                     <TextBlock FontSize="12" Foreground="#FFCCCCCC" Margin="0,5,0,0">
-                        <Run Text="{x:Static helper:ProjectEditorWindowText.ProjectIdLabel}"/><Run Text="{Binding Project.ProjectId, Mode=OneWay}" FontWeight="SemiBold"/>
+                        <Run Text="{x:Static helper:ProjectEditorWindowText.ProjectIdLabel}"/> <Run Text="{Binding Project.ProjectId, Mode=OneWay}" FontWeight="SemiBold"/>
                     </TextBlock>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
@@ -428,7 +428,7 @@
                                                                     <ColumnDefinition Width="Auto"/>
                                                                 </Grid.ColumnDefinitions>
                                                                 <Button Grid.Column="0" Content="{x:Static helper:ProjectEditorWindowText.IconRemove}" Click="RemoveCondition_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Width="24" Height="24" Padding="0"/>
-                                                                <TextBlock Grid.Column="1" Text="{Binding Code}" TextWrapping="Wrap" FontSize="11"/>
+                                                                <TextBlock Grid.Column="1" Text="{Binding Code}" TextWrapping="Wrap" FontSize="12" VerticalAlignment="Center"/>
                                                             </Grid>
                                                         </DataTemplate>
                                                     </ListBox.ItemTemplate>
@@ -450,8 +450,8 @@
                                                                     <ColumnDefinition Width="*"/>
                                                                     <ColumnDefinition Width="Auto"/>
                                                                 </Grid.ColumnDefinitions>
-                                                                <TextBlock Grid.Column="0" Text="{Binding Code}" TextWrapping="Wrap" FontSize="11"/>
-                                                                <Button Grid.Column="1" Content="{x:Static helper:ProjectEditorWindowText.IconRemove}" Click="RemoveAction_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Width="24" Height="24" Padding="0"/>
+                                                                <Button Grid.Column="0" Content="{x:Static helper:ProjectEditorWindowText.IconRemove}" Click="RemoveAction_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Width="24" Height="24" Padding="0"/>
+                                                                <TextBlock Grid.Column="1" Text="{Binding Code}" TextWrapping="Wrap" FontSize="12" VerticalAlignment="Center"/>
                                                             </Grid>
                                                         </DataTemplate>
                                                     </ListBox.ItemTemplate>

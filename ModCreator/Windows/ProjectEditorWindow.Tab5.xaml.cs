@@ -19,6 +19,45 @@ namespace ModCreator.Windows
             if (e.NewValue is FileItem fileItem)
             {
                 WindowData.SelectedEventItem = fileItem;
+                UpdateModeButtonsBasedOnCodeModeFlag();
+            }
+        }
+
+        [SupportedOSPlatform("windows6.1")]
+        private void UpdateModeButtonsBasedOnCodeModeFlag()
+        {
+            var guiPanel = this.FindName("guiModePanel") as Grid;
+            var codePanel = this.FindName("codeModePanel") as Grid;
+            var btnGui = this.FindName("btnGuiMode") as Button;
+            var btnCode = this.FindName("btnCodeMode") as Button;
+
+            if (guiPanel == null || codePanel == null || btnGui == null || btnCode == null) return;
+
+            if (WindowData?.SelectedModEvent?.IsCodeModeOnly == true)
+            {
+                guiPanel.Visibility = Visibility.Collapsed;
+                codePanel.Visibility = Visibility.Visible;
+                WindowData.IsGuiMode = false;
+
+                btnCode.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2E5090"));
+                btnCode.Foreground = Brushes.White;
+                btnGui.Background = Brushes.White;
+                btnGui.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF666666"));
+                btnGui.IsEnabled = false;
+
+                SetupEventSourceEditorBinding();
+            }
+            else
+            {
+                guiPanel.Visibility = Visibility.Visible;
+                codePanel.Visibility = Visibility.Collapsed;
+                WindowData.IsGuiMode = true;
+
+                btnGui.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2E5090"));
+                btnGui.Foreground = Brushes.White;
+                btnCode.Background = Brushes.White;
+                btnCode.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF666666"));
+                btnGui.IsEnabled = true;
             }
         }
 
@@ -418,6 +457,16 @@ namespace ModCreator.Windows
         [SupportedOSPlatform("windows6.1")]
         private void ToggleGuiMode_Click(object sender, RoutedEventArgs e)
         {
+            if (WindowData?.SelectedModEvent?.IsCodeModeOnly == true)
+            {
+                MessageBox.Show(
+                    MessageHelper.Get("Messages.Warning.CannotSwitchToGuiMode"),
+                    MessageHelper.Get("Messages.Warning.Title"),
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+                return;
+            }
+
             var guiPanel = this.FindName("guiModePanel") as Grid;
             var codePanel = this.FindName("codeModePanel") as Grid;
             var btnGui = this.FindName("btnGuiMode") as Button;
@@ -439,6 +488,21 @@ namespace ModCreator.Windows
         [SupportedOSPlatform("windows6.1")]
         private void ToggleCodeMode_Click(object sender, RoutedEventArgs e)
         {
+            if (WindowData?.SelectedModEvent == null) return;
+
+            if (!WindowData.SelectedModEvent.IsCodeModeOnly)
+            {
+                var result = MessageBox.Show(
+                    MessageHelper.Get("Messages.Warning.SwitchToCodeModeWarning"),
+                    MessageHelper.Get("Messages.Warning.Title"),
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+
+                if (result != MessageBoxResult.Yes) return;
+
+                WindowData.SelectedModEvent.IsCodeModeOnly = true;
+            }
+
             var guiPanel = this.FindName("guiModePanel") as Grid;
             var codePanel = this.FindName("codeModePanel") as Grid;
             var btnGui = this.FindName("btnGuiMode") as Button;
@@ -456,6 +520,7 @@ namespace ModCreator.Windows
             btnCode.Foreground = Brushes.White;
             btnGui.Background = Brushes.White;
             btnGui.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF666666"));
+            btnGui.IsEnabled = false;
             WindowData.StatusMessage = MessageHelper.Get("Messages.Success.SwitchedToCodeMode");
         }
 
@@ -594,7 +659,7 @@ namespace ModCreator.Windows
         {
             if (!(sender is ComboBox comboBox) || WindowData?.SelectedModEvent == null) return;
 
-            var mode = comboBox.SelectedItem as string;
+            var mode = comboBox.SelectedItem as Enums.EventMode?;
             var grpEventSelection = this.FindName("grpEventSelection") as GroupBox;
             var gridCustomEventName = this.FindName("gridCustomEventName") as Grid;
             
@@ -606,7 +671,7 @@ namespace ModCreator.Windows
             var txtWorkOnLabel = this.FindName("txtWorkOnLabel") as TextBlock;
             var cmbWorkOn = this.FindName("cmbWorkOn") as ComboBox;
 
-            var isModEvent = mode == Enums.EventMode.ModEvent.ToString();
+            var isModEvent = mode == Enums.EventMode.ModEvent;
             
             if (grpEventSelection != null)
                 grpEventSelection.Visibility = isModEvent ? Visibility.Visible : Visibility.Collapsed;

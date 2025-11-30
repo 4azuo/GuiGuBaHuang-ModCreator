@@ -348,7 +348,9 @@
       "PleaseSetWorkplacePath": "Please set workplace path first!",
       "InvalidClassName": "Invalid class name!",
       "ClassNameExists": "A ModEvent with name '{0}' already exists!",
-      "NoPatternSelected": "Please select a pattern first!"
+      "NoPatternSelected": "Please select a pattern first!",
+      "SwitchToCodeModeWarning": "Once you switch to Code Mode, you cannot return to GUI Mode.\n\nAll GUI-based edits will be lost and you'll need to edit the code directly.\n\nDo you want to continue?",
+      "CannotSwitchToGuiMode": "This ModEvent is in Code-Only Mode and cannot be switched back to GUI Mode."
     },
     "Confirmation": {
       "Title": "Confirmation",

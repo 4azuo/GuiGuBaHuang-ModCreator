@@ -64,5 +64,10 @@ namespace ModCreator.Models
         /// File name without path (without extension, used as class name)
         /// </summary>
         public string FileName => System.IO.Path.GetFileNameWithoutExtension(FilePath);
+
+        /// <summary>
+        /// Flag indicating if this event is in code-only mode (cannot switch back to GUI mode)
+        /// </summary>
+        public bool IsCodeModeOnly { get; set; }
     }
 }
