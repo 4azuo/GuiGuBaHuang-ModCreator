@@ -65,6 +65,9 @@
     <None Remove="Resources\project-replacements.json" />
     <None Remove="Resources\image-extensions.json" />
     <None Remove="Resources\languages.json" />
+    <None Remove="Resources\modconf-patterns.json" />
+    <None Remove="Resources\modconfs.json" />
+    <None Remove="Resources\modconf-values.json" />
     <None Remove="Styles\Json.xshd" />
   </ItemGroup>
 
@@ -88,6 +91,15 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\languages.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\modconf-patterns.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\modconfs.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\modconf-values.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Styles\Json.xshd">

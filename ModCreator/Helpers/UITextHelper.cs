@@ -132,6 +132,7 @@ namespace ModCreator.Helpers
         public static string HeaderCreated => MessageHelper.Get("Windows.ProjectEditorWindow.HeaderCreated");
         public static string HeaderModified => MessageHelper.Get("Windows.ProjectEditorWindow.HeaderModified");
         public static string HeaderState => MessageHelper.Get("Windows.ProjectEditorWindow.HeaderState");
+        public static string HeaderTitleImg => MessageHelper.Get("Windows.ProjectEditorWindow.HeaderTitleImg");
         public static string TabModConf => MessageHelper.Get("Windows.ProjectEditorWindow.TabModConf");
         public static string ConfFiles => MessageHelper.Get("Windows.ProjectEditorWindow.ConfFiles");
         public static string TooltipCreateFolder => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipCreateFolder");
@@ -206,9 +207,11 @@ namespace ModCreator.Helpers
         public static string IconImport => MessageHelper.Get("Windows.ProjectEditorWindow.IconImport");
         public static string IconExport => MessageHelper.Get("Windows.ProjectEditorWindow.IconExport");
         public static string IconFilter => MessageHelper.Get("Windows.ProjectEditorWindow.IconFilter");
+        public static string IconPattern => MessageHelper.Get("Windows.ProjectEditorWindow.IconPattern");
         public static string TooltipCreateEventFolder => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipCreateEventFolder");
         public static string TooltipDeleteEventFolder => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipDeleteEventFolder");
         public static string TooltipToggleFilterLocalText => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipToggleFilterLocalText");
+        public static string TooltipCreateFromPattern => MessageHelper.Get("Windows.ProjectEditorWindow.TooltipCreateFromPattern");
     }
 
     /// <summary>
@@ -224,5 +227,18 @@ namespace ModCreator.Helpers
         public static string Cancel => MessageHelper.Get("Windows.AddConfWindow.Cancel");
         public static string SearchPlaceholder => MessageHelper.Get("Windows.AddConfWindow.SearchPlaceholder");
         public static string Selected => MessageHelper.Get("Windows.AddConfWindow.Selected");
+    }
+
+    /// <summary>
+    /// Pattern selector window UI texts helper for XAML bindings
+    /// </summary>
+    public static class PatternSelectorWindowText
+    {
+        public static string WindowTitle => MessageHelper.Get("Windows.PatternSelectorWindow.WindowTitle");
+        public static string SearchPlaceholder => MessageHelper.Get("Windows.PatternSelectorWindow.SearchPlaceholder");
+        public static string SelectPattern => MessageHelper.Get("Windows.PatternSelectorWindow.SelectPattern");
+        public static string PatternDetails => MessageHelper.Get("Windows.PatternSelectorWindow.PatternDetails");
+        public static string Create => MessageHelper.Get("Windows.PatternSelectorWindow.Create");
+        public static string Cancel => MessageHelper.Get("Windows.PatternSelectorWindow.Cancel");
     }
 }

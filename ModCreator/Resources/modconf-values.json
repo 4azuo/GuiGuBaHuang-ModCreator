@@ -1,0 +1,77 @@
+[
+  {
+    "Name": "ConcealTypes",
+    "Values": [
+      {
+        "DisplayName": "Hidden",
+        "Value": "0"
+      },
+      {
+        "DisplayName": "Visible",
+        "Value": "1"
+      }
+    ]
+  },
+  {
+    "Name": "FeatureTypes",
+    "Values": [
+      {
+        "DisplayName": "Nature",
+        "Value": "1"
+      },
+      {
+        "DisplayName": "Nurture",
+        "Value": "2"
+      },
+      {
+        "DisplayName": "Rewrite Destiny",
+        "Value": "3"
+      }
+    ]
+  },
+  {
+    "Name": "FeatureLevels",
+    "Values": [
+      {
+        "DisplayName": "Level 1",
+        "Value": "1"
+      },
+      {
+        "DisplayName": "Level 2",
+        "Value": "2"
+      },
+      {
+        "DisplayName": "Level 3",
+        "Value": "3"
+      },
+      {
+        "DisplayName": "Level 4",
+        "Value": "4"
+      },
+      {
+        "DisplayName": "Level 5",
+        "Value": "5"
+      },
+      {
+        "DisplayName": "Level 6",
+        "Value": "6"
+      },
+      {
+        "DisplayName": "Level 7",
+        "Value": "7"
+      },
+      {
+        "DisplayName": "Level 8",
+        "Value": "8"
+      },
+      {
+        "DisplayName": "Level 9",
+        "Value": "9"
+      },
+      {
+        "DisplayName": "Level 10",
+        "Value": "10"
+      }
+    ]
+  }
+]

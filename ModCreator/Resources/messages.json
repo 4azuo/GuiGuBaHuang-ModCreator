@@ -97,6 +97,7 @@
       "HeaderCreated": "Created:",
       "HeaderModified": "Modified:",
       "HeaderState": "State:",
+      "HeaderTitleImg": "Title Image:",
       "TabModConf": "ModConf",
       "ConfFiles": "Configuration Files",
       "TooltipCreateFolder": "Create Folder",
@@ -171,9 +172,11 @@
       "IconImport": "📥",
       "IconExport": "📤",
       "IconFilter": "🔍",
+      "IconPattern": "📋",
       "TooltipCreateEventFolder": "Create New Folder",
       "TooltipDeleteEventFolder": "Delete Folder",
-      "TooltipToggleFilterLocalText": "Toggle Filter *LocalText.json Files"
+      "TooltipToggleFilterLocalText": "Toggle Filter *LocalText.json Files",
+      "TooltipCreateFromPattern": "Create from Pattern Template"
     },
     "AddConfWindow": {
       "AddConfTitle": "Add Configuration File",
@@ -184,6 +187,14 @@
       "Cancel": "Cancel",
       "SearchPlaceholder": "Search configurations...",
       "Selected": "Selected:"
+    },
+    "PatternSelectorWindow": {
+      "WindowTitle": "Create from Pattern Template",
+      "SearchPlaceholder": "Search patterns...",
+      "SelectPattern": "Select Pattern:",
+      "PatternDetails": "Pattern Details",
+      "Create": "Create",
+      "Cancel": "Cancel"
     }
   },
   "Messages": {
@@ -203,7 +214,8 @@
       "ModEventDeleted": "ModEvent deleted successfully!",
       "ModEventSaved": "ModEvent saved successfully!",
       "GeneratedCode": "Variables code generated successfully!\n\nOutput file: {0}",
-      "ReplacedOccurrences": "Replaced {0} occurrence(s)"
+      "ReplacedOccurrences": "Replaced {0} occurrence(s)",
+      "PatternCreated": "Pattern '{0}' created successfully!"
     },
     "Error": {
       "Title": "Error",
@@ -225,14 +237,16 @@
       "EmptyVariableName": "Variable name cannot be empty!",
       "CompleteExistingVariable": "Please complete the existing variable with empty name before adding a new one!",
       "NoVariablesToGenerate": "No variables to generate. Please add variables first.",
-      "AllVariablesMustHaveNames": "All variables must have names. Please complete all variables before generating code."
+      "AllVariablesMustHaveNames": "All variables must have names. Please complete all variables before generating code.",
+      "NoProject": "No project is open!"
     },
     "Warning": {
       "Title": "Warning",
       "NoProjectSelected": "No project selected",
       "PleaseSetWorkplacePath": "Please set workplace path first!",
       "InvalidClassName": "Invalid class name!",
-      "ClassNameExists": "A ModEvent with name '{0}' already exists!"
+      "ClassNameExists": "A ModEvent with name '{0}' already exists!",
+      "NoPatternSelected": "Please select a pattern first!"
     },
     "Confirmation": {
       "Title": "Confirmation",

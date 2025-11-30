@@ -469,5 +469,11 @@ namespace ModCreator.Windows
                     : new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF666666"));
             }
         }
+
+        private void CreateFromPattern_Click(object sender, RoutedEventArgs e)
+        {
+            var patternWindow = new PatternSelectorWindow { Owner = this };
+            patternWindow.ShowDialog();
+        }
     }
 }

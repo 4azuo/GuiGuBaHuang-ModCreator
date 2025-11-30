@@ -1,0 +1,35 @@
+[
+  {
+    "Name": "RoleCreateFeature",
+    "Description": "Create character creation feature",
+    "Files": [
+      {
+        "FileName": "RoleCreateFeature.json",
+        "Elements": [
+          "RoleCreateFeature.id",
+          "RoleCreateFeature.type",
+          "RoleCreateFeature.group",
+          "RoleCreateFeature.level",
+          "RoleCreateFeature.duration",
+          "RoleCreateFeature.conceal",
+          "RoleCreateFeature.refreshType",
+          "RoleCreateFeature.name",
+          "RoleCreateFeature.tips",
+          "RoleCreateFeature.effect",
+          "RoleCreateFeature.iconAndDesc",
+          "RoleCreateFeature.lockLuck",
+          "RoleCreateFeature.introduceText",
+          "RoleCreateFeature.weight"
+        ]
+      },
+      {
+        "FileName": "LocalText.json",
+        "Elements": [
+          "LocalText.id",
+          "LocalText.key",
+          "LocalText.en"
+        ]
+      }
+    ]
+  }
+]

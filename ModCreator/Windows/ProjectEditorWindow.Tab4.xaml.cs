@@ -1,4 +1,4 @@
-using ModCreator.Helpers;
+﻿using ModCreator.Helpers;
 using ModCreator.Models;
 using ModCreator.WindowData;
 using System.Collections.Generic;
@@ -64,13 +64,54 @@ namespace ModCreator.Windows
             if (e.EditAction != DataGridEditAction.Commit) return;
 
             var variable = e.Row.Item as GlobalVariable;
-            if (variable == null || !string.IsNullOrWhiteSpace(variable.Name)) return;
+            if (variable == null) return;
 
-            e.Cancel = true;
-            MessageBox.Show("Variable name cannot be empty!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
-            
-            if (string.IsNullOrWhiteSpace(variable.Type) && string.IsNullOrWhiteSpace(variable.Value) && string.IsNullOrWhiteSpace(variable.Description))
-                WindowData.GlobalVariables.Remove(variable);
+            // Validate variable name
+            if (string.IsNullOrWhiteSpace(variable.Name))
+            {
+                e.Cancel = true;
+                MessageBox.Show("Variable name cannot be empty!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                
+                if (string.IsNullOrWhiteSpace(variable.Type) && string.IsNullOrWhiteSpace(variable.Value) && string.IsNullOrWhiteSpace(variable.Description))
+                    WindowData.GlobalVariables.Remove(variable);
+                return;
+            }
+
+            // Validate variable name format (must be valid C# identifier)
+            if (!System.CodeDom.Compiler.CodeGenerator.IsValidLanguageIndependentIdentifier(variable.Name))
+            {
+                e.Cancel = true;
+                MessageBox.Show($"Variable name '{variable.Name}' is not a valid C# identifier!\nUse only letters, digits, and underscores. Must start with a letter or underscore.", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // Check for duplicate variable names
+            var duplicates = WindowData.GlobalVariables.Where(v => v != variable && v.Name == variable.Name).ToList();
+            if (duplicates.Any())
+            {
+                e.Cancel = true;
+                MessageBox.Show($"Variable name '{variable.Name}' already exists!\nPlease use a unique name.", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // Validate type
+            if (string.IsNullOrWhiteSpace(variable.Type))
+            {
+                e.Cancel = true;
+                MessageBox.Show("Variable type cannot be empty!", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // Validate value against type
+            if (!string.IsNullOrWhiteSpace(variable.Value))
+            {
+                if (!variable.ValidateValue(variable.Value, variable.Type))
+                {
+                    e.Cancel = true;
+                    MessageBox.Show($"Invalid value for type '{variable.Type}'!\n\nError: {variable.ValidationError}", MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+            }
         }
 
         private void GenerateVariablesCode_Click(object sender, RoutedEventArgs e)
@@ -83,9 +124,58 @@ namespace ModCreator.Windows
                 return;
             }
 
-            if (WindowData.GlobalVariables.Any(v => string.IsNullOrWhiteSpace(v.Name)))
+            // Validate all variables before generating code
+            var validationErrors = new List<string>();
+
+            foreach (var variable in WindowData.GlobalVariables)
             {
-                MessageBox.Show(MessageHelper.Get("Messages.Error.AllVariablesMustHaveNames"), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                // Check for empty name
+                if (string.IsNullOrWhiteSpace(variable.Name))
+                {
+                    validationErrors.Add("• Variable with empty name found");
+                    continue;
+                }
+
+                // Validate name format
+                if (!System.CodeDom.Compiler.CodeGenerator.IsValidLanguageIndependentIdentifier(variable.Name))
+                {
+                    validationErrors.Add($"• Invalid variable name: '{variable.Name}' (not a valid C# identifier)");
+                }
+
+                // Check for empty type
+                if (string.IsNullOrWhiteSpace(variable.Type))
+                {
+                    validationErrors.Add($"• Variable '{variable.Name}' has no type specified");
+                }
+
+                // Validate value against type
+                if (!string.IsNullOrWhiteSpace(variable.Value) && !string.IsNullOrWhiteSpace(variable.Type))
+                {
+                    if (!variable.ValidateValue(variable.Value, variable.Type))
+                    {
+                        validationErrors.Add($"• Variable '{variable.Name}': {variable.ValidationError}");
+                    }
+                }
+            }
+
+            // Check for duplicate names
+            var duplicateGroups = WindowData.GlobalVariables
+                .Where(v => !string.IsNullOrWhiteSpace(v.Name))
+                .GroupBy(v => v.Name)
+                .Where(g => g.Count() > 1)
+                .Select(g => g.Key)
+                .ToList();
+
+            foreach (var dupName in duplicateGroups)
+            {
+                validationErrors.Add($"• Duplicate variable name: '{dupName}'");
+            }
+
+            // Show all validation errors
+            if (validationErrors.Any())
+            {
+                var errorMessage = "Cannot generate code due to validation errors:\n\n" + string.Join("\n", validationErrors);
+                MessageBox.Show(errorMessage, MessageHelper.Get("Messages.Error.Title"), MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -117,10 +207,7 @@ namespace ModCreator.Windows
                     .Replace("#VARNAME#", variable.Name)
                     .Replace("#VARVALUE#", FormatVariableValue(variable));
 
-                if (!string.IsNullOrWhiteSpace(variable.Description))
-                    variableProperties.AppendLine($"        // {variable.Description}");
-
-                variableProperties.AppendLine($"        {propertyCode.Trim()}");
+                variableProperties.AppendLine($"        {propertyCode.Trim()} // {variable.Description}");
             }
 
             var generatedCode = varTemplate.Replace("#VARIABLES#", variableProperties.ToString());

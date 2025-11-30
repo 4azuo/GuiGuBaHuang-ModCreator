@@ -1,0 +1,131 @@
+<local:CWindow x:Class="ModCreator.Windows.PatternSelectorWindow" x:TypeArguments="localData:PatternSelectorWindowData"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:ModCreator.Windows"
+        xmlns:localData="clr-namespace:ModCreator.WindowData" xmlns:helper="clr-namespace:ModCreator.Helpers"
+        xmlns:converter="clr-namespace:ModCreator.Converters" mc:Ignorable="d"
+        Title="{x:Static helper:PatternSelectorWindowText.WindowTitle}" Height="800" Width="1200" WindowStartupLocation="CenterOwner"
+        Icon="/Resources/app-icon.png" FontFamily="Segoe UI">
+    <Window.Resources>
+        <converter:TextBoxVisibilityConverter x:Key="TextBoxVisibilityConverter"/>
+        <converter:ComboBoxVisibilityConverter x:Key="ComboBoxVisibilityConverter"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" Background="#FF2E5090" Padding="15">
+            <TextBlock Text="{x:Static helper:PatternSelectorWindowText.WindowTitle}" FontSize="18" FontWeight="Bold" Foreground="White"/>
+        </Border>
+        <Grid Grid.Row="1" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="🔍" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <TextBox Grid.Column="1" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" BorderBrush="#FFCCCCCC" BorderThickness="1" Padding="8" FontSize="13">
+                <TextBox.Style>
+                    <Style TargetType="TextBox">
+                        <Style.Triggers>
+                            <Trigger Property="Text" Value="">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <VisualBrush Stretch="None" AlignmentX="Left">
+                                            <VisualBrush.Visual>
+                                                <TextBlock Text="{x:Static helper:PatternSelectorWindowText.SearchPlaceholder}" Foreground="Gray" Margin="8,0,0,0"/>
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBox.Style>
+            </TextBox>
+        </Grid>
+        <Grid Grid.Row="2" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <GroupBox Grid.Row="0" Header="Prefix" Margin="0,0,10,5">
+                    <TextBox Text="{Binding Prefix, UpdateSourceTrigger=PropertyChanged}" Padding="5" VerticalContentAlignment="Center"/>
+                </GroupBox>
+                <GroupBox Grid.Row="1" Header="{x:Static helper:PatternSelectorWindowText.SelectPattern}" Margin="0,0,10,0">
+                    <ListBox ItemsSource="{Binding FilteredPatterns}" SelectedItem="{Binding SelectedPattern, Mode=TwoWay}" DisplayMemberPath="Name" ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
+                </GroupBox>
+            </Grid>
+            <GroupBox Grid.Column="1" Header="{x:Static helper:PatternSelectorWindowText.PatternDetails}">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="{Binding SelectedPattern.Description}" TextWrapping="Wrap" FontSize="13" Margin="0,0,0,10" Foreground="Gray"/>
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding DisplayFiles}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <GroupBox Header="{Binding FileName}" Margin="0,0,0,10" BorderBrush="#FF2E5090" BorderThickness="2">
+                                        <ScrollViewer HorizontalScrollBarVisibility="Auto">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+                                                <ItemsControl Grid.Row="0" ItemsSource="{Binding Elements}">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <StackPanel Orientation="Horizontal"/>
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Border BorderBrush="#FFCCCCCC" BorderThickness="0,0,1,1" Padding="5" MinWidth="150">
+                                                                <TextBlock Text="{Binding Label}" TextAlignment="Center"/>
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                                <ItemsControl Grid.Row="1" ItemsSource="{Binding Elements}">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <StackPanel Orientation="Horizontal"/>
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Border BorderBrush="#FFCCCCCC" BorderThickness="0,0,1,1" Padding="5" MinWidth="150">
+                                                                <Grid>
+                                                                    <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Type, Converter={StaticResource TextBoxVisibilityConverter}}"/>
+                                                                    <ComboBox ItemsSource="{Binding Options}" SelectedValue="{Binding Value, Mode=TwoWay}" SelectedValuePath="Value" DisplayMemberPath="DisplayName" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Type, Converter={StaticResource ComboBoxVisibilityConverter}}"/>
+                                                                </Grid>
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </Grid>
+                                        </ScrollViewer>
+                                    </GroupBox>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </GroupBox>
+        </Grid>
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+            <Button Content="{x:Static helper:PatternSelectorWindowText.Create}" Click="Create_Click" Style="{StaticResource PrimaryButton}" Width="100" IsEnabled="{Binding HasSelectedPattern}"/>
+            <Button Content="Update" Click="Update_Click" Style="{StaticResource PrimaryButton}" Width="100" Margin="10,0,0,0" IsEnabled="{Binding HasExistingFiles}"/>
+            <Button Content="{x:Static helper:PatternSelectorWindowText.Cancel}" Click="Cancel_Click" Style="{StaticResource ActionButton}" Width="100" Margin="10,0,0,0"/>
+        </StackPanel>
+    </Grid>
+</local:CWindow>

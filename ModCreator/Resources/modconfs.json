@@ -1,0 +1,159 @@
+[
+  {
+    "Name": "RoleCreateFeature.id",
+    "Type": "textbox",
+    "Label": "Feature ID",
+    "Description": "Unique identifier for the feature",
+    "VarType": "int",
+    "Enable": true,
+    "Required": true
+  },
+  {
+    "Name": "RoleCreateFeature.type",
+    "Type": "combo",
+    "Label": "Feature Type",
+    "Description": "Feature type identifier",
+    "VarType": "int",
+    "Enable": true,
+    "Required": true,
+    "Options": ["FeatureTypes"]
+  },
+  {
+    "Name": "RoleCreateFeature.group",
+    "Type": "textbox",
+    "Label": "Group",
+    "Description": "Feature group identifier",
+    "VarType": "string",
+    "Enable": true,
+    "Required": false
+  },
+  {
+    "Name": "RoleCreateFeature.level",
+    "Type": "combo",
+    "Label": "Level",
+    "Description": "Feature level identifier",
+    "VarType": "int",
+    "Enable": true,
+    "Required": true,
+    "Options": ["FeatureLevels"]
+  },
+  {
+    "Name": "RoleCreateFeature.duration",
+    "Type": "textbox",
+    "Label": "Duration",
+    "Description": "Duration of the feature effect",
+    "VarType": "int",
+    "Enable": true,
+    "Required": false
+  },
+  {
+    "Name": "RoleCreateFeature.conceal",
+    "Type": "combo",
+    "Label": "Conceal",
+    "Description": "Conceal type of the feature effect",
+    "VarType": "int",
+    "Enable": true,
+    "Required": false,
+    "Options": ["ConcealTypes"]
+  },
+  {
+    "Name": "RoleCreateFeature.refreshType",
+    "Type": "combo",
+    "Label": "Refresh Type",
+    "Description": "Refresh type of the feature effect",
+    "VarType": "string",
+    "Enable": true,
+    "Required": false,
+    "Options": []
+  },
+  {
+    "Name": "RoleCreateFeature.name",
+    "Type": "textbox",
+    "Label": "Name",
+    "Description": "Name of the feature",
+    "VarType": "string",
+    "Enable": true,
+    "Required": true
+  },
+  {
+    "Name": "RoleCreateFeature.tips",
+    "Type": "textbox",
+    "Label": "Tips",
+    "Description": "Tips of the feature",
+    "VarType": "string",
+    "Enable": true,
+    "Required": false
+  },
+  {
+    "Name": "RoleCreateFeature.effect",
+    "Type": "textbox",
+    "Label": "Effect",
+    "Description": "Effect of the feature",
+    "VarType": "string",
+    "Enable": true,
+    "Required": false
+  },
+  {
+    "Name": "RoleCreateFeature.iconAndDesc",
+    "Type": "textbox",
+    "Label": "Icon and Description",
+    "Description": "Icon and description of the feature",
+    "VarType": "string",
+    "Enable": true,
+    "Required": false
+  },
+  {
+    "Name": "RoleCreateFeature.lockLuck",
+    "Type": "textbox",
+    "Label": "Lock Luck",
+    "Description": "Lock luck value of the feature",
+    "VarType": "int",
+    "Enable": true,
+    "Required": false
+  },
+  {
+    "Name": "RoleCreateFeature.introduceText",
+    "Type": "textbox",
+    "Label": "Introduce Text",
+    "Description": "Introduce text of the feature",
+    "VarType": "string",
+    "Enable": true,
+    "Required": false
+  },
+  {
+    "Name": "RoleCreateFeature.weight",
+    "Type": "textbox",
+    "Label": "Weight",
+    "Description": "Weight of the feature",
+    "VarType": "int",
+    "Enable": true,
+    "Required": false
+  },
+  {
+    "Name": "LocalText.id",
+    "Type": "textbox",
+    "Label": "Local text ID",
+    "Description": "Unique identifier for the localized text",
+    "VarType": "int",
+    "Enable": true,
+    "Required": true
+  },
+  {
+    "Name": "LocalText.key",
+    "Type": "textbox",
+    "Label": "Local text key",
+    "Description": "Key for mapping localized text",
+    "VarType": "string",
+    "Enable": true,
+    "Required": true
+  },
+  {
+    "Name": "LocalText.en",
+    "Type": "textbox",
+    "Label": "Local text",
+    "Description": "Localized text",
+    "VarType": "string",
+    "Enable": true,
+    "Required": true
+  }
+]
