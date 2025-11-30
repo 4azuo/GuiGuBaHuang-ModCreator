@@ -30,47 +30,52 @@
     ]
   },
   {
-    "Name": "FeatureLevels",
+    "Name": "RefreshTypes",
     "Values": [
       {
-        "DisplayName": "Level 1",
+        "DisplayName": "Only one Destiny can exist at the same time. When there is a new Destiny added, the longest non-stack time is taken.",
+        "Value": "0"
+      },
+      {
+        "DisplayName": "Only one Destiny can exist at the same time. When there is a new Destiny added, the duration is stacked.",
         "Value": "1"
       },
       {
-        "DisplayName": "Level 2",
+        "DisplayName": "If Destiny already exists, it is not added.",
         "Value": "2"
       },
       {
-        "DisplayName": "Level 3",
+        "DisplayName": "Multiple Destinies are stacked at the same time.",
+        "Value": "3"
+      }
+    ]
+  },
+  {
+    "Name": "FeatureLevels",
+    "Values": [
+      {
+        "DisplayName": "Common",
+        "Value": "1"
+      },
+      {
+        "DisplayName": "Uncommon",
+        "Value": "2"
+      },
+      {
+        "DisplayName": "Rare",
         "Value": "3"
       },
       {
-        "DisplayName": "Level 4",
+        "DisplayName": "Epic",
         "Value": "4"
       },
       {
-        "DisplayName": "Level 5",
+        "DisplayName": "Legendary",
         "Value": "5"
       },
       {
-        "DisplayName": "Level 6",
+        "DisplayName": "Mythic",
         "Value": "6"
-      },
-      {
-        "DisplayName": "Level 7",
-        "Value": "7"
-      },
-      {
-        "DisplayName": "Level 8",
-        "Value": "8"
-      },
-      {
-        "DisplayName": "Level 9",
-        "Value": "9"
-      },
-      {
-        "DisplayName": "Level 10",
-        "Value": "10"
       }
     ]
   },

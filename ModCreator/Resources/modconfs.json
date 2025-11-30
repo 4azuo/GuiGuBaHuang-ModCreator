@@ -66,8 +66,8 @@
     "Description": "Refresh type of the feature effect",
     "VarType": "string",
     "Enable": true,
-    "Required": false,
-    "Options": []
+    "Required": true,
+    "Options": ["RefreshTypes"]
   },
   {
     "Name": "RoleCreateFeature.name",

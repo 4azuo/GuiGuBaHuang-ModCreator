@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:ModCreator.Windows"
         xmlns:localData="clr-namespace:ModCreator.WindowData" xmlns:helper="clr-namespace:ModCreator.Helpers"
         xmlns:converter="clr-namespace:ModCreator.Converters" mc:Ignorable="d"
-        Title="{x:Static helper:PatternSelectorWindowText.WindowTitle}" Height="800" Width="1200" WindowStartupLocation="CenterOwner"
+        Title="{x:Static helper:PatternSelectorWindowText.WindowTitle}" Height="900" Width="1500" WindowStartupLocation="CenterOwner"
         Icon="/Resources/app-icon.png" FontFamily="Segoe UI">
     <Window.Resources>
         <converter:TextBoxVisibilityConverter x:Key="TextBoxVisibilityConverter"/>
@@ -82,7 +82,7 @@
                                             </Grid.RowDefinitions>
                                             <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto">
                                                 <StackPanel>
-                                                    <Grid Margin="0,0,0,10">
+                                                    <Grid>
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="Auto"/>
                                                             <ColumnDefinition Width="*"/>
@@ -96,7 +96,7 @@
                                                             </ItemsControl.ItemsPanel>
                                                             <ItemsControl.ItemTemplate>
                                                                 <DataTemplate>
-                                                                    <Border BorderBrush="#FFCCCCCC" BorderThickness="0,0,1,1" Padding="5" MinWidth="150" Background="#FFE8EAF6">
+                                                                    <Border BorderBrush="#FFCCCCCC" BorderThickness="0,0,1,1" Padding="5" MinWidth="150" MaxWidth="150" Background="#FFE8EAF6">
                                                                         <TextBlock Text="{Binding Label}" TextAlignment="Center" FontWeight="SemiBold"/>
                                                                     </Border>
                                                                 </DataTemplate>
@@ -106,7 +106,7 @@
                                                     <ItemsControl ItemsSource="{Binding Rows}">
                                                         <ItemsControl.ItemTemplate>
                                                             <DataTemplate>
-                                                                <Grid Margin="0,0,0,5">
+                                                                <Grid>
                                                                     <Grid.ColumnDefinitions>
                                                                         <ColumnDefinition Width="Auto"/>
                                                                         <ColumnDefinition Width="*"/>
@@ -120,7 +120,7 @@
                                                                         </ItemsControl.ItemsPanel>
                                                                         <ItemsControl.ItemTemplate>
                                                                             <DataTemplate>
-                                                                                <Border BorderBrush="#FFCCCCCC" BorderThickness="0,0,1,1" Padding="5" MinWidth="150">
+                                                                                <Border BorderBrush="#FFCCCCCC" BorderThickness="0,0,1,1" Padding="5" MinWidth="150" MaxWidth="150">
                                                                                     <Grid>
                                                                                         <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Element.Type, Converter={StaticResource TextBoxVisibilityConverter}}" IsReadOnly="{Binding Element.IsReadOnly}">
                                                                                             <TextBox.Style>
@@ -134,7 +134,7 @@
                                                                                                 </Style>
                                                                                             </TextBox.Style>
                                                                                         </TextBox>
-                                                                                        <ComboBox ItemsSource="{Binding Element.Options}" SelectedValue="{Binding Value, Mode=TwoWay}" SelectedValuePath="Value" DisplayMemberPath="DisplayName" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Element.Type, Converter={StaticResource ComboBoxVisibilityConverter}}"/>
+                                                                                        <ComboBox ItemsSource="{Binding Element.Options}" SelectedValue="{Binding Value, Mode=TwoWay}" SelectedValuePath="Value" DisplayMemberPath="DisplayName" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Element.Type, Converter={StaticResource ComboBoxVisibilityConverter}}" DropDownOpened="ComboBox_DropDownOpened" Tag="{Binding}"/>
                                                                                     </Grid>
                                                                                 </Border>
                                                                             </DataTemplate>

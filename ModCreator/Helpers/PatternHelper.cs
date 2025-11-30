@@ -1,5 +1,6 @@
 using ModCreator.Models;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -9,6 +10,11 @@ namespace ModCreator.Helpers
     {
         private static readonly Regex AutoGenPlaceholderRegex = new Regex(@"\{([^}]+)\}", RegexOptions.Compiled);
 
+        public static string GetKeyAfterFirstDot(string value)
+        {
+            return value.Contains('.') ? value.Substring(value.IndexOf('.') + 1) : value;
+        }
+
         public static string ProcessAutoGenValue(string autoGenPattern, Dictionary<string, string> rowData)
         {
             if (string.IsNullOrEmpty(autoGenPattern))
@@ -17,7 +23,7 @@ namespace ModCreator.Helpers
             return AutoGenPlaceholderRegex.Replace(autoGenPattern, match =>
             {
                 var placeholder = match.Groups[1].Value;
-                var actualKey = placeholder.Contains(".") ? placeholder.Split('.')[1] : placeholder;
+                var actualKey = GetKeyAfterFirstDot(placeholder);
                 if (rowData.TryGetValue(actualKey, out var value)) return value;
                 return match.Value;
             });

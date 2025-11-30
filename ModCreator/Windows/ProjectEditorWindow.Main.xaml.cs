@@ -124,12 +124,6 @@ namespace ModCreator.Windows
 
         private void Translate_Click(object sender, RoutedEventArgs e)
         {
-            if (WindowData?.Project == null)
-            {
-                MessageBox.Show("No project is open!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
             if (WindowData.SelectedSourceLanguage == null)
             {
                 MessageBox.Show("Please select a source language!", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -163,12 +157,12 @@ namespace ModCreator.Windows
             // Build command arguments
             var projectPath = WindowData.Project.ProjectPath;
             var sourceLanguage = WindowData.SelectedSourceLanguage.Code;
-            var arguments = $"\"{translateScriptPath}\" --project \"{projectPath}\" --path . --source_lan {sourceLanguage}";
+            var arguments = $"/K {pythonPath} \"{translateScriptPath}\" --project \"{projectPath}\" --path . --source_lan {sourceLanguage}";
 
             // Start translation process
             var processInfo = new ProcessStartInfo
             {
-                FileName = pythonPath,
+                FileName = "cmd.exe",
                 Arguments = arguments,
                 UseShellExecute = true,
                 CreateNoWindow = false

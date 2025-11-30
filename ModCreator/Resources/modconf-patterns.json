@@ -13,8 +13,8 @@
           "RoleCreateFeature.duration",
           "RoleCreateFeature.conceal",
           "RoleCreateFeature.refreshType",
-          "RoleCreateFeature.name",
-          "RoleCreateFeature.tips",
+          "RoleCreateFeature.name:[LocalText.key]",
+          "RoleCreateFeature.tips:[LocalText.key]",
           "RoleCreateFeature.effect",
           "RoleCreateFeature.iconAndDesc",
           "RoleCreateFeature.lockLuck",
@@ -28,6 +28,14 @@
           "LocalText.id",
           "LocalText.key:localtext{LocalText.id}",
           "LocalText.en"
+        ]
+      },
+      {
+        "FileName": "RoleEffect.json",
+        "Elements": [
+          "RoleEffect.id",
+          "RoleEffect.effectType",
+          "RoleEffect.value"
         ]
       }
     ]

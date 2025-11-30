@@ -74,11 +74,11 @@ namespace ModCreator.Helpers
         }
 
         /// <summary>
-        /// Write text file with UTF-8 encoding
+        /// Write text file with UTF-8 encoding (no BOM)
         /// </summary>
         public static void WriteTextFile(string filePath, string content)
         {
-            File.WriteAllText(filePath, content, Encoding.UTF8);
+            File.WriteAllText(filePath, content, new UTF8Encoding(false));
         }
 
         /// <summary>
