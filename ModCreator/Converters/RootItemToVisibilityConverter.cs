@@ -1,0 +1,27 @@
+using System;
+using System.Globalization;
+using System.Windows;
+using System.Windows.Data;
+using ModCreator.Models;
+
+namespace ModCreator.Converters
+{
+    public class RootItemToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is EventCondition condition)
+                return condition.Name == "Root" ? Visibility.Collapsed : Visibility.Visible;
+            
+            if (value is EventAction action)
+                return action.Name == "Root" ? Visibility.Collapsed : Visibility.Visible;
+            
+            return Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}

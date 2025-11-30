@@ -1,30 +1,16 @@
 using ModCreator.Commons;
+using System.Collections.ObjectModel;
 
 namespace ModCreator.Models
 {
-    /// <summary>
-    /// Represents an action in ModEvent
-    /// </summary>
     public class EventAction : AutoNotifiableObject
     {
-        /// <summary>
-        /// Action name/type
-        /// </summary>
         public string Name { get; set; }
-
-        /// <summary>
-        /// Display name for UI
-        /// </summary>
+        public string Category { get; set; }
         public string DisplayName { get; set; }
-
-        /// <summary>
-        /// Description of the action
-        /// </summary>
         public string Description { get; set; }
-
-        /// <summary>
-        /// C# code for the action
-        /// </summary>
         public string Code { get; set; }
+        public ObservableCollection<EventAction> Children { get; set; } = [];
+        public string DisplayText => string.IsNullOrEmpty(Category) ? DisplayName : $"{Category} - {DisplayName}";
     }
 }

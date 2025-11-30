@@ -10,6 +10,7 @@
     <Window.Resources>
         <converter:BoolToIconConverter x:Key="BoolToIconConverter"/>
         <converter:FilePathToImageConverter x:Key="FilePathToImageConverter"/>
+        <converter:RootItemToVisibilityConverter x:Key="RootItemToVisibilityConverter"/>
         <ObjectDataProvider x:Key="EventModeEnum" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
             <ObjectDataProvider.MethodParameters>
                 <x:Type TypeName="enums:EventMode"/>
@@ -419,20 +420,25 @@
                                                     <ColumnDefinition Width="*"/>
                                                 </Grid.ColumnDefinitions>
                                                 <Button VerticalAlignment="Top" Grid.Column="0" Content="{x:Static helper:ProjectEditorWindowText.AddCondition}" Click="AddCondition_Click" Style="{StaticResource ActionButton}" Background="#FF4CAF50" Foreground="White" Height="24" Margin="0,0,10,0"/>
-                                                <ListBox x:Name="lstConditions" Grid.Column="1" ItemsSource="{Binding SelectedModEvent.Conditions}" AllowDrop="True" Drop="Conditions_Drop" PreviewMouseLeftButtonDown="Conditions_PreviewMouseLeftButtonDown" Height="80">
-                                                    <ListBox.ItemTemplate>
-                                                        <DataTemplate>
+                                                <TreeView x:Name="tvConditions" Grid.Column="1" ItemsSource="{Binding SelectedModEvent.Conditions}" AllowDrop="True" Drop="Conditions_Drop" PreviewMouseLeftButtonDown="Conditions_PreviewMouseLeftButtonDown" Height="80">
+                                                    <TreeView.ItemContainerStyle>
+                                                        <Style TargetType="TreeViewItem">
+                                                            <Setter Property="IsExpanded" Value="True"/>
+                                                        </Style>
+                                                    </TreeView.ItemContainerStyle>
+                                                    <TreeView.ItemTemplate>
+                                                        <HierarchicalDataTemplate ItemsSource="{Binding Children}">
                                                             <Grid Margin="2">
                                                                 <Grid.ColumnDefinitions>
-                                                                    <ColumnDefinition Width="*"/>
                                                                     <ColumnDefinition Width="Auto"/>
+                                                                    <ColumnDefinition Width="*"/>
                                                                 </Grid.ColumnDefinitions>
-                                                                <Button Grid.Column="0" Content="{x:Static helper:ProjectEditorWindowText.IconRemove}" Click="RemoveCondition_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Width="24" Height="24" Padding="0"/>
-                                                                <TextBlock Grid.Column="1" Text="{Binding Code}" TextWrapping="Wrap" FontSize="12" VerticalAlignment="Center"/>
+                                                                <Button Grid.Column="0" Content="{x:Static helper:ProjectEditorWindowText.IconRemove}" Click="RemoveCondition_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Width="24" Height="24" Padding="0" Visibility="{Binding Converter={StaticResource RootItemToVisibilityConverter}}"/>
+                                                                <TextBlock Grid.Column="1" Text="{Binding DisplayText}" TextWrapping="Wrap" FontSize="12" VerticalAlignment="Center"/>
                                                             </Grid>
-                                                        </DataTemplate>
-                                                    </ListBox.ItemTemplate>
-                                                </ListBox>
+                                                        </HierarchicalDataTemplate>
+                                                    </TreeView.ItemTemplate>
+                                                </TreeView>
                                             </Grid>
                                         </GroupBox>
                                         <GroupBox Header="{x:Static helper:ProjectEditorWindowText.Actions}" Grid.Row="6">
@@ -442,20 +448,25 @@
                                                     <RowDefinition Height="*"/>
                                                 </Grid.RowDefinitions>
                                                 <Button Grid.Row="0" Content="{x:Static helper:ProjectEditorWindowText.AddAction}" Click="AddAction_Click" Style="{StaticResource ActionButton}" Background="#FF4CAF50" Foreground="White" Height="24" Padding="10,0" Margin="0,0,0,5" HorizontalAlignment="Left"/>
-                                                <ListBox x:Name="lstActions" Grid.Row="1" ItemsSource="{Binding SelectedModEvent.Actions}" MinHeight="120" AllowDrop="True" Drop="Actions_Drop" PreviewMouseLeftButtonDown="Actions_PreviewMouseLeftButtonDown">
-                                                    <ListBox.ItemTemplate>
-                                                        <DataTemplate>
+                                                <TreeView x:Name="tvActions" Grid.Row="1" ItemsSource="{Binding SelectedModEvent.Actions}" MinHeight="120" AllowDrop="True" Drop="Actions_Drop" PreviewMouseLeftButtonDown="Actions_PreviewMouseLeftButtonDown">
+                                                    <TreeView.ItemContainerStyle>
+                                                        <Style TargetType="TreeViewItem">
+                                                            <Setter Property="IsExpanded" Value="True"/>
+                                                        </Style>
+                                                    </TreeView.ItemContainerStyle>
+                                                    <TreeView.ItemTemplate>
+                                                        <HierarchicalDataTemplate ItemsSource="{Binding Children}">
                                                             <Grid Margin="2">
                                                                 <Grid.ColumnDefinitions>
-                                                                    <ColumnDefinition Width="*"/>
                                                                     <ColumnDefinition Width="Auto"/>
+                                                                    <ColumnDefinition Width="*"/>
                                                                 </Grid.ColumnDefinitions>
-                                                                <Button Grid.Column="0" Content="{x:Static helper:ProjectEditorWindowText.IconRemove}" Click="RemoveAction_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Width="24" Height="24" Padding="0"/>
-                                                                <TextBlock Grid.Column="1" Text="{Binding Code}" TextWrapping="Wrap" FontSize="12" VerticalAlignment="Center"/>
+                                                                <Button Grid.Column="0" Content="{x:Static helper:ProjectEditorWindowText.IconRemove}" Click="RemoveAction_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Width="24" Height="24" Padding="0" Visibility="{Binding Converter={StaticResource RootItemToVisibilityConverter}}"/>
+                                                                <TextBlock Grid.Column="1" Text="{Binding DisplayText}" TextWrapping="Wrap" FontSize="12" VerticalAlignment="Center"/>
                                                             </Grid>
-                                                        </DataTemplate>
-                                                    </ListBox.ItemTemplate>
-                                                </ListBox>
+                                                        </HierarchicalDataTemplate>
+                                                    </TreeView.ItemTemplate>
+                                                </TreeView>
                                             </Grid>
                                         </GroupBox>
                                     </Grid>

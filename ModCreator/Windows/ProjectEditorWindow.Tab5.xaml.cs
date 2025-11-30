@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Versioning;
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Media;
 using MessageBox = System.Windows.MessageBox;
@@ -265,6 +266,7 @@ namespace ModCreator.Windows
                 clonedEvent.Conditions.Add(new EventCondition
                 {
                     Name = condition.Name,
+                    Category = condition.Category,
                     DisplayName = condition.DisplayName,
                     Description = condition.Description,
                     Code = condition.Code
@@ -276,6 +278,7 @@ namespace ModCreator.Windows
                 clonedEvent.Actions.Add(new EventAction
                 {
                     Name = action.Name,
+                    Category = action.Category,
                     DisplayName = action.DisplayName,
                     Description = action.Description,
                     Code = action.Code
@@ -390,13 +393,33 @@ namespace ModCreator.Windows
                 var conditionInfo = selectWindow.WindowData.SelectedItem;
                 if (conditionInfo != null)
                 {
-                    WindowData.SelectedModEvent.Conditions.Add(new EventCondition
+                    var newCondition = new EventCondition
                     {
                         Name = conditionInfo.Name,
+                        Category = conditionInfo.Category,
                         DisplayName = conditionInfo.DisplayName,
                         Description = conditionInfo.Description,
                         Code = conditionInfo.Code
-                    });
+                    };
+
+                    var selectedItem = tvConditions.SelectedItem as EventCondition;
+                    if (selectedItem != null)
+                    {
+                        selectedItem.Children.Add(newCondition);
+                    }
+                    else
+                    {
+                        var root = WindowData.SelectedModEvent.Conditions.FirstOrDefault(c => c.Name == "Root");
+                        if (root != null)
+                        {
+                            root.Children.Add(newCondition);
+                        }
+                        else
+                        {
+                            WindowData.SelectedModEvent.Conditions.Add(newCondition);
+                        }
+                    }
+
                     WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.AddedCondition", conditionInfo.DisplayName);
                 }
             }
@@ -422,13 +445,33 @@ namespace ModCreator.Windows
                 var actionInfo = selectWindow.WindowData.SelectedItem;
                 if (actionInfo != null)
                 {
-                    WindowData.SelectedModEvent.Actions.Add(new EventAction
+                    var newAction = new EventAction
                     {
                         Name = actionInfo.Name,
+                        Category = actionInfo.Category,
                         DisplayName = actionInfo.DisplayName,
                         Description = actionInfo.Description,
                         Code = actionInfo.Code
-                    });
+                    };
+
+                    var selectedItem = tvActions.SelectedItem as EventAction;
+                    if (selectedItem != null)
+                    {
+                        selectedItem.Children.Add(newAction);
+                    }
+                    else
+                    {
+                        var root = WindowData.SelectedModEvent.Actions.FirstOrDefault(a => a.Name == "Root");
+                        if (root != null)
+                        {
+                            root.Children.Add(newAction);
+                        }
+                        else
+                        {
+                            WindowData.SelectedModEvent.Actions.Add(newAction);
+                        }
+                    }
+
                     WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.AddedAction", actionInfo.DisplayName);
                 }
             }
@@ -562,13 +605,13 @@ namespace ModCreator.Windows
 
         private void Conditions_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            var listBox = sender as System.Windows.Controls.ListBox;
-            if (listBox == null) return;
+            var treeView = sender as System.Windows.Controls.TreeView;
+            if (treeView == null) return;
 
-            var item = ItemsControl.ContainerFromElement(listBox, e.OriginalSource as DependencyObject) as ListBoxItem;
+            var item = ItemsControl.ContainerFromElement(treeView, e.OriginalSource as DependencyObject) as TreeViewItem;
             if (item != null)
             {
-                _draggedCondition = item.Content as EventCondition;
+                _draggedCondition = item.Header as EventCondition;
                 if (_draggedCondition != null)
                 {
                     DragDrop.DoDragDrop(item, _draggedCondition, System.Windows.DragDropEffects.Move);
@@ -580,11 +623,11 @@ namespace ModCreator.Windows
         {
             if (_draggedCondition == null || WindowData.SelectedModEvent == null) return;
 
-            var listBox = sender as System.Windows.Controls.ListBox;
-            if (listBox == null) return;
+            var treeView = sender as System.Windows.Controls.TreeView;
+            if (treeView == null) return;
 
-            var targetItem = ItemsControl.ContainerFromElement(listBox, e.OriginalSource as DependencyObject) as ListBoxItem;
-            var targetCondition = targetItem?.Content as EventCondition;
+            var targetItem = ItemsControl.ContainerFromElement(treeView, e.OriginalSource as DependencyObject) as TreeViewItem;
+            var targetCondition = targetItem?.Header as EventCondition;
 
             if (targetCondition != null && targetCondition != _draggedCondition)
             {
@@ -607,13 +650,13 @@ namespace ModCreator.Windows
 
         private void Actions_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            var listBox = sender as System.Windows.Controls.ListBox;
-            if (listBox == null) return;
+            var treeView = sender as System.Windows.Controls.TreeView;
+            if (treeView == null) return;
 
-            var item = ItemsControl.ContainerFromElement(listBox, e.OriginalSource as DependencyObject) as ListBoxItem;
+            var item = ItemsControl.ContainerFromElement(treeView, e.OriginalSource as DependencyObject) as TreeViewItem;
             if (item != null)
             {
-                _draggedAction = item.Content as EventAction;
+                _draggedAction = item.Header as EventAction;
                 if (_draggedAction != null)
                 {
                     DragDrop.DoDragDrop(item, _draggedAction, System.Windows.DragDropEffects.Move);
@@ -625,11 +668,11 @@ namespace ModCreator.Windows
         {
             if (_draggedAction == null || WindowData.SelectedModEvent == null) return;
 
-            var listBox = sender as System.Windows.Controls.ListBox;
-            if (listBox == null) return;
+            var treeView = sender as System.Windows.Controls.TreeView;
+            if (treeView == null) return;
 
-            var targetItem = ItemsControl.ContainerFromElement(listBox, e.OriginalSource as DependencyObject) as ListBoxItem;
-            var targetAction = targetItem?.Content as EventAction;
+            var targetItem = ItemsControl.ContainerFromElement(treeView, e.OriginalSource as DependencyObject) as TreeViewItem;
+            var targetAction = targetItem?.Header as EventAction;
 
             if (targetAction != null && targetAction != _draggedAction)
             {

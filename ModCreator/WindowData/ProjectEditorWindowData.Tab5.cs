@@ -100,6 +100,26 @@ namespace ModCreator.WindowData
                     SelectedModEvent = new ModEventItem { FilePath = SelectedEventItem.FullPath };
                     Project?.ModEvents?.Add(SelectedModEvent);
                 }
+
+                if (SelectedModEvent.Conditions.Count == 0 || SelectedModEvent.Conditions[0].Name != "Root")
+                {
+                    SelectedModEvent.Conditions.Insert(0, new EventCondition
+                    {
+                        Name = "Root",
+                        DisplayName = "Root",
+                        Code = "Root"
+                    });
+                }
+
+                if (SelectedModEvent.Actions.Count == 0 || SelectedModEvent.Actions[0].Name != "Root")
+                {
+                    SelectedModEvent.Actions.Insert(0, new EventAction
+                    {
+                        Name = "Root",
+                        DisplayName = "Root",
+                        Code = "Root"
+                    });
+                }
             }
             else
                 SelectedModEvent = null;

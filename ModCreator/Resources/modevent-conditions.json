@@ -1,5 +1,19 @@
 [
   {
+    "Category": "Logic",
+    "Name": "AND",
+    "DisplayName": "AND (All conditions must be true)",
+    "Description": "Logical AND operator - all child conditions must be true",
+    "Code": "/* Add conditions as children */"
+  },
+  {
+    "Category": "Logic",
+    "Name": "OR",
+    "DisplayName": "OR (Any condition must be true)",
+    "Description": "Logical OR operator - at least one child condition must be true",
+    "Code": "/* Add conditions as children */"
+  },
+  {
     "Category": "Basic",
     "Name": "true",
     "DisplayName": "Always True",
