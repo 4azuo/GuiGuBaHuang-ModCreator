@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using ModCreator.Commons;
+using ModCreator.Enums;
 
 namespace ModCreator.Models
 {
@@ -9,9 +11,9 @@ namespace ModCreator.Models
     public class ModEventItem : AutoNotifiableObject
     {
         /// <summary>
-        /// Event mode: "ModEvent" or "NonEvent"
+        /// Event mode: ModEvent or NonEvent
         /// </summary>
-        public string EventMode { get; set; } = "ModEvent";
+        public EventMode EventMode { get; set; } = EventMode.ModEvent;
 
         /// <summary>
         /// Custom event method name (for NonEvent mode)
@@ -46,12 +48,12 @@ namespace ModCreator.Models
         /// <summary>
         /// List of conditions for this event
         /// </summary>
-        public List<EventCondition> Conditions { get; set; } = new List<EventCondition>();
+        public ObservableCollection<EventCondition> Conditions { get; set; } = [];
 
         /// <summary>
         /// List of actions for this event
         /// </summary>
-        public List<EventAction> Actions { get; set; } = new List<EventAction>();
+        public ObservableCollection<EventAction> Actions { get; set; } = [];
 
         /// <summary>
         /// Full file path to the ModEvent .cs file

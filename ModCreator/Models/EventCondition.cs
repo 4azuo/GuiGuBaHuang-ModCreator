@@ -1,33 +1,16 @@
-using System.ComponentModel;
+using ModCreator.Commons;
 
 namespace ModCreator.Models
 {
     /// <summary>
     /// Represents a condition in ModEvent
     /// </summary>
-    public class EventCondition : INotifyPropertyChanged
+    public class EventCondition : AutoNotifiableObject
     {
-        private string _name;
-        private string _code;
-        private int _order;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
         /// <summary>
         /// Condition name/type
         /// </summary>
-        public string Name
-        {
-            get => _name;
-            set
-            {
-                if (_name != value)
-                {
-                    _name = value;
-                    OnPropertyChanged(nameof(Name));
-                }
-            }
-        }
+        public string Name { get; set; }
 
         /// <summary>
         /// Display name for UI
@@ -42,38 +25,6 @@ namespace ModCreator.Models
         /// <summary>
         /// C# code for the condition
         /// </summary>
-        public string Code
-        {
-            get => _code;
-            set
-            {
-                if (_code != value)
-                {
-                    _code = value;
-                    OnPropertyChanged(nameof(Code));
-                }
-            }
-        }
-
-        /// <summary>
-        /// Order/position in the condition list
-        /// </summary>
-        public int Order
-        {
-            get => _order;
-            set
-            {
-                if (_order != value)
-                {
-                    _order = value;
-                    OnPropertyChanged(nameof(Order));
-                }
-            }
-        }
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        public string Code { get; set; }
     }
 }

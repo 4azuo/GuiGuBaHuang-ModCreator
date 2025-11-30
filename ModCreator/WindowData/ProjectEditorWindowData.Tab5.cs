@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using EventInfo = ModCreator.Models.EventInfo;
 
 namespace ModCreator.WindowData
 {
@@ -17,27 +18,18 @@ namespace ModCreator.WindowData
         private static readonly Regex EventMethodRegex = new(@"public override void (On\w+)\([^)]*\)", RegexOptions.Compiled);
         private static readonly Regex ConditionRegex = new(@"return (.+?);", RegexOptions.Singleline | RegexOptions.Compiled);
         private static readonly Regex ActionRegex = new(@"(?:^|\n)\s+(.+?;)(?=\s*(?:\n|$))", RegexOptions.Multiline | RegexOptions.Compiled);
-
+        
         public ObservableCollection<FileItem> EventItems { get; set; } = [];
-
         [NotifyMethod(nameof(OnEventItemSelected))]
         public FileItem SelectedEventItem { get; set; }
-
         [NotifyMethod(nameof(LoadModEventContent))]
         public ModEventItem SelectedModEvent { get; set; }
-
         public string EventSourceContent { get; set; }
         public bool HasSelectedEventFile => SelectedModEvent != null;
         public bool IsGuiMode { get; set; } = true;
-        public List<EventCategory> EventCategories { get; set; } = new List<EventCategory>();
-        public List<ConditionInfo> AvailableConditions { get; set; } = new List<ConditionInfo>();
-        public List<ActionInfo> AvailableActions { get; set; } = new List<ActionInfo>();
-        public List<string> EventCategoryList { get; set; } = new List<string>();
-        public List<string> ConditionCategoryList { get; set; } = new List<string>();
-        public List<string> ActionCategoryList { get; set; } = new List<string>();
         public List<string> CacheTypes { get; set; } = [];
         public List<string> WorkOnTypes { get; set; } = [];
-        public List<string> EventModeOptions { get; set; } = new List<string> { "ModEvent", "NonEvent" };
+        public List<EventInfo> AvailableEvents { get; set; } = ResourceHelper.ReadEmbeddedResource<List<EventInfo>>("ModCreator.Resources.modevent-events.json");
 
         public void LoadModEventFiles()
         {
@@ -131,19 +123,16 @@ namespace ModCreator.WindowData
 
                 var separator = modEvent.ConditionLogic == "AND" ? "&&" : "||";
                 var conditionParts = conditionCode.Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries);
-                int order = 0;
                 foreach (var part in conditionParts)
                 {
                     modEvent.Conditions.Add(new EventCondition
                     {
-                        Code = part.Trim().TrimEnd(';'),
-                        Order = order++
+                        Code = part.Trim().TrimEnd(';')
                     });
                 }
             }
 
             var actionMatches = ActionRegex.Matches(source);
-            int actionOrder = 0;
             foreach (Match match in actionMatches)
             {
                 var actionCode = match.Groups[1].Value.Trim();
@@ -151,8 +140,7 @@ namespace ModCreator.WindowData
                 {
                     modEvent.Actions.Add(new EventAction
                     {
-                        Code = actionCode,
-                        Order = actionOrder++
+                        Code = actionCode
                     });
                 }
             }
@@ -179,60 +167,7 @@ namespace ModCreator.WindowData
 
         public string GenerateModEventCode(ModEventItem modEvent)
         {
-            var templatePath = Path.Combine(Project.ProjectPath, "EventTemplate.tmp");
-            var contentTemplatePath = Path.Combine(Project.ProjectPath, "EventTemplateContent.tmp");
-
-            if (!File.Exists(templatePath) || !File.Exists(contentTemplatePath))
-                return string.Empty;
-
-            var template = File.ReadAllText(templatePath);
-            var contentTemplate = File.ReadAllText(contentTemplatePath);
-
-            var eventInfo = EventCategories.SelectMany(c => c.Events)
-                .FirstOrDefault(e => e.Name == modEvent.SelectedEvent);
-
-            if (eventInfo == null)
-                return string.Empty;
-
-            var conditionCode = GenerateConditionCode(modEvent);
-            var actionCode = GenerateActionCode(modEvent);
-
-            var eventContent = contentTemplate
-                .Replace("#EVENTMETHOD#", eventInfo.Signature)
-                .Replace("#CONDITION#", conditionCode)
-                .Replace("#ACTION#", actionCode);
-
-            var code = template
-                .Replace("#CLASSNAME#", modEvent.FileName)
-                .Replace("#CACHETYPE#", modEvent.CacheType)
-                .Replace("#WORKON#", modEvent.WorkOn)
-                .Replace("#ORDERINDEX#", modEvent.OrderIndex.ToString())
-                .Replace("#EVENTCONTENT#", eventContent);
-
-            return code;
-        }
-
-        private string GenerateConditionCode(ModEventItem modEvent)
-        {
-            if (modEvent.Conditions == null || modEvent.Conditions.Count == 0)
-                return "true";
-
-            var separator = modEvent.ConditionLogic == "AND" ? " && " : " || ";
-            var conditions = modEvent.Conditions.OrderBy(c => c.Order)
-                .Select(c => $"({c.Code})");
-
-            return string.Join(separator, conditions);
-        }
-
-        private string GenerateActionCode(ModEventItem modEvent)
-        {
-            if (modEvent.Actions == null || modEvent.Actions.Count == 0)
-                return "// No actions";
-
-            var actions = modEvent.Actions.OrderBy(a => a.Order)
-                .Select(a => $"        {a.Code}");
-
-            return string.Join("\n", actions);
+            return string.Empty; // Todo
         }
     }
 }

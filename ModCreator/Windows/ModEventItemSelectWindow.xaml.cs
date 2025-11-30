@@ -1,3 +1,4 @@
+using ModCreator.Enums;
 using ModCreator.WindowData;
 using System.ComponentModel;
 using System.Windows;
@@ -7,9 +8,15 @@ namespace ModCreator.Windows
 {
     public partial class ModEventItemSelectWindow : CWindow<ModEventItemSelectWindowData>
     {
+        public ModEventItemType ItemType { get; set; }
+
         public override ModEventItemSelectWindowData InitData(CancelEventArgs e)
         {
             var data = new ModEventItemSelectWindowData();
+            Loaded += (s, ev) =>
+            {
+                data.Initialize(ItemType);
+            };
             return data;
         }
 

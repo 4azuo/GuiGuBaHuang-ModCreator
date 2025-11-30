@@ -80,10 +80,8 @@ namespace ModCreator.Helpers
                     return (O)converter.ConvertFrom(value);
                 return (O)Convert.ChangeType(value, t);
             }
-            catch (Exception ex)
+            catch
             {
-                //DebugHelper.WriteLine($"ParseHelper.Parse<{typeof(O).Name}>({value}, {default(O)})");
-                //DebugHelper.WriteLine(ex);
                 return def;
             }
         }

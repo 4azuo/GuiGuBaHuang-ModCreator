@@ -9,11 +9,9 @@ namespace ModCreator.Helpers
         private static string ReadEmbeddedResource(string resourceName)
         {
             var assembly = Assembly.GetExecutingAssembly();
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
-            using (var reader = new StreamReader(stream))
-            {
-                return reader.ReadToEnd();
-            }
+            using var stream = assembly.GetManifestResourceStream(resourceName);
+            using var reader = new StreamReader(stream);
+            return reader.ReadToEnd();
         }
 
         public static T ReadEmbeddedResource<T>(string resourceName)

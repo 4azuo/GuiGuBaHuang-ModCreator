@@ -1,4 +1,6 @@
 using ModCreator.Attributes;
+using ModCreator.Enums;
+using ModCreator.Helpers;
 using ModCreator.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,81 +12,96 @@ namespace ModCreator.WindowData
     public class ModEventItemSelectWindowData : CWindowData
     {
         public string WindowTitle { get; set; } = "Select Item";
-        public string ItemType { get; set; }
+        public ModEventItemType ItemType { get; set; }
         public ObservableCollection<string> Categories { get; set; } = [];
-
         [NotifyMethod(nameof(OnCategoryChanged))]
         public string SelectedCategory { get; set; }
-
         [NotifyMethod(nameof(OnSearchTextChanged))]
         public string SearchText { get; set; } = string.Empty;
-
-        public List<object> AllItems { get; set; } = [];
-        public ObservableCollection<object> FilteredItems { get; set; } = [];
-        public object SelectedItem { get; set; }
+        public List<ModEventItemDisplay> AllItems { get; set; } = [];
+        public ObservableCollection<ModEventItemDisplay> FilteredItems { get; set; } = [];
+        public ModEventItemDisplay SelectedItem { get; set; }
         public bool HasSelectedItem => SelectedItem != null;
 
-        public void InitializeWithEvents(List<EventCategory> eventCategories)
+        public void Initialize(ModEventItemType itemType)
         {
-            ItemType = "Event";
-            WindowTitle = "Select Event";
-
-            Categories.Clear();
-            Categories.Add("All");
-            foreach (var cat in eventCategories.Select(c => c.Category).Distinct().OrderBy(c => c))
-                Categories.Add(cat);
-
-            AllItems.Clear();
-            foreach (var category in eventCategories)
+            ItemType = itemType;
+            WindowTitle = itemType switch
             {
-                foreach (var evt in category.Events)
-                {
-                    AllItems.Add(new EventInfoDisplay
+                ModEventItemType.Event => "Select Event",
+                ModEventItemType.Condition => "Select Condition",
+                ModEventItemType.Action => "Select Action",
+                _ => "Select Item"
+            };
+
+            LoadItems();
+            LoadCategories();
+            SelectedCategory = "All";
+            UpdateFilteredItems();
+        }
+
+        private void LoadItems()
+        {
+            AllItems.Clear();
+
+            switch (ItemType)
+            {
+                case ModEventItemType.Event:
+                    var events = ResourceHelper.ReadEmbeddedResource<List<Models.EventInfo>>("ModCreator.Resources.modevent-events.json");
+                    foreach (var evt in events)
                     {
-                        Category = category.Category,
-                        Name = evt.Name,
-                        DisplayName = evt.DisplayName,
-                        Description = evt.Description,
-                        Code = evt.Signature,
-                        EventInfo = evt
-                    });
-                }
+                        AllItems.Add(new ModEventItemDisplay
+                        {
+                            Category = evt.Category,
+                            Name = evt.Name,
+                            DisplayName = evt.DisplayName,
+                            Description = evt.Description,
+                            Code = evt.Signature
+                        });
+                    }
+                    break;
+
+                case ModEventItemType.Condition:
+                    var conditions = ResourceHelper.ReadEmbeddedResource<List<ConditionInfo>>("ModCreator.Resources.modevent-conditions.json");
+                    foreach (var cond in conditions)
+                    {
+                        AllItems.Add(new ModEventItemDisplay
+                        {
+                            Category = cond.Category,
+                            Name = cond.Name,
+                            DisplayName = cond.DisplayName,
+                            Description = cond.Description,
+                            Code = cond.Code
+                        });
+                    }
+                    break;
+
+                case ModEventItemType.Action:
+                    var actions = ResourceHelper.ReadEmbeddedResource<List<ActionInfo>>("ModCreator.Resources.modevent-actions.json");
+                    foreach (var act in actions)
+                    {
+                        AllItems.Add(new ModEventItemDisplay
+                        {
+                            Category = act.Category,
+                            Name = act.Name,
+                            DisplayName = act.DisplayName,
+                            Description = act.Description,
+                            Code = act.Code
+                        });
+                    }
+                    break;
             }
-
-            SelectedCategory = "All";
-            UpdateFilteredItems();
         }
 
-        public void InitializeWithConditions(List<ConditionInfo> conditions)
+        private void LoadCategories()
         {
-            ItemType = "Condition";
-            WindowTitle = "Select Condition";
-
             Categories.Clear();
             Categories.Add("All");
-            foreach (var cat in conditions.Select(c => c.Category).Distinct().OrderBy(c => c))
-                Categories.Add(cat);
-
-            AllItems = conditions.Cast<object>().ToList();
-
-            SelectedCategory = "All";
-            UpdateFilteredItems();
-        }
-
-        public void InitializeWithActions(List<ActionInfo> actions)
-        {
-            ItemType = "Action";
-            WindowTitle = "Select Action";
-
-            Categories.Clear();
-            Categories.Add("All");
-            foreach (var cat in actions.Select(a => a.Category).Distinct().OrderBy(c => c))
-                Categories.Add(cat);
-
-            AllItems = actions.Cast<object>().ToList();
-
-            SelectedCategory = "All";
-            UpdateFilteredItems();
+            foreach (var cat in AllItems.Select(i => i.Category).Distinct().OrderBy(c => c))
+            {
+                if (!string.IsNullOrEmpty(cat))
+                    Categories.Add(cat);
+            }
         }
 
         public void OnCategoryChanged(object obj, PropertyInfo prop, object oldValue, object newValue)
@@ -105,34 +122,16 @@ namespace ModCreator.WindowData
 
             if (!string.IsNullOrEmpty(SelectedCategory) && SelectedCategory != "All")
             {
-                query = query.Where(item =>
-                {
-                    if (item is EventInfoDisplay evt) return evt.Category == SelectedCategory;
-                    if (item is ConditionInfo cond) return cond.Category == SelectedCategory;
-                    if (item is ActionInfo act) return act.Category == SelectedCategory;
-                    return false;
-                });
+                query = query.Where(item => item.Category == SelectedCategory);
             }
 
             if (!string.IsNullOrEmpty(SearchText))
             {
                 var searchLower = SearchText.ToLower();
                 query = query.Where(item =>
-                {
-                    if (item is EventInfoDisplay evt)
-                        return evt.DisplayName?.ToLower().Contains(searchLower) == true ||
-                               evt.Description?.ToLower().Contains(searchLower) == true ||
-                               evt.Name?.ToLower().Contains(searchLower) == true;
-                    if (item is ConditionInfo cond)
-                        return cond.DisplayName?.ToLower().Contains(searchLower) == true ||
-                               cond.Description?.ToLower().Contains(searchLower) == true ||
-                               cond.Name?.ToLower().Contains(searchLower) == true;
-                    if (item is ActionInfo act)
-                        return act.DisplayName?.ToLower().Contains(searchLower) == true ||
-                               act.Description?.ToLower().Contains(searchLower) == true ||
-                               act.Name?.ToLower().Contains(searchLower) == true;
-                    return false;
-                });
+                    item.DisplayName?.ToLower().Contains(searchLower) == true ||
+                    item.Description?.ToLower().Contains(searchLower) == true ||
+                    item.Name?.ToLower().Contains(searchLower) == true);
             }
 
             foreach (var item in query)

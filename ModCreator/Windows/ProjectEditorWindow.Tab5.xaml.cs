@@ -13,16 +13,7 @@ using MessageBox = System.Windows.MessageBox;
 namespace ModCreator.Windows
 {
     public partial class ProjectEditorWindow : CWindow<ProjectEditorWindowData>
-    {        
-        [SupportedOSPlatform("windows6.1")]
-        private void PopulateEventsComboBox()
-        {
-            var cmbEvents = this.FindName("cmbEvents") as ComboBox;
-            if (cmbEvents == null || WindowData == null) return;
-
-            cmbEvents.ItemsSource = WindowData.EventCategories.SelectMany(cat => cat.Events).ToList();
-        }
-
+    {
         private void TreeView_EventSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (e.NewValue is FileItem fileItem)
@@ -237,8 +228,7 @@ namespace ModCreator.Windows
                     Name = condition.Name,
                     DisplayName = condition.DisplayName,
                     Description = condition.Description,
-                    Code = condition.Code,
-                    Order = condition.Order
+                    Code = condition.Code
                 });
             }
 
@@ -249,8 +239,7 @@ namespace ModCreator.Windows
                     Name = action.Name,
                     DisplayName = action.DisplayName,
                     Description = action.Description,
-                    Code = action.Code,
-                    Order = action.Order
+                    Code = action.Code
                 });
             }
 
@@ -338,12 +327,11 @@ namespace ModCreator.Windows
         {
             if (WindowData.SelectedModEvent == null) return;
 
-            var selectWindow = new ModEventItemSelectWindow { Owner = this };
-            selectWindow.WindowData.InitializeWithEvents(WindowData.EventCategories);
+            var selectWindow = new ModEventItemSelectWindow { Owner = this, ItemType = Enums.ModEventItemType.Event };
 
             if (selectWindow.ShowDialog() == true)
             {
-                var selectedItem = selectWindow.WindowData.SelectedItem as EventInfoDisplay;
+                var selectedItem = selectWindow.WindowData.SelectedItem;
                 if (selectedItem != null)
                 {
                     WindowData.SelectedModEvent.SelectedEvent = selectedItem.Name;
@@ -356,12 +344,11 @@ namespace ModCreator.Windows
         {
             if (WindowData.SelectedModEvent == null) return;
 
-            var selectWindow = new ModEventItemSelectWindow { Owner = this };
-            selectWindow.WindowData.InitializeWithConditions(WindowData.AvailableConditions);
+            var selectWindow = new ModEventItemSelectWindow { Owner = this, ItemType = Enums.ModEventItemType.Condition };
 
             if (selectWindow.ShowDialog() == true)
             {
-                var conditionInfo = selectWindow.WindowData.SelectedItem as ConditionInfo;
+                var conditionInfo = selectWindow.WindowData.SelectedItem;
                 if (conditionInfo != null)
                 {
                     WindowData.SelectedModEvent.Conditions.Add(new EventCondition
@@ -369,8 +356,7 @@ namespace ModCreator.Windows
                         Name = conditionInfo.Name,
                         DisplayName = conditionInfo.DisplayName,
                         Description = conditionInfo.Description,
-                        Code = conditionInfo.Code,
-                        Order = WindowData.SelectedModEvent.Conditions.Count
+                        Code = conditionInfo.Code
                     });
                     WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.AddedCondition", conditionInfo.DisplayName);
                 }
@@ -390,12 +376,11 @@ namespace ModCreator.Windows
         {
             if (WindowData.SelectedModEvent == null) return;
 
-            var selectWindow = new ModEventItemSelectWindow { Owner = this };
-            selectWindow.WindowData.InitializeWithActions(WindowData.AvailableActions);
+            var selectWindow = new ModEventItemSelectWindow { Owner = this, ItemType = Enums.ModEventItemType.Action };
 
             if (selectWindow.ShowDialog() == true)
             {
-                var actionInfo = selectWindow.WindowData.SelectedItem as ActionInfo;
+                var actionInfo = selectWindow.WindowData.SelectedItem;
                 if (actionInfo != null)
                 {
                     WindowData.SelectedModEvent.Actions.Add(new EventAction
@@ -403,8 +388,7 @@ namespace ModCreator.Windows
                         Name = actionInfo.Name,
                         DisplayName = actionInfo.DisplayName,
                         Description = actionInfo.Description,
-                        Code = actionInfo.Code,
-                        Order = WindowData.SelectedModEvent.Actions.Count
+                        Code = actionInfo.Code
                     });
                     WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.AddedAction", actionInfo.DisplayName);
                 }
@@ -417,9 +401,6 @@ namespace ModCreator.Windows
             if (action == null || WindowData.SelectedModEvent == null) return;
 
             WindowData.SelectedModEvent.Actions.Remove(action);
-            
-            for (int i = 0; i < WindowData.SelectedModEvent.Actions.Count; i++)
-                WindowData.SelectedModEvent.Actions[i].Order = i;
             
             WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.RemovedAction", action.DisplayName);
         }
@@ -550,12 +531,6 @@ namespace ModCreator.Windows
                 {
                     conditions.RemoveAt(oldIndex);
                     conditions.Insert(newIndex, _draggedCondition);
-                    
-                    // Update order
-                    for (int i = 0; i < conditions.Count; i++)
-                    {
-                        conditions[i].Order = i;
-                    }
                 }
             }
 
@@ -601,12 +576,6 @@ namespace ModCreator.Windows
                 {
                     actions.RemoveAt(oldIndex);
                     actions.Insert(newIndex, _draggedAction);
-                    
-                    // Update order
-                    for (int i = 0; i < actions.Count; i++)
-                    {
-                        actions[i].Order = i;
-                    }
                 }
             }
 
@@ -637,7 +606,7 @@ namespace ModCreator.Windows
             var txtWorkOnLabel = this.FindName("txtWorkOnLabel") as TextBlock;
             var cmbWorkOn = this.FindName("cmbWorkOn") as ComboBox;
 
-            var isModEvent = mode == "ModEvent";
+            var isModEvent = mode == Enums.EventMode.ModEvent.ToString();
             
             if (grpEventSelection != null)
                 grpEventSelection.Visibility = isModEvent ? Visibility.Visible : Visibility.Collapsed;

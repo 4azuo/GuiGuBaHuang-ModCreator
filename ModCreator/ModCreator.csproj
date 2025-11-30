@@ -57,7 +57,6 @@
     <None Remove="Resources\embeded-settings.json" />
     <None Remove="Resources\modevent-actions.json" />
     <None Remove="Resources\modevent-cachetype.json" />
-    <None Remove="Resources\modevent-cats.json" />
     <None Remove="Resources\modevent-conditions.json" />
     <None Remove="Resources\modevent-events.json" />
     <None Remove="Resources\modevent-workon.json" />
@@ -77,7 +76,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\modevent-actions.json" />
     <EmbeddedResource Include="Resources\modevent-cachetype.json" />
-    <EmbeddedResource Include="Resources\modevent-cats.json" />
     <EmbeddedResource Include="Resources\modevent-conditions.json" />
     <EmbeddedResource Include="Resources\modevent-events.json" />
     <EmbeddedResource Include="Resources\modevent-workon.json" />

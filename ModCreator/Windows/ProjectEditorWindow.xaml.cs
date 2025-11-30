@@ -1,4 +1,3 @@
-using ModCreator.Businesses;
 using ModCreator.Helpers;
 using ModCreator.Models;
 using ModCreator.WindowData;
@@ -12,12 +11,6 @@ namespace ModCreator.Windows
 {
     public partial class ProjectEditorWindow : CWindow<ProjectEditorWindowData>
     {
-        // Business layer instances
-        private ModConfBusiness _modConfBusiness;
-        private ModImgBusiness _modImgBusiness;
-        private GlobalVariablesBusiness _globalVariablesBusiness;
-        private ModEventBusiness _modEventBusiness;
-
         // Auto-save timer
         private DispatcherTimer _autoSaveTimer;
 
@@ -50,20 +43,11 @@ namespace ModCreator.Windows
             {
                 WindowData.Project = ProjectToEdit;
 
-                // Initialize business layer
-                _modConfBusiness = new ModConfBusiness(WindowData, this);
-                _modImgBusiness = new ModImgBusiness(WindowData, this);
-                _globalVariablesBusiness = new GlobalVariablesBusiness(WindowData, this);
-                _modEventBusiness = new ModEventBusiness(WindowData, this);
-
                 // Setup AvalonEdit binding
                 SetupAvalonEditBinding();
                 
                 // Setup Variables Source Editor binding
                 SetupVariablesSourceBinding();
-                
-                // Populate Events ComboBox
-                PopulateEventsComboBox();
 
                 // Initialize auto-save timer
                 InitializeAutoSaveTimer();

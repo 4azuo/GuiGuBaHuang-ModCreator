@@ -85,15 +85,8 @@ namespace ModCreator.WindowData
             var resourcePrefix = "ModCreator.Resources.";
 
             SourceLanguages = ResourceHelper.ReadEmbeddedResource<List<Language>>($"{resourcePrefix}languages.json");
-            EventCategories = ResourceHelper.ReadEmbeddedResource<List<EventCategory>>($"{resourcePrefix}modevent-events.json");
-            AvailableConditions = ResourceHelper.ReadEmbeddedResource<List<ConditionInfo>>($"{resourcePrefix}modevent-conditions.json");
-            AvailableActions = ResourceHelper.ReadEmbeddedResource<List<ActionInfo>>($"{resourcePrefix}modevent-actions.json");
             CacheTypes = ResourceHelper.ReadEmbeddedResource<List<string>>($"{resourcePrefix}modevent-cachetype.json");
             WorkOnTypes = ResourceHelper.ReadEmbeddedResource<List<string>>($"{resourcePrefix}modevent-workon.json");
-            var cats = ResourceHelper.ReadEmbeddedResource<Dictionary<string, List<string>>>($"{resourcePrefix}modevent-cats.json");
-            EventCategoryList = cats["EventCategories"];
-            ConditionCategoryList = cats["ConditionCategories"];
-            ActionCategoryList = cats["ActionCategories"];
 
             SelectedSourceLanguage = SourceLanguages[0];
         }
