@@ -88,7 +88,7 @@
                                                             <ColumnDefinition Width="*"/>
                                                         </Grid.ColumnDefinitions>
                                                         <Button Grid.Column="0" Content="➕" Click="AddRow_Click" Tag="{Binding}" Margin="0,0,5,0" Padding="10,5" Background="#FF2E5090" Foreground="White" BorderThickness="0" Cursor="Hand"/>
-                                                        <ItemsControl Grid.Column="1" ItemsSource="{Binding Elements}">
+                                                        <ItemsControl Grid.Column="1" ItemsSource="{Binding DisplayElements}">
                                                             <ItemsControl.ItemsPanel>
                                                                 <ItemsPanelTemplate>
                                                                     <StackPanel Orientation="Horizontal"/>
@@ -122,7 +122,18 @@
                                                                             <DataTemplate>
                                                                                 <Border BorderBrush="#FFCCCCCC" BorderThickness="0,0,1,1" Padding="5" MinWidth="150">
                                                                                     <Grid>
-                                                                                        <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Element.Type, Converter={StaticResource TextBoxVisibilityConverter}}"/>
+                                                                                        <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Element.Type, Converter={StaticResource TextBoxVisibilityConverter}}" IsReadOnly="{Binding Element.IsReadOnly}">
+                                                                                            <TextBox.Style>
+                                                                                                <Style TargetType="TextBox">
+                                                                                                    <Style.Triggers>
+                                                                                                        <Trigger Property="IsReadOnly" Value="True">
+                                                                                                            <Setter Property="Background" Value="#FFF0F0F0"/>
+                                                                                                            <Setter Property="Foreground" Value="#FF666666"/>
+                                                                                                        </Trigger>
+                                                                                                    </Style.Triggers>
+                                                                                                </Style>
+                                                                                            </TextBox.Style>
+                                                                                        </TextBox>
                                                                                         <ComboBox ItemsSource="{Binding Element.Options}" SelectedValue="{Binding Value, Mode=TwoWay}" SelectedValuePath="Value" DisplayMemberPath="DisplayName" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Element.Type, Converter={StaticResource ComboBoxVisibilityConverter}}"/>
                                                                                     </Grid>
                                                                                 </Border>

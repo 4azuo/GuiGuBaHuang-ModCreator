@@ -10,12 +10,16 @@ namespace ModCreator.Models
         public Dictionary<string, string> RowData { get; set; }
         public ObservableCollection<RowElementBinding> Bindings { get; set; }
 
-        public RowDisplay(Dictionary<string, string> rowData, List<PatternElement> elements)
+        public RowDisplay(Dictionary<string, string> rowData, List<PatternElement> allElements, List<PatternElement> displayElements = null)
         {
             RowData = rowData;
-            Bindings = new ObservableCollection<RowElementBinding>(
-                elements.Select(e => new RowElementBinding(rowData, e))
-            );
+            var elementsToDisplay = displayElements ?? allElements;
+            Bindings = new ObservableCollection<RowElementBinding>();
+            
+            foreach (var element in elementsToDisplay)
+            {
+                Bindings.Add(new RowElementBinding(rowData, element, allElements, Bindings));
+            }
         }
     }
 }

@@ -92,8 +92,23 @@ namespace ModCreator.Windows
                         var jsonObject = new Dictionary<string, object>();
                         foreach (var element in file.Elements)
                         {
-                            if (row.RowData.ContainsKey(element.Name) && !string.IsNullOrWhiteSpace(row.RowData[element.Name]))
-                                jsonObject[element.Name] = row.RowData[element.Name];
+                            var value = string.Empty;
+
+                            if (element.Type == "composite")
+                            {
+                                value = PatternHelper.ProcessCompositeValue(element, row.RowData);
+                            }
+                            else if (!string.IsNullOrEmpty(element.AutoGenPattern))
+                            {
+                                value = PatternHelper.ProcessAutoGenValue(element.AutoGenPattern, row.RowData);
+                            }
+                            else if (row.RowData.ContainsKey(element.Name))
+                            {
+                                value = row.RowData[element.Name];
+                            }
+
+                            if (!string.IsNullOrWhiteSpace(value))
+                                jsonObject[element.Name] = value;
                         }
                         if (jsonObject.Count > 0)
                             jsonArray.Add(jsonObject);
@@ -111,8 +126,23 @@ namespace ModCreator.Windows
                     var row = file.Rows[0];
                     foreach (var element in file.Elements)
                     {
-                        if (row.RowData.ContainsKey(element.Name) && !string.IsNullOrWhiteSpace(row.RowData[element.Name]))
-                            jsonObject[element.Name] = row.RowData[element.Name];
+                        var value = string.Empty;
+
+                        if (element.Type == "composite")
+                        {
+                            value = PatternHelper.ProcessCompositeValue(element, row.RowData);
+                        }
+                        else if (!string.IsNullOrEmpty(element.AutoGenPattern))
+                        {
+                            value = PatternHelper.ProcessAutoGenValue(element.AutoGenPattern, row.RowData);
+                        }
+                        else if (row.RowData.ContainsKey(element.Name))
+                        {
+                            value = row.RowData[element.Name];
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(value))
+                            jsonObject[element.Name] = value;
                     }
 
                     if (jsonObject.Count > 0)
@@ -197,8 +227,23 @@ namespace ModCreator.Windows
                         var jsonObject = new Dictionary<string, object>();
                         foreach (var element in file.Elements)
                         {
-                            if (row.RowData.ContainsKey(element.Name) && !string.IsNullOrWhiteSpace(row.RowData[element.Name]))
-                                jsonObject[element.Name] = row.RowData[element.Name];
+                            var value = string.Empty;
+
+                            if (element.Type == "composite")
+                            {
+                                value = PatternHelper.ProcessCompositeValue(element, row.RowData);
+                            }
+                            else if (!string.IsNullOrEmpty(element.AutoGenPattern))
+                            {
+                                value = PatternHelper.ProcessAutoGenValue(element.AutoGenPattern, row.RowData);
+                            }
+                            else if (row.RowData.ContainsKey(element.Name))
+                            {
+                                value = row.RowData[element.Name];
+                            }
+
+                            if (!string.IsNullOrWhiteSpace(value))
+                                jsonObject[element.Name] = value;
                         }
                         if (jsonObject.Count > 0)
                             jsonArray.Add(jsonObject);
@@ -216,8 +261,23 @@ namespace ModCreator.Windows
                     var row = file.Rows[0];
                     foreach (var element in file.Elements)
                     {
-                        if (row.RowData.ContainsKey(element.Name) && !string.IsNullOrWhiteSpace(row.RowData[element.Name]))
-                            jsonObject[element.Name] = row.RowData[element.Name];
+                        var value = string.Empty;
+
+                        if (element.Type == "composite")
+                        {
+                            value = PatternHelper.ProcessCompositeValue(element, row.RowData);
+                        }
+                        else if (!string.IsNullOrEmpty(element.AutoGenPattern))
+                        {
+                            value = PatternHelper.ProcessAutoGenValue(element.AutoGenPattern, row.RowData);
+                        }
+                        else if (row.RowData.ContainsKey(element.Name))
+                        {
+                            value = row.RowData[element.Name];
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(value))
+                            jsonObject[element.Name] = value;
                     }
 
                     if (jsonObject.Count > 0)

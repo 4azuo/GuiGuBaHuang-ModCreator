@@ -92,12 +92,35 @@ namespace ModCreator.WindowData
             foreach (var file in SelectedPattern.Files)
             {
                 var displayFile = new PatternFileDisplay { FileName = file.FileName };
+                
                 foreach (var elementName in file.Elements)
                 {
                     var element = ResolveElement(elementName);
                     if (element != null && element.Enable)
+                    {
                         displayFile.Elements.Add(element);
+                        
+                        if (element.Type == "composite" && element.SubElements != null && element.SubElements.Count > 0)
+                        {
+                            foreach (var subElement in element.SubElements)
+                            {
+                                if (subElement.Enable)
+                                {
+                                    displayFile.Elements.Add(subElement);
+                                    displayFile.DisplayElements.Add(subElement);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrEmpty(element.AutoGenPattern))
+                                element.IsReadOnly = true;
+                            
+                            displayFile.DisplayElements.Add(element);
+                        }
+                    }
                 }
+                
                 displayFile.AddRow();
                 DisplayFiles.Add(displayFile);
             }
@@ -146,12 +169,32 @@ namespace ModCreator.WindowData
                             var row = new Dictionary<string, string>();
                             foreach (var element in file.Elements)
                             {
-                                if (jsonObject.ContainsKey(element.Name))
+                                if (element.Type == "composite")
+                                {
+                                    if (jsonObject.ContainsKey(element.Name))
+                                    {
+                                        var compositeValue = jsonObject[element.Name]?.ToString() ?? string.Empty;
+                                        PatternHelper.DecomposeCompositeValue(element, compositeValue, row);
+                                    }
+                                }
+                                else if (jsonObject.ContainsKey(element.Name))
+                                {
                                     row[element.Name] = jsonObject[element.Name]?.ToString() ?? string.Empty;
+                                }
                                 else
+                                {
                                     row[element.Name] = element.Value ?? string.Empty;
+                                }
                             }
-                            file.Rows.Add(new RowDisplay(row, file.Elements));
+                            
+                            foreach (var element in file.Elements.Where(e => !string.IsNullOrEmpty(e.AutoGenPattern)))
+                            {
+                                var generatedValue = PatternHelper.ProcessAutoGenValue(element.AutoGenPattern, row);
+                                if (!string.IsNullOrEmpty(generatedValue))
+                                    row[element.Name] = generatedValue;
+                            }
+                            
+                            file.Rows.Add(new RowDisplay(row, file.Elements, file.DisplayElements));
                         }
                     }
                 }
@@ -163,10 +206,25 @@ namespace ModCreator.WindowData
                         var firstRow = file.Rows[0];
                         foreach (var element in file.Elements)
                         {
-                            if (jsonObject.ContainsKey(element.Name))
+                            if (element.Type == "composite")
+                            {
+                                if (jsonObject.ContainsKey(element.Name))
+                                {
+                                    var compositeValue = jsonObject[element.Name]?.ToString() ?? string.Empty;
+                                    PatternHelper.DecomposeCompositeValue(element, compositeValue, firstRow.RowData);
+                                }
+                            }
+                            else if (jsonObject.ContainsKey(element.Name))
                             {
                                 firstRow.RowData[element.Name] = jsonObject[element.Name]?.ToString() ?? string.Empty;
                             }
+                        }
+                        
+                        foreach (var element in file.Elements.Where(e => !string.IsNullOrEmpty(e.AutoGenPattern)))
+                        {
+                            var generatedValue = PatternHelper.ProcessAutoGenValue(element.AutoGenPattern, firstRow.RowData);
+                            if (!string.IsNullOrEmpty(generatedValue))
+                                firstRow.RowData[element.Name] = generatedValue;
                         }
                     }
                 }
@@ -195,19 +253,31 @@ namespace ModCreator.WindowData
 
         public PatternElement ResolveElement(string elementName)
         {
-            if (!_allElements.TryGetValue(elementName, out var element))
+            var actualElementName = elementName;
+            string autoGenPattern = null;
+
+            if (elementName.Contains(":"))
+            {
+                var parts = elementName.Split(':');
+                actualElementName = parts[0];
+                autoGenPattern = parts[1];
+            }
+
+            if (!_allElements.TryGetValue(actualElementName, out var element))
                 return null;
 
             var patternElement = new PatternElement
             {
-                Name = elementName.Contains(".") ? elementName.Split('.')[1] : elementName,
+                Name = actualElementName.Contains(".") ? actualElementName.Split('.')[1] : actualElementName,
                 Type = element.Type,
                 Label = element.Label,
                 Description = element.Description,
                 VarType = element.VarType,
                 Enable = element.Enable,
                 Required = element.Required,
-                Value = element.Value
+                Value = element.Value,
+                Separator = element.Separator,
+                AutoGenPattern = autoGenPattern
             };
 
             if (element.Options != null)
@@ -218,6 +288,16 @@ namespace ModCreator.WindowData
                     {
                         patternElement.Options.AddRange(values);
                     }
+                }
+            }
+
+            if (element.Type == "composite" && element.SubProperties != null)
+            {
+                foreach (var subPropName in element.SubProperties)
+                {
+                    var subElement = ResolveElement(subPropName);
+                    if (subElement != null)
+                        patternElement.SubElements.Add(subElement);
                 }
             }
 

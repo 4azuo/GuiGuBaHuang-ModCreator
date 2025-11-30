@@ -7,11 +7,6 @@ namespace ModCreator.Models
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public List<PatternFile> Files { get; set; }
-
-        public RegularPattern()
-        {
-            Files = new List<PatternFile>();
-        }
+        public List<PatternFile> Files { get; set; } = new List<PatternFile>();
     }
 }

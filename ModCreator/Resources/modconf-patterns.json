@@ -26,7 +26,7 @@
         "FileName": "LocalText.json",
         "Elements": [
           "LocalText.id",
-          "LocalText.key",
+          "LocalText.key:localtext{LocalText.id}",
           "LocalText.en"
         ]
       }

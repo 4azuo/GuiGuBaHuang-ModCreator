@@ -15,5 +15,9 @@ namespace ModCreator.Models
         public bool Required { get; set; } = false;
         public List<ModConfValue> Options { get; set; } = new List<ModConfValue>();
         public string Value { get; set; }
+        public string Separator { get; set; }
+        public List<PatternElement> SubElements { get; set; } = new List<PatternElement>();
+        public string AutoGenPattern { get; set; }
+        public bool IsReadOnly { get; set; } = false;
     }
 }

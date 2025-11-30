@@ -5,11 +5,6 @@ namespace ModCreator.Models
     public class ModConfValueGroup
     {
         public string Name { get; set; }
-        public List<ModConfValue> Values { get; set; }
-
-        public ModConfValueGroup()
-        {
-            Values = new List<ModConfValue>();
-        }
+        public List<ModConfValue> Values { get; set; } = new List<ModConfValue>();
     }
 }

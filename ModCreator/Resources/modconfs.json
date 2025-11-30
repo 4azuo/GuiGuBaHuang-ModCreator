@@ -170,18 +170,56 @@
   },
   {
     "Name": "RoleEffect.effectType",
-    "Type": "textbox",
+    "Type": "combo",
     "Label": "Effect Type",
     "Description": "Type of the effect",
     "VarType": "string",
     "Enable": true,
-    "Required": true
+    "Required": true,
+    "Options": ["RoleEffectTypes"],
+    "Value": "1"
   },
   {
     "Name": "RoleEffect.value",
+    "Type": "composite",
+    "Label": "Value",
+    "Description": "Effect value (format: property_effectType_value, e.g., luck_1_20)",
+    "VarType": "string",
+    "Enable": true,
+    "Required": true,
+    "Separator": "_",
+    "SubProperties": [
+      "RoleEffect.value.property",
+      "RoleEffect.value.effectType",
+      "RoleEffect.value.value"
+    ]
+  },
+  {
+    "Name": "RoleEffect.value.property",
+    "Type": "combo",
+    "Label": "Property",
+    "Description": "Property name (e.g., luck, atk, def)",
+    "VarType": "string",
+    "Enable": true,
+    "Required": true,
+    "Options": ["EffectProperties"]
+  },
+  {
+    "Name": "RoleEffect.value.effectType",
+    "Type": "combo",
+    "Label": "Effect Type",
+    "Description": "Effect type for the value",
+    "VarType": "string",
+    "Enable": true,
+    "Required": true,
+    "Options": ["ValueEffectTypes"],
+    "Value": "1"
+  },
+  {
+    "Name": "RoleEffect.value.value",
     "Type": "textbox",
     "Label": "Value",
-    "Description": "Effect value",
+    "Description": "Numeric value for the effect",
     "VarType": "string",
     "Enable": true,
     "Required": true

@@ -73,5 +73,300 @@
         "Value": "10"
       }
     ]
+  },
+  {
+    "Name": "ValueEffectTypes",
+    "Values": [
+      {
+        "DisplayName": "Percentage",
+        "Value": "0"
+      },
+      {
+        "DisplayName": "Fixed Value",
+        "Value": "1"
+      }
+    ]
+  },
+  {
+    "Name": "RoleEffectTypes",
+    "Values": [
+      {
+        "DisplayName": "Change Stats",
+        "Value": "1"
+      },
+      {
+        "DisplayName": "Locked Stats",
+        "Value": "2"
+      },
+      {
+        "DisplayName": "Special Function",
+        "Value": "3"
+      },
+      {
+        "DisplayName": "Use Item",
+        "Value": "101"
+      },
+      {
+        "DisplayName": "Cast Item",
+        "Value": "102"
+      },
+      {
+        "DisplayName": "Normal Item",
+        "Value": "201"
+      },
+      {
+        "DisplayName": "Breakthrough Item",
+        "Value": "301"
+      },
+      {
+        "DisplayName": "Escape Item",
+        "Value": "302"
+      },
+      {
+        "DisplayName": "Hobby Item",
+        "Value": "401"
+      },
+      {
+        "DisplayName": "Battle Debuff Item",
+        "Value": "501"
+      }
+    ]
+  },
+  {
+    "Name": "EffectProperties",
+    "Values": [
+      {
+        "DisplayName": "Sex",
+        "Value": "sex"
+      },
+      {
+        "DisplayName": "Race",
+        "Value": "race"
+      },
+      {
+        "DisplayName": "Age",
+        "Value": "age"
+      },
+      {
+        "DisplayName": "Life",
+        "Value": "life"
+      },
+      {
+        "DisplayName": "Beauty",
+        "Value": "beauty"
+      },
+      {
+        "DisplayName": "Stand Up",
+        "Value": "standUp"
+      },
+      {
+        "DisplayName": "Stand Down",
+        "Value": "standDown"
+      },
+      {
+        "DisplayName": "Reputation",
+        "Value": "reputation"
+      },
+      {
+        "DisplayName": "Experience",
+        "Value": "exp"
+      },
+      {
+        "DisplayName": "Grade ID",
+        "Value": "gradeID"
+      },
+      {
+        "DisplayName": "In Trait",
+        "Value": "inTrait"
+      },
+      {
+        "DisplayName": "Out Trait 1",
+        "Value": "outTrait1"
+      },
+      {
+        "DisplayName": "Out Trait 2",
+        "Value": "outTrait2"
+      },
+      {
+        "DisplayName": "Ability Point",
+        "Value": "abilityPoint"
+      },
+      {
+        "DisplayName": "Ability Experience",
+        "Value": "abilityExp"
+      },
+      {
+        "DisplayName": "Ability Up Level",
+        "Value": "abilityUpLevel"
+      },
+      {
+        "DisplayName": "Talent",
+        "Value": "talent"
+      },
+      {
+        "DisplayName": "Health",
+        "Value": "health"
+      },
+      {
+        "DisplayName": "Health Max",
+        "Value": "healthMax"
+      },
+      {
+        "DisplayName": "HP",
+        "Value": "hp"
+      },
+      {
+        "DisplayName": "HP Max",
+        "Value": "hpMax"
+      },
+      {
+        "DisplayName": "MP",
+        "Value": "mp"
+      },
+      {
+        "DisplayName": "MP Max",
+        "Value": "mpMax"
+      },
+      {
+        "DisplayName": "SP",
+        "Value": "sp"
+      },
+      {
+        "DisplayName": "SP Max",
+        "Value": "spMax"
+      },
+      {
+        "DisplayName": "Attack",
+        "Value": "attack"
+      },
+      {
+        "DisplayName": "Defense",
+        "Value": "defense"
+      },
+      {
+        "DisplayName": "Foot Speed",
+        "Value": "footSpeed"
+      },
+      {
+        "DisplayName": "Luck",
+        "Value": "luck"
+      },
+      {
+        "DisplayName": "Energy",
+        "Value": "energy"
+      },
+      {
+        "DisplayName": "Energy Max",
+        "Value": "energyMax"
+      },
+      {
+        "DisplayName": "Critical",
+        "Value": "crit"
+      },
+      {
+        "DisplayName": "Critical Value",
+        "Value": "critValue"
+      },
+      {
+        "DisplayName": "Guard",
+        "Value": "guard"
+      },
+      {
+        "DisplayName": "Guard Value",
+        "Value": "guardValue"
+      },
+      {
+        "DisplayName": "Move Speed",
+        "Value": "moveSpeed"
+      },
+      {
+        "DisplayName": "Physical Free",
+        "Value": "phycicalFree"
+      },
+      {
+        "DisplayName": "Magic Free",
+        "Value": "magicFree"
+      },
+      {
+        "DisplayName": "Basis Fire",
+        "Value": "basisFire"
+      },
+      {
+        "DisplayName": "Basis Froze",
+        "Value": "basisFroze"
+      },
+      {
+        "DisplayName": "Basis Thunder",
+        "Value": "basisThunder"
+      },
+      {
+        "DisplayName": "Basis Wind",
+        "Value": "basisWind"
+      },
+      {
+        "DisplayName": "Basis Earth",
+        "Value": "basisEarth"
+      },
+      {
+        "DisplayName": "Basis Wood",
+        "Value": "basisWood"
+      },
+      {
+        "DisplayName": "Basis Sword",
+        "Value": "basisSword"
+      },
+      {
+        "DisplayName": "Basis Spear",
+        "Value": "basisSpear"
+      },
+      {
+        "DisplayName": "Basis Blade",
+        "Value": "basisBlade"
+      },
+      {
+        "DisplayName": "Basis Fist",
+        "Value": "basisFist"
+      },
+      {
+        "DisplayName": "Basis Palm",
+        "Value": "basisPalm"
+      },
+      {
+        "DisplayName": "Basis Finger",
+        "Value": "basisFinger"
+      },
+      {
+        "DisplayName": "Refine Elixir",
+        "Value": "refineElixir"
+      },
+      {
+        "DisplayName": "Refine Weapon",
+        "Value": "refineWeapon"
+      },
+      {
+        "DisplayName": "Geomancy",
+        "Value": "geomancy"
+      },
+      {
+        "DisplayName": "Symbol",
+        "Value": "symbol"
+      },
+      {
+        "DisplayName": "Herbal",
+        "Value": "herbal"
+      },
+      {
+        "DisplayName": "Mine",
+        "Value": "mine"
+      },
+      {
+        "DisplayName": "Mood",
+        "Value": "mood"
+      },
+      {
+        "DisplayName": "Mood Max",
+        "Value": "moodMax"
+      }
+    ]
   }
 ]
