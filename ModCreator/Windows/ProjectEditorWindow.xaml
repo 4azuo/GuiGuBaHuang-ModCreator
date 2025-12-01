@@ -132,21 +132,7 @@
                                 <Button x:Name="btnToggleFilterLocalText" Content="{x:Static helper:ProjectEditorWindowText.IconFilter}" ToolTip="{x:Static helper:ProjectEditorWindowText.TooltipToggleFilterLocalText}" Click="ToggleFilterLocalText_Click" Style="{StaticResource ActionButton}" Width="30" Height="30" FontSize="14" Margin="10,0,0,0"/>
                                 <Button Content="{x:Static helper:ProjectEditorWindowText.IconPattern}" ToolTip="{x:Static helper:ProjectEditorWindowText.TooltipCreateFromPattern}" Click="CreateFromPattern_Click" Style="{StaticResource ActionButton}" Width="30" Height="30" FontSize="14" Margin="2,0,0,0" Background="#FF4CAF50" Foreground="White"/>
                             </StackPanel>
-                            <TreeView Grid.Row="1" Name="tvConfFiles" ItemsSource="{Binding ConfItems, Mode=OneWay}" SelectedItemChanged="TreeView_ConfSelectedItemChanged">
-                                <TreeView.ItemContainerStyle>
-                                    <Style TargetType="TreeViewItem">
-                                        <Setter Property="IsExpanded" Value="True"/>
-                                    </Style>
-                                </TreeView.ItemContainerStyle>
-                                <TreeView.ItemTemplate>
-                                    <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding IsFolder, Converter={StaticResource BoolToIconConverter}}" FontFamily="Segoe UI Symbol" Margin="0,0,5,0"/>
-                                            <TextBlock Text="{Binding Name}" Padding="2"/>
-                                        </StackPanel>
-                                    </HierarchicalDataTemplate>
-                                </TreeView.ItemTemplate>
-                            </TreeView>
+                            <TreeView Grid.Row="1" Name="tvConfFiles" ItemsSource="{Binding ConfItems, Mode=OneWay}" SelectedItemChanged="TreeView_ConfSelectedItemChanged" Style="{StaticResource FileBrowserTreeView}"/>
                         </Grid>
                     </GroupBox>
                     <GroupBox Grid.Column="1" Grid.Row="0" Header="{x:Static helper:ProjectEditorWindowText.JsonEditor}">
@@ -221,21 +207,7 @@
                                 <Button Content="{x:Static helper:ProjectEditorWindowText.IconExport}" ToolTip="{x:Static helper:ProjectEditorWindowText.TooltipExportImage}" Click="ExportImage_Click" Style="{StaticResource ActionButton}" Width="30" Height="30" FontSize="14" Margin="0,0,2,0" IsEnabled="{Binding HasSelectedImageFile, Mode=OneWay}"/>
                                 <Button Content="{x:Static helper:ProjectEditorWindowText.IconRemove}" ToolTip="{x:Static helper:ProjectEditorWindowText.TooltipRemoveImage}" Click="RemoveImage_Click" Style="{StaticResource ActionButton}" Width="30" Height="30" FontSize="14" IsEnabled="{Binding HasSelectedImageFile, Mode=OneWay}"/>
                             </StackPanel>
-                            <TreeView Grid.Row="1" Name="tvImageFiles" ItemsSource="{Binding ImageItems, Mode=OneWay}" SelectedItemChanged="TreeView_ImageSelectedItemChanged">
-                                <TreeView.ItemContainerStyle>
-                                    <Style TargetType="TreeViewItem">
-                                        <Setter Property="IsExpanded" Value="True"/>
-                                    </Style>
-                                </TreeView.ItemContainerStyle>
-                                <TreeView.ItemTemplate>
-                                    <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding IsFolder, Converter={StaticResource BoolToIconConverter}}" FontFamily="Segoe UI Symbol" Margin="0,0,5,0"/>
-                                            <TextBlock Text="{Binding Name}" Padding="2"/>
-                                        </StackPanel>
-                                    </HierarchicalDataTemplate>
-                                </TreeView.ItemTemplate>
-                            </TreeView>
+                            <TreeView Grid.Row="1" Name="tvImageFiles" ItemsSource="{Binding ImageItems, Mode=OneWay}" SelectedItemChanged="TreeView_ImageSelectedItemChanged" Style="{StaticResource FileBrowserTreeView}"/>
                         </Grid>
                     </GroupBox>
                     <GroupBox Grid.Column="1" Grid.Row="0" Header="{x:Static helper:ProjectEditorWindowText.ImagePreview}">
@@ -331,21 +303,7 @@
                                 <Button Content="{x:Static helper:ProjectEditorWindowText.IconEdit}" ToolTip="{x:Static helper:ProjectEditorWindowText.TooltipRenameModEvent}" Click="RenameModEvent_Click" Style="{StaticResource ActionButton}" Width="30" Height="30" FontSize="14" Margin="0,0,2,0" IsEnabled="{Binding HasSelectedEventFile, Mode=OneWay}"/>
                                 <Button Content="{x:Static helper:ProjectEditorWindowText.IconRemove}" ToolTip="{x:Static helper:ProjectEditorWindowText.TooltipDeleteModEvent}" Click="DeleteModEvent_Click" Style="{StaticResource ActionButton}" Width="30" Height="30" FontSize="14" IsEnabled="{Binding HasSelectedEventFile, Mode=OneWay}"/>
                             </StackPanel>
-                            <TreeView Grid.Row="1" Name="tvModEventFiles" ItemsSource="{Binding EventItems, Mode=OneWay}" SelectedItemChanged="TreeView_EventSelectedItemChanged">
-                                <TreeView.ItemContainerStyle>
-                                    <Style TargetType="TreeViewItem">
-                                        <Setter Property="IsExpanded" Value="True"/>
-                                    </Style>
-                                </TreeView.ItemContainerStyle>
-                                <TreeView.ItemTemplate>
-                                    <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding IsFolder, Converter={StaticResource BoolToIconConverter}}" FontFamily="Segoe UI Symbol" Margin="0,0,5,0"/>
-                                            <TextBlock Text="{Binding Name}" Padding="2"/>
-                                        </StackPanel>
-                                    </HierarchicalDataTemplate>
-                                </TreeView.ItemTemplate>
-                            </TreeView>
+                            <TreeView Grid.Row="1" Name="tvModEventFiles" ItemsSource="{Binding EventItems, Mode=OneWay}" SelectedItemChanged="TreeView_EventSelectedItemChanged" Style="{StaticResource FileBrowserTreeView}"/>
                         </Grid>
                     </GroupBox>
                     <GroupBox Grid.Column="1" Grid.Row="0" Header="{x:Static helper:ProjectEditorWindowText.ModEventEditor}">
@@ -393,14 +351,6 @@
                                                     <TextBlock Grid.Column="6" x:Name="txtWorkOnLabel" Text="{x:Static helper:ProjectEditorWindowText.WorkOn}" VerticalAlignment="Center" Margin="10,0,10,0"/>
                                                     <ComboBox Grid.Column="7" x:Name="cmbWorkOn" ItemsSource="{Binding WorkOnTypes}" SelectedItem="{Binding SelectedModEvent.WorkOn, Mode=TwoWay}" Height="28"/>
                                                 </Grid>
-                                                <Grid x:Name="gridCustomEventName" Margin="0,0,0,0" Visibility="Collapsed">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                        <ColumnDefinition Width="*"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <TextBlock Grid.Column="0" Text="{x:Static helper:ProjectEditorWindowText.EventMethodName}" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                                                    <TextBox Grid.Column="1" Text="{Binding SelectedModEvent.CustomEventName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="28" VerticalContentAlignment="Center" ToolTip="{x:Static helper:ProjectEditorWindowText.EventMethodNameTooltip}"/>
-                                                </Grid>
                                             </StackPanel>
                                         </GroupBox>
                                         <GroupBox x:Name="grpEventSelection" Header="{x:Static helper:ProjectEditorWindowText.Event}" Grid.Row="2">
@@ -420,7 +370,7 @@
                                                     <ColumnDefinition Width="*"/>
                                                 </Grid.ColumnDefinitions>
                                                 <Button VerticalAlignment="Top" Grid.Column="0" Content="{x:Static helper:ProjectEditorWindowText.AddCondition}" Click="AddCondition_Click" Style="{StaticResource ActionButton}" Background="#FF4CAF50" Foreground="White" Height="24" Margin="0,0,10,0"/>
-                                                <TreeView x:Name="tvConditions" Grid.Column="1" ItemsSource="{Binding SelectedModEvent.Conditions}" AllowDrop="True" Drop="Conditions_Drop" PreviewMouseLeftButtonDown="Conditions_PreviewMouseLeftButtonDown" Height="80">
+                                                <TreeView x:Name="tvConditions" Grid.Column="1" ItemsSource="{Binding SelectedModEvent.Conditions}" AllowDrop="True" Drop="Conditions_Drop" PreviewMouseLeftButtonDown="Conditions_PreviewMouseLeftButtonDown" Height="80" Style="{StaticResource StandardTreeView}">
                                                     <TreeView.ItemContainerStyle>
                                                         <Style TargetType="TreeViewItem">
                                                             <Setter Property="IsExpanded" Value="True"/>
@@ -448,7 +398,7 @@
                                                     <RowDefinition Height="*"/>
                                                 </Grid.RowDefinitions>
                                                 <Button Grid.Row="0" Content="{x:Static helper:ProjectEditorWindowText.AddAction}" Click="AddAction_Click" Style="{StaticResource ActionButton}" Background="#FF4CAF50" Foreground="White" Height="24" Padding="10,0" Margin="0,0,0,5" HorizontalAlignment="Left"/>
-                                                <TreeView x:Name="tvActions" Grid.Row="1" ItemsSource="{Binding SelectedModEvent.Actions}" MinHeight="120" AllowDrop="True" Drop="Actions_Drop" PreviewMouseLeftButtonDown="Actions_PreviewMouseLeftButtonDown">
+                                                <TreeView x:Name="tvActions" Grid.Row="1" ItemsSource="{Binding SelectedModEvent.Actions}" MinHeight="120" AllowDrop="True" Drop="Actions_Drop" PreviewMouseLeftButtonDown="Actions_PreviewMouseLeftButtonDown" Style="{StaticResource StandardTreeView}">
                                                     <TreeView.ItemContainerStyle>
                                                         <Style TargetType="TreeViewItem">
                                                             <Setter Property="IsExpanded" Value="True"/>

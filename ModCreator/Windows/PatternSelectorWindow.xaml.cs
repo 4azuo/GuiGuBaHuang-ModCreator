@@ -118,7 +118,7 @@ namespace ModCreator.Windows
                 if (jsonArray.Count > 0)
                 {
                     var jsonContent = JsonConvert.SerializeObject(jsonArray, Formatting.Indented);
-                    FileHelper.WriteTextFile(filePath, jsonContent);
+                    Helpers.FileHelper.WriteTextFile(filePath, jsonContent);
                 }
             }
 
@@ -222,7 +222,7 @@ namespace ModCreator.Windows
                 if (jsonArray.Count > 0)
                 {
                     var jsonContent = JsonConvert.SerializeObject(jsonArray, Formatting.Indented);
-                    FileHelper.WriteTextFile(filePath, jsonContent);
+                    Helpers.FileHelper.WriteTextFile(filePath, jsonContent);
                 }
             }
 

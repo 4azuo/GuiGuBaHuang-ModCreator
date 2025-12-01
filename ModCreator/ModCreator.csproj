@@ -21,6 +21,7 @@
     <PackageReference Include="Markdig.Wpf" Version="0.5.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.0" />
+    <PackageReference Include="System.Reflection.MetadataLoadContext" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,9 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Resources\messages.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="Resources\settings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -55,10 +53,9 @@
 
   <ItemGroup>
     <None Remove="Resources\embeded-settings.json" />
+    <None Remove="Resources\messages.json" />
     <None Remove="Resources\modevent-actions.json" />
     <None Remove="Resources\modevent-cachetype.json" />
-    <None Remove="Resources\modevent-conditions.json" />
-    <None Remove="Resources\modevent-events.json" />
     <None Remove="Resources\modevent-workon.json" />
     <None Remove="Resources\var-types.json" />
     <None Remove="Resources\project-replacements.json" />
@@ -74,10 +71,11 @@
     <EmbeddedResource Include="Resources\embeded-settings.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\messages.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\modevent-actions.json" />
     <EmbeddedResource Include="Resources\modevent-cachetype.json" />
-    <EmbeddedResource Include="Resources\modevent-conditions.json" />
-    <EmbeddedResource Include="Resources\modevent-events.json" />
     <EmbeddedResource Include="Resources\modevent-workon.json" />
     <EmbeddedResource Include="Resources\var-types.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
@@ -104,5 +102,16 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="ModLib">
+      <HintPath>Resources\ModProject_0hKMNX\ModProject\ModCode\ModMain\CodeArtifacts\ModLib.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="CopyModLibDll" AfterTargets="Build">
+    <Message Text="Copying ModLib DLL files to template project..." Importance="high" />
+    <Exec Command="xcopy &quot;$(ProjectDir)..\..\3385996759\debug\Mod_flQrxq\ModCode\dll\*.*&quot; &quot;$(ProjectDir)Resources\ModProject_0hKMNX\ModProject\ModCode\ModMain\CodeArtifacts\&quot; /y /i" />
+  </Target>
 
 </Project>

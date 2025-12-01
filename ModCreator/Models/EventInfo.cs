@@ -8,7 +8,6 @@ namespace ModCreator.Models
         public string Name { get; set; }
         public string DisplayName { get; set; }
         public string Description { get; set; }
-        public string Signature { get; set; }
-        public List<string> Parameters { get; set; } = [];
+        public string Code { get; set; }
     }
 }

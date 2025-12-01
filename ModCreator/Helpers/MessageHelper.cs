@@ -15,7 +15,7 @@ namespace ModCreator.Helpers
     public static class MessageHelper
     {
         private static JObject _messagesRoot;
-        private static readonly object _lock = new object();
+        private static readonly object _lock = new();
 
         /// <summary>
         /// Load messages from the JSON file
@@ -34,20 +34,12 @@ namespace ModCreator.Helpers
             {
                 try
                 {
-                    var jsonPath = Path.GetFullPath(Path.Combine(Constants.ResourcesDir, "messages.json"));
-                    
-                    if (!File.Exists(jsonPath))
-                    {
-                        throw new FileNotFoundException($"Message file not found: {jsonPath}");
-                    }
-
-                    var jsonContent = File.ReadAllText(jsonPath);
-                    _messagesRoot = JsonConvert.DeserializeObject<JObject>(jsonContent);
+                    _messagesRoot = ResourceHelper.ReadEmbeddedResource<JObject>("ModCreator.Resources.messages.json");
                 }
                 catch (Exception ex)
                 {
                     DebugHelper.ShowError(ex, "Error", $"Error loading messages: {ex.Message}");
-                    _messagesRoot = new JObject();
+                    _messagesRoot = [];
                 }
             }
         }

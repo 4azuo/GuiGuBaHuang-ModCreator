@@ -1,24 +1,17 @@
 using ModCreator.Attributes;
 using ModCreator.Helpers;
 using ModCreator.Models;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using EventInfo = ModCreator.Models.EventInfo;
 
 namespace ModCreator.WindowData
 {
     public partial class ProjectEditorWindowData : CWindowData
     {
-        private static readonly Regex CacheAttributeRegex = new(@"\[Cache\([""'](.+?)[""'],\s*CacheType\s*=\s*(.+?),\s*WorkOn\s*=\s*(.+?),\s*OrderIndex\s*=\s*(\d+)\)\]", RegexOptions.Compiled);
-        private static readonly Regex EventMethodRegex = new(@"public override void (On\w+)\([^)]*\)", RegexOptions.Compiled);
-        private static readonly Regex ConditionRegex = new(@"return (.+?);", RegexOptions.Singleline | RegexOptions.Compiled);
-        private static readonly Regex ActionRegex = new(@"(?:^|\n)\s+(.+?;)(?=\s*(?:\n|$))", RegexOptions.Multiline | RegexOptions.Compiled);
-        
         public ObservableCollection<FileItem> EventItems { get; set; } = [];
         [NotifyMethod(nameof(OnEventItemSelected))]
         public FileItem SelectedEventItem { get; set; }
@@ -29,7 +22,7 @@ namespace ModCreator.WindowData
         public bool IsGuiMode { get; set; } = true;
         public List<string> CacheTypes { get; set; } = [];
         public List<string> WorkOnTypes { get; set; } = [];
-        public List<EventInfo> AvailableEvents { get; set; } = ResourceHelper.ReadEmbeddedResource<List<EventInfo>>("ModCreator.Resources.modevent-events.json");
+        public List<EventInfo> AvailableEvents { get; set; } = ModEventHelper.LoadModEventMethodsFromAssembly();
 
         public void LoadModEventFiles()
         {
@@ -103,7 +96,7 @@ namespace ModCreator.WindowData
 
                 if (SelectedModEvent.Conditions.Count == 0 || SelectedModEvent.Conditions[0].Name != "Root")
                 {
-                    SelectedModEvent.Conditions.Insert(0, new EventCondition
+                    SelectedModEvent.Conditions.Insert(0, new EventActionInfo
                     {
                         Name = "Root",
                         DisplayName = "Root",
@@ -113,7 +106,7 @@ namespace ModCreator.WindowData
 
                 if (SelectedModEvent.Actions.Count == 0 || SelectedModEvent.Actions[0].Name != "Root")
                 {
-                    SelectedModEvent.Actions.Insert(0, new EventAction
+                    SelectedModEvent.Actions.Insert(0, new EventActionInfo
                     {
                         Name = "Root",
                         DisplayName = "Root",

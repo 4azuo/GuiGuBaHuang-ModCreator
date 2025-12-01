@@ -54,7 +54,7 @@ namespace ModCreator
             var project = WindowData.SelectedProject;
             if (!System.IO.Directory.Exists(project.ProjectPath))
             {
-                DebugHelper.ShowWarning(
+                Helpers.DebugHelper.ShowWarning(
                     MessageHelper.GetFormat("Messages.Error.ErrorProjectFolderMissing", project.ProjectPath),
                     MessageHelper.Get("Messages.Error.Title"));
                 return;

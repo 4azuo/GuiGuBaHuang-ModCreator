@@ -1,0 +1,57 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converter="clr-namespace:ModCreator.Converters"
+                    xmlns:helper="clr-namespace:ModCreator.Helpers">
+
+    <!-- Converters -->
+    <converter:BoolToIconConverter x:Key="BoolToIconConverter"/>
+    <converter:RootItemToVisibilityConverter x:Key="RootItemToVisibilityConverter"/>
+
+    <!-- File/Folder TreeView Template -->
+    <HierarchicalDataTemplate x:Key="FileFolderTreeTemplate" ItemsSource="{Binding Children}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="{Binding IsFolder, Converter={StaticResource BoolToIconConverter}}" 
+                       FontFamily="Segoe UI Symbol" 
+                       Margin="0,0,5,0"/>
+            <TextBlock Text="{Binding Name}" Padding="2"/>
+        </StackPanel>
+    </HierarchicalDataTemplate>
+
+    <!-- Event Action/Condition TreeView Template with Remove Button -->
+    <HierarchicalDataTemplate x:Key="EventActionTreeTemplate" ItemsSource="{Binding Children}">
+        <Grid Margin="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" 
+                    Content="{x:Static helper:ProjectEditorWindowText.IconRemove}" 
+                    Tag="{Binding}" 
+                    Background="Transparent" 
+                    BorderThickness="0" 
+                    Width="24" 
+                    Height="24" 
+                    Padding="0" 
+                    Visibility="{Binding Converter={StaticResource RootItemToVisibilityConverter}}"/>
+            <TextBlock Grid.Column="1" 
+                       Text="{Binding DisplayText}" 
+                       TextWrapping="Wrap" 
+                       FontSize="12" 
+                       VerticalAlignment="Center"/>
+        </Grid>
+    </HierarchicalDataTemplate>
+
+    <!-- Standard TreeView Style -->
+    <Style x:Key="StandardTreeView" TargetType="TreeView">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="BorderBrush" Value="#FFCCCCCC"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="5"/>
+    </Style>
+
+    <!-- File Browser TreeView Style -->
+    <Style x:Key="FileBrowserTreeView" TargetType="TreeView" BasedOn="{StaticResource StandardTreeView}">
+        <Setter Property="ItemTemplate" Value="{StaticResource FileFolderTreeTemplate}"/>
+    </Style>
+
+</ResourceDictionary>

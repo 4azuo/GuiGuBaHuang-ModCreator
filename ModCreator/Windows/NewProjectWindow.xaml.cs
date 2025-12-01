@@ -22,7 +22,7 @@ namespace ModCreator.Windows
         {
             if (!WindowData.CanCreate)
             {
-                DebugHelper.ShowWarning(MessageHelper.Get("Messages.Error.ErrorFillRequiredFields"), MessageHelper.Get("Messages.Error.Title"));
+                Helpers.DebugHelper.ShowWarning(MessageHelper.Get("Messages.Error.ErrorFillRequiredFields"), MessageHelper.Get("Messages.Error.Title"));
                 return;
             }
 
@@ -30,7 +30,7 @@ namespace ModCreator.Windows
             var workplacePath = WindowData.WorkplacePath;
             if (string.IsNullOrWhiteSpace(workplacePath))
             {
-                DebugHelper.ShowWarning(MessageHelper.Get("Messages.Error.ErrorWorkplaceNotSet"), MessageHelper.Get("Messages.Error.Title"));
+                Helpers.DebugHelper.ShowWarning(MessageHelper.Get("Messages.Error.ErrorWorkplaceNotSet"), MessageHelper.Get("Messages.Error.Title"));
                 return;
             }
             // ProjectId will be generated inside CreateProject

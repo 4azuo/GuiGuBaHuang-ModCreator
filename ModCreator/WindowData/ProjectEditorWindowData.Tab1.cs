@@ -29,7 +29,7 @@ namespace ModCreator.WindowData
         public bool HasUnsavedChanges()
         {
             if (Project == null || _originalProject == null) return false;
-            return !ObjectHelper.ArePropertiesEqual(Project, _originalProject);
+            return !Helpers.ObjectHelper.ArePropertiesEqual(Project, _originalProject);
         }
 
         public void BackupProject()
@@ -44,7 +44,7 @@ namespace ModCreator.WindowData
         {
             if (_originalProject == null || Project == null) return;
 
-            ObjectHelper.CopyProperties(_originalProject, Project);
+            Helpers.ObjectHelper.CopyProperties(_originalProject, Project);
             LoadGlobalVariables();
         }
 

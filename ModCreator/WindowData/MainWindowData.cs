@@ -336,7 +336,7 @@ namespace ModCreator.WindowData
             if (Directory.Exists(targetFolder))
                 Directory.Delete(targetFolder, true);
 
-            FileHelper.CopyDirectory(sourceFolder, targetFolder);
+            Helpers.FileHelper.CopyDirectory(sourceFolder, targetFolder);
                 
             StatusMessage = MessageHelper.GetFormat("Messages.Success.CopiedToModExportData", targetFolder);
             System.Windows.MessageBox.Show(

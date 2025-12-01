@@ -29,7 +29,6 @@ namespace ModCreator.WindowData
             WindowTitle = itemType switch
             {
                 ModEventItemType.Event => "Select Event",
-                ModEventItemType.Condition => "Select Condition",
                 ModEventItemType.Action => "Select Action",
                 _ => "Select Item"
             };
@@ -47,8 +46,7 @@ namespace ModCreator.WindowData
             switch (ItemType)
             {
                 case ModEventItemType.Event:
-                    var events = ResourceHelper.ReadEmbeddedResource<List<Models.EventInfo>>("ModCreator.Resources.modevent-events.json");
-                    foreach (var evt in events)
+                    foreach (var evt in ModEventHelper.LoadModEventMethodsFromAssembly())
                     {
                         AllItems.Add(new ModEventItemDisplay
                         {
@@ -56,29 +54,12 @@ namespace ModCreator.WindowData
                             Name = evt.Name,
                             DisplayName = evt.DisplayName,
                             Description = evt.Description,
-                            Code = evt.Signature
+                            Code = evt.Code
                         });
                     }
                     break;
-
-                case ModEventItemType.Condition:
-                    var conditions = ResourceHelper.ReadEmbeddedResource<List<ConditionInfo>>("ModCreator.Resources.modevent-conditions.json");
-                    foreach (var cond in conditions)
-                    {
-                        AllItems.Add(new ModEventItemDisplay
-                        {
-                            Category = cond.Category,
-                            Name = cond.Name,
-                            DisplayName = cond.DisplayName,
-                            Description = cond.Description,
-                            Code = cond.Code
-                        });
-                    }
-                    break;
-
                 case ModEventItemType.Action:
-                    var actions = ResourceHelper.ReadEmbeddedResource<List<ActionInfo>>("ModCreator.Resources.modevent-actions.json");
-                    foreach (var act in actions)
+                    foreach (var act in ResourceHelper.ReadEmbeddedResource<List<Models.ActionInfo>>("ModCreator.Resources.modevent-actions.json"))
                     {
                         AllItems.Add(new ModEventItemDisplay
                         {

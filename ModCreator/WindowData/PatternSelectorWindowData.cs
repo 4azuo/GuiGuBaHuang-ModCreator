@@ -161,7 +161,7 @@ namespace ModCreator.WindowData
                 if (!System.IO.File.Exists(filePath))
                     continue;
 
-                var jsonContent = FileHelper.ReadTextFile(filePath);
+                var jsonContent = Helpers.FileHelper.ReadTextFile(filePath);
                 if (string.IsNullOrEmpty(jsonContent))
                     continue;
 

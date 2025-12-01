@@ -16,17 +16,17 @@ namespace ModCreator
             SettingHelper.EnsureLoaded();
 
             // Cleanup old logs
-            DebugHelper.CleanupOldLogs(keepDays: 7);
+            Helpers.DebugHelper.CleanupOldLogs(keepDays: 7);
 
             // Setup global exception handlers
             SetupExceptionHandling();
 
-            DebugHelper.Info("Application started");
+            Helpers.DebugHelper.Info("Application started");
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
-            DebugHelper.Info($"Application exiting with code: {e.ApplicationExitCode}");
+            Helpers.DebugHelper.Info($"Application exiting with code: {e.ApplicationExitCode}");
             base.OnExit(e);
         }
 
@@ -44,7 +44,7 @@ namespace ModCreator
 
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            DebugHelper.Error(e.Exception, "Unhandled UI thread exception");
+            Helpers.DebugHelper.Error(e.Exception, "Unhandled UI thread exception");
 
             // // Prevent default unhandled exception processing
             // e.Handled = true;
@@ -56,17 +56,17 @@ namespace ModCreator
             
             if (e.IsTerminating)
             {
-                DebugHelper.Fatal(exception, "Fatal unhandled exception - application will terminate");
+                Helpers.DebugHelper.Fatal(exception, "Fatal unhandled exception - application will terminate");
             }
             else
             {
-                DebugHelper.Error(exception, "Unhandled AppDomain exception");
+                Helpers.DebugHelper.Error(exception, "Unhandled AppDomain exception");
             }
         }
 
         private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
-            DebugHelper.Error(e.Exception, "Unobserved task exception");
+            Helpers.DebugHelper.Error(e.Exception, "Unobserved task exception");
             
             // // Prevent the exception from crashing the application
             // e.SetObserved();

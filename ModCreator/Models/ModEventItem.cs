@@ -18,7 +18,7 @@ namespace ModCreator.Models
         /// <summary>
         /// Custom event method name (for NonEvent mode)
         /// </summary>
-        public string CustomEventName { get; set; }
+        public string CustomEventName { get; set; } = "Run";
 
         /// <summary>
         /// Cache type for the event (e.g., Local, Global)
@@ -46,14 +46,14 @@ namespace ModCreator.Models
         public string ConditionLogic { get; set; } = "AND";
 
         /// <summary>
-        /// List of conditions for this event
+        /// List of conditions for this event (uses EventActionInfo)
         /// </summary>
-        public ObservableCollection<EventCondition> Conditions { get; set; } = [];
+        public ObservableCollection<EventActionInfo> Conditions { get; set; } = [];
 
         /// <summary>
-        /// List of actions for this event
+        /// List of actions for this event (uses EventActionInfo)
         /// </summary>
-        public ObservableCollection<EventAction> Actions { get; set; } = [];
+        public ObservableCollection<EventActionInfo> Actions { get; set; } = [];
 
         /// <summary>
         /// Full file path to the ModEvent .cs file
