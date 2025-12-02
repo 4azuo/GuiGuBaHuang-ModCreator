@@ -59,7 +59,20 @@ namespace ModCreator.WindowData
                     }
                     break;
                 case ModEventItemType.Action:
+                    // Load from modevent-actions.json
                     foreach (var act in ResourceHelper.ReadEmbeddedResource<List<Models.ActionInfo>>("ModCreator.Resources.modevent-actions.json"))
+                    {
+                        AllItems.Add(new ModEventItemDisplay
+                        {
+                            Category = act.Category,
+                            Name = act.Name,
+                            DisplayName = act.DisplayName,
+                            Description = act.Description,
+                            Code = act.Code
+                        });
+                    }
+                    // Load from ModLib.Helper.* classes
+                    foreach (var act in ModEventHelper.LoadModActionMethodsFromAssembly())
                     {
                         AllItems.Add(new ModEventItemDisplay
                         {

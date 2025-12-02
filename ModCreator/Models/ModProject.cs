@@ -19,7 +19,7 @@ namespace ModCreator.Models
         public string Author { get; set; }
         public string TitleImg { get; set; }
         public ProjectState State { get; set; } = ProjectState.Valid;
-        public bool AutoSaveEnabled { get; set; }
+        public bool AutoSaveEnabled { get; set; } = false;
         public List<GlobalVariable> GlobalVariables { get; set; } = new List<GlobalVariable>();
         public List<ModEventItem> ModEvents { get; set; } = new List<ModEventItem>();
     }

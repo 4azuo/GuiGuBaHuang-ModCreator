@@ -1,4 +1,3 @@
-using ModCreator.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,10 +9,58 @@ namespace ModCreator.Helpers
 {
     public static class ModEventHelper
     {
+        private static List<Models.EventInfo> _cachedEvents;
+        private static List<Models.ActionInfo> _cachedActions;
+
+        /// <summary>
+        /// Check if a member has a specific attribute
+        /// </summary>
+        public static bool HasAttribute(MemberInfo member, string attributeFullName)
+        {
+            return member.GetCustomAttributesData()
+                .Any(a => a.AttributeType.FullName == attributeFullName);
+        }
+
+        /// <summary>
+        /// Get attribute value from a member
+        /// </summary>
+        public static object GetAttributeValue(MemberInfo member, string attributeFullName, int argumentIndex = 0)
+        {
+            var attr = member.GetCustomAttributesData()
+                .FirstOrDefault(a => a.AttributeType.FullName == attributeFullName);
+            
+            if (attr != null && attr.ConstructorArguments.Count > argumentIndex)
+            {
+                return attr.ConstructorArguments[argumentIndex].Value;
+            }
+            
+            return null;
+        }
+
+        /// <summary>
+        /// Format type name for display (handle generic types)
+        /// </summary>
+        public static string FormatTypeName(Type type)
+        {
+            if (!type.IsGenericType)
+                return type.Name;
+
+            try
+            {
+                var genericTypeName = type.Name.Substring(0, type.Name.IndexOf('`'));
+                var genericArgs = string.Join(", ", type.GetGenericArguments().Select(t => FormatTypeName(t)));
+                return $"{genericTypeName}<{genericArgs}>";
+            }
+            catch
+            {
+                return type.Name;
+            }
+        }
+
         /// <summary>
         /// Execute action within MetadataLoadContext scope
         /// </summary>
-        private static void WithMetadataLoadContext(Action<Assembly> action)
+        public static void WithMetadataLoadContext(Action<Assembly> action, Action<Exception> catcher = null)
         {
             try
             {
@@ -21,68 +68,162 @@ namespace ModCreator.Helpers
                 if (!File.Exists(modLibPath))
                     return;
                 var dll = Path.Combine(Constants.ResourcesDir, "ModProject_0hKMNX", "ModProject", "ModCode", "ModMain", "dll", "Assembly-CSharp.dll");
-                if (!File.Exists(modLibPath))
+                if (!File.Exists(dll))
                     return;
 
-                var runtimeAssemblies = Directory.GetFiles(RuntimeEnvironment.GetRuntimeDirectory(), "*.dll");
-                var paths = new List<string>(runtimeAssemblies) { dll, modLibPath };
-                var resolver = new PathAssemblyResolver(paths);
+                var paths = new List<string>();
+                
+                // Add runtime assemblies
+                paths.AddRange(Directory.GetFiles(RuntimeEnvironment.GetRuntimeDirectory(), "*.dll"));
+
+                // Add game folder DLLs
+                paths.AddRange(Directory.GetFiles(Constants.GameFolderPath, "*.dll", SearchOption.AllDirectories));
+
+                // Add project DLLs
+                paths.Add(dll);
+                paths.Add(modLibPath);
+                
+                // Distinct by filename to avoid duplicates
+                var distinctPaths = paths
+                    .GroupBy(p => Path.GetFileName(p))
+                    .Select(g => g.First())
+                    .ToList();
+                
+                var resolver = new PathAssemblyResolver(distinctPaths);
                 using var mlc = new MetadataLoadContext(resolver);
                 var assembly = mlc.LoadFromAssemblyPath(modLibPath);
                 
                 action(assembly);
             }
-            catch
+            catch (Exception ex)
             {
-                // Silently fail if assembly cannot be loaded
+                catcher?.Invoke(ex);
             }
         }
 
         /// <summary>
         /// Load ModEvent methods from ModLib.dll assembly
         /// </summary>
-        public static List<Models.EventInfo> LoadModEventMethodsFromAssembly()
+        public static List<Models.EventInfo> LoadModEventMethodsFromAssembly(bool forceReload = false)
         {
-            var events = new List<Models.EventInfo>();
-            
+            if (!forceReload && _cachedEvents != null)
+                return _cachedEvents;
+
+            var items = LoadMethodsFromAssembly<Models.EventInfo>(
+                typeFilter: t => t.FullName == "ModLib.Mod.ModEvent",
+                methodFilter: m => m.IsVirtual && !m.IsSpecialName,
+                categoryAttribute: "ModLib.Attributes.EventCatAttribute",
+                ignoreAttribute: "ModLib.Attributes.EventCatIgnAttribute",
+                bindingFlags: BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly,
+                itemFactory: (typeName, method, category, code) => new Models.EventInfo
+                {
+                    Category = category,
+                    Name = method.Name,
+                    DisplayName = method.Name,
+                    Description = $"ModEvent method: {method.Name}",
+                    Code = code
+                });
+
+            _cachedEvents = items;
+            return items;
+        }
+
+        /// <summary>
+        /// Load Action methods from ModLib.Helper.* classes in ModLib.dll assembly
+        /// </summary>
+        public static List<Models.ActionInfo> LoadModActionMethodsFromAssembly(bool forceReload = false)
+        {
+            if (!forceReload && _cachedActions != null)
+                return _cachedActions;
+
+            var items = LoadMethodsFromAssembly<Models.ActionInfo>(
+                typeFilter: t => t.Namespace != null && t.Namespace.StartsWith("ModLib.Helper"),
+                methodFilter: m => !m.IsSpecialName,
+                categoryAttribute: null,
+                ignoreAttribute: "ModLib.Attributes.ActionCatIgnAttribute",
+                bindingFlags: BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly,
+                itemFactory: (typeName, method, category, code) => new Models.ActionInfo
+                {
+                    Category = typeName,
+                    Name = $"{typeName}.{method.Name}",
+                    DisplayName = $"{typeName}.{method.Name}",
+                    Description = $"Helper method from {typeName}",
+                    Code = code
+                });
+
+            _cachedActions = items;
+            return items;
+        }
+
+        /// <summary>
+        /// Generic method to load methods from assembly based on filters and attributes
+        /// </summary>
+        public static List<T> LoadMethodsFromAssembly<T>(
+            Func<Type, bool> typeFilter,
+            Func<MethodInfo, bool> methodFilter,
+            string categoryAttribute,
+            string ignoreAttribute,
+            BindingFlags bindingFlags,
+            Func<string, MethodInfo, string, string, T> itemFactory) where T : class
+        {
+            var items = new List<T>();
+
             WithMetadataLoadContext(assembly =>
             {
-                var modEventType = assembly.GetType("ModLib.Mod.ModEvent");
-                if (modEventType == null)
-                    return;
-                var atrEventCat = assembly.GetType("ModLib.Attributes.EventCatAttribute");
-                if (atrEventCat == null)
-                    return;
+                // Get all types matching the filter
+                var types = assembly.GetTypes().Where(typeFilter).ToList();
 
-                var methods = modEventType.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
-                    .Where(m => m.IsVirtual && !m.IsSpecialName).ToList();
-
-                foreach (var method in methods)
+                foreach (var type in types)
                 {
-                    var parameters = method.GetParameters();
-                    var code = $"{method.ReturnType.Name} {method.Name}({string.Join(", ", parameters.Select(p => $"{p.ParameterType.Name} {p.Name}"))})";
+                    // Skip if type has ignore attribute
+                    if (!string.IsNullOrEmpty(ignoreAttribute) && HasAttribute(type, ignoreAttribute))
+                        continue;
 
-                    // Get category from EventCatAttribute
-                    var category = "Others";
-                    var eventCatAttr = method.GetCustomAttributesData()
-                        .FirstOrDefault(a => a.AttributeType.FullName == "ModLib.Attributes.EventCatAttribute");
-                    if (eventCatAttr != null && eventCatAttr.ConstructorArguments.Count > 0)
+                    var methods = type.GetMethods(bindingFlags)
+                        .Where(methodFilter)
+                        .ToList();
+
+                    foreach (var method in methods)
                     {
-                        category = eventCatAttr.ConstructorArguments[0].Value?.ToString() ?? "Others";
+                        // Skip if method has ignore attribute
+                        if (!string.IsNullOrEmpty(ignoreAttribute) && HasAttribute(method, ignoreAttribute))
+                            continue;
+
+                        // Skip obsolete methods
+                        if (HasAttribute(method, "System.ObsoleteAttribute"))
+                            continue;
+
+                        var parameters = method.GetParameters();
+                        var code = $"{FormatTypeName(method.ReturnType)} {method.Name}({string.Join(", ", parameters.Select(p => $"{FormatTypeName(p.ParameterType)} {p.Name}"))})";
+
+                        // Get category from attribute or use default
+                        var category = string.IsNullOrEmpty(categoryAttribute)
+                            ? "Others"
+                            : GetAttributeValue(method, categoryAttribute)?.ToString() ?? "Others";
+
+                        var item = itemFactory(type.Name, method, category, code);
+                        if (item != null)
+                        {
+                            // Populate Parameters and Return properties
+                            if (item is Models.EventActionBase baseItem)
+                            {
+                                baseItem.Parameters = parameters.Select(p => new Models.ParameterInfo
+                                {
+                                    Type = FormatTypeName(p.ParameterType),
+                                    Name = p.Name
+                                }).ToList();
+                                baseItem.Return = FormatTypeName(method.ReturnType);
+                            }
+                            items.Add(item);
+                        }
                     }
-
-                    events.Add(new Models.EventInfo
-                    {
-                        Category = category,
-                        Name = method.Name,
-                        DisplayName = method.Name,
-                        Description = $"ModEvent method: {method.Name}",
-                        Code = code
-                    });
                 }
+            }, (e) =>
+            {
+                DebugHelper.Error(e.Message);
             });
 
-            return events;
+            return items;
         }
     }
 }

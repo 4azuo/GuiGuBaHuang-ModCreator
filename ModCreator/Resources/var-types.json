@@ -10,17 +10,17 @@
     "Desc": "True or False value"
   },
   {
-    "Name": "Integer",
+    "Name": "Int32",
     "Type": "int",
     "Desc": "32-bit integer number"
   },
   {
-    "Name": "Long Integer",
+    "Name": "Int64",
     "Type": "long",
     "Desc": "64-bit integer number"
   },
   {
-    "Name": "Float",
+    "Name": "Single",
     "Type": "float",
     "Desc": "Single precision floating point number"
   },
@@ -35,32 +35,32 @@
     "Desc": "Text value"
   },
   {
-    "Name": "Boolean Array",
+    "Name": "Boolean[]",
     "Type": "bool[]",
     "Desc": "Array of boolean values"
   },
   {
-    "Name": "Integer Array",
+    "Name": "Int32[]",
     "Type": "int[]",
     "Desc": "Array of 32-bit integers"
   },
   {
-    "Name": "Long Array",
+    "Name": "Int64[]",
     "Type": "long[]",
     "Desc": "Array of 64-bit integers"
   },
   {
-    "Name": "Float Array",
+    "Name": "Single[]",
     "Type": "float[]",
     "Desc": "Array of single precision floats"
   },
   {
-    "Name": "Double Array",
+    "Name": "Double[]",
     "Type": "double[]",
     "Desc": "Array of double precision floats"
   },
   {
-    "Name": "String Array",
+    "Name": "String[]",
     "Type": "string[]",
     "Desc": "Array of string values"
   }
