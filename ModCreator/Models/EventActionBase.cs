@@ -11,6 +11,10 @@ namespace ModCreator.Models
         public string Code { get; set; }
         public List<ParameterInfo> Parameters { get; set; } = new List<ParameterInfo>();
         public string Return { get; set; }
+        public bool HasBody { get; set; } = false;
+        public bool IsHidden { get; set; } = false;
+        public bool IsCanAddChild { get; set; } = true;
+        public List<string> SubItems { get; set; } = new List<string>();
         public bool IsReturn => !string.IsNullOrEmpty(Return) && Return != "Void";
         public string DisplayText => string.IsNullOrEmpty(Category) ? DisplayName : $"{Category} - {DisplayName}";
     }

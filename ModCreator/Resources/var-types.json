@@ -35,33 +35,36 @@
     "Desc": "Text value"
   },
   {
-    "Name": "Boolean[]",
-    "Type": "bool[]",
-    "Desc": "Array of boolean values"
+    "Name": "Array",
+    "Type": "Array",
+    "Desc": "Array of values"
   },
   {
-    "Name": "Int32[]",
-    "Type": "int[]",
-    "Desc": "Array of 32-bit integers"
+    "Name": "List",
+    "Type": "List",
+    "Desc": "List of values"
   },
   {
-    "Name": "Int64[]",
-    "Type": "long[]",
-    "Desc": "Array of 64-bit integers"
+    "Name": "Dictionary",
+    "Type": "Dictionary",
+    "Desc": "Dictionary of key-value pairs"
   },
   {
-    "Name": "Single[]",
-    "Type": "float[]",
-    "Desc": "Array of single precision floats"
+    "Name": "ModEvent",
+    "Type": "modevent",
+    "Desc": "Mod Event type",
+    "IsHidden": true
   },
   {
-    "Name": "Double[]",
-    "Type": "double[]",
-    "Desc": "Array of double precision floats"
+    "Name": "NonEvent",
+    "Type": "nonevent",
+    "Desc": "Non Event type",
+    "IsHidden": true
   },
   {
-    "Name": "String[]",
-    "Type": "string[]",
-    "Desc": "Array of string values"
+    "Name": "IEnumerable",
+    "Type": "IEnumerable",
+    "Desc": "IEnumerable",
+    "IsHidden": true
   }
 ]
