@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using ModCreator.Commons;
 using ModCreator.Enums;
@@ -41,19 +40,14 @@ namespace ModCreator.Models
         public string SelectedEvent { get; set; }
 
         /// <summary>
-        /// Logic operator for combining conditions: "AND" or "OR"
-        /// </summary>
-        public string ConditionLogic { get; set; } = "AND";
-
-        /// <summary>
         /// List of conditions for this event (uses EventActionInfo)
         /// </summary>
-        public ObservableCollection<EventActionInfo> Conditions { get; set; } = [];
+        public ObservableCollection<EventActionBase> Conditions { get; set; } = [];
 
         /// <summary>
         /// List of actions for this event (uses EventActionInfo)
         /// </summary>
-        public ObservableCollection<EventActionInfo> Actions { get; set; } = [];
+        public ObservableCollection<EventActionBase> Actions { get; set; } = [];
 
         /// <summary>
         /// Full file path to the ModEvent .cs file

@@ -1,5 +1,6 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:helpers="clr-namespace:ModCreator.Helpers">
 
     <!-- Merge Colors -->
     <ResourceDictionary.MergedDictionaries>
@@ -8,7 +9,7 @@
 
     <!-- Base TextBox Style -->
     <Style TargetType="TextBox" x:Key="BaseTextBox">
-        <Setter Property="Padding" Value="8,5"/>
+        <!-- <Setter Property="Padding" Value="8,5"/> -->
         <Setter Property="Height" Value="30"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -16,12 +17,121 @@
 
     <!-- Standard TextBox -->
     <Style TargetType="TextBox" BasedOn="{StaticResource BaseTextBox}">
-        <Setter Property="Margin" Value="0,5"/>
+        <!-- <Setter Property="Margin" Value="0,5"/> -->
+    </Style>
+
+    <!-- PlaceHolder TextBox -->
+    <Style TargetType="TextBox" x:Key="PlaceHolderTextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+        <Setter Property="MinWidth" Value="150"/>
+        <Setter Property="helpers:TextBoxBehaviors.EnableClearButton" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Grid>
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="2">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <!-- Placeholder TextBlock -->
+                                <TextBlock x:Name="PlaceholderText"
+                                          Grid.Column="0"
+                                          Text="{Binding Path=(helpers:TextBoxBehaviors.Placeholder), RelativeSource={RelativeSource TemplatedParent}}"
+                                          Foreground="#80808080"
+                                          FontStyle="Italic"
+                                          Margin="9,0,5,0"
+                                          VerticalAlignment="Center"
+                                          IsHitTestVisible="False"
+                                          Visibility="Collapsed"/>
+                                
+                                <ScrollViewer x:Name="PART_ContentHost" 
+                                            Grid.Column="0"
+                                            Margin="8,5,5,5"
+                                            VerticalAlignment="Center"/>
+                                
+                                <Button x:Name="ClearButton"
+                                        Grid.Column="1"
+                                        Width="20"
+                                        Height="20"
+                                        Margin="0,0,5,0"
+                                        Content="✕"
+                                        FontSize="10"
+                                        FontWeight="Bold"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Cursor="Hand"
+                                        Visibility="Collapsed"
+                                        VerticalAlignment="Center"
+                                        Foreground="{TemplateBinding Foreground}">
+                                    <Button.Style>
+                                        <Style TargetType="Button">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border Background="{TemplateBinding Background}"
+                                                                CornerRadius="10">
+                                                            <ContentPresenter HorizontalAlignment="Center"
+                                                                            VerticalAlignment="Center"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#40000000"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                    <Button.Tag>
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}"/>
+                                    </Button.Tag>
+                                </Button>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <!-- Show placeholder when text is empty -->
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Text" Value=""/>
+                                <Condition Property="IsFocused" Value="False"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="PlaceholderText" Property="Visibility" Value="Visible"/>
+                        </MultiTrigger>
+                        
+                        <!-- Hide clear button when text is empty or null -->
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Text" Value=""/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="ClearButton" Property="Visibility" Value="Collapsed"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Text" Value="{x:Null}"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="ClearButton" Property="Visibility" Value="Collapsed"/>
+                        </MultiTrigger>
+                        
+                        <!-- Show clear button on hover when text is not empty -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="ClearButton" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <!-- Search TextBox -->
-    <Style TargetType="TextBox" x:Key="SearchTextBox" BasedOn="{StaticResource {x:Type TextBox}}">
-        <Setter Property="MinWidth" Value="150"/>
+    <Style TargetType="TextBox" x:Key="SearchTextBox" BasedOn="{StaticResource PlaceHolderTextBox}">
     </Style>
 
     <!-- Multiline TextBox -->

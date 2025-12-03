@@ -52,26 +52,7 @@
                         <Button Content="{x:Static helper:MainWindowText.CreateNewProject}" Style="{StaticResource PrimaryButton}" Click="CreateProject_Click" Foreground="White"/>
                         <Button Content="{x:Static helper:MainWindowText.RefreshList}" Style="{StaticResource ActionButton}" Click="RefreshProjects_Click"/>
                         <TextBlock Grid.Column="0" Text="{x:Static helper:MainWindowText.SearchIcon}" FontSize="16" VerticalAlignment="Center" Margin="40,0,10,0"/>
-                        <TextBox Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="200" Margin="5" VerticalContentAlignment="Center">
-                            <TextBox.Style>
-                                <Style TargetType="TextBox">
-                                    <Setter Property="Padding" Value="5"/>
-                                    <Style.Triggers>
-                                        <Trigger Property="Text" Value="">
-                                            <Setter Property="Background">
-                                                <Setter.Value>
-                                                    <VisualBrush Stretch="None" AlignmentX="Left">
-                                                        <VisualBrush.Visual>
-                                                            <TextBlock Text="{x:Static helper:MainWindowText.SearchPlaceholder}" Foreground="Gray" Margin="5,0,0,0"/>
-                                                        </VisualBrush.Visual>
-                                                    </VisualBrush>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBox.Style>
-                        </TextBox>
+                        <TextBox Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="200" Margin="5" VerticalContentAlignment="Center" Style="{StaticResource SearchTextBox}" helper:TextBoxBehaviors.Placeholder="{x:Static helper:MainWindowText.SearchPlaceholder}"/>
                     </StackPanel>
                     <!-- Project List -->
                     <DataGrid Grid.Row="1" ItemsSource="{Binding FilteredProjects, Mode=OneWay}" SelectedItem="{Binding SelectedProject, Mode=TwoWay}" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" CanUserResizeRows="False" RowHeight="40" ColumnHeaderHeight="48" AlternatingRowBackground="#FFF5F5F5" MouseDoubleClick="ProjectList_DoubleClick" CellStyle="{StaticResource ProjectGridCellStyle}" ColumnHeaderStyle="{StaticResource ProjectGridHeaderStyle}">

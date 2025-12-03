@@ -13,30 +13,61 @@ namespace ModCreator.WindowData
     {
         public string WindowTitle { get; set; } = "Select Item";
         public ModEventItemType ItemType { get; set; }
+        public string ReturnType { get; set; }
         public ObservableCollection<string> Categories { get; set; } = [];
         [NotifyMethod(nameof(OnCategoryChanged))]
         public string SelectedCategory { get; set; }
         [NotifyMethod(nameof(OnSearchTextChanged))]
         public string SearchText { get; set; } = string.Empty;
-        public List<ModEventItemDisplay> AllItems { get; set; } = [];
-        public ObservableCollection<ModEventItemDisplay> FilteredItems { get; set; } = [];
-        public ModEventItemDisplay SelectedItem { get; set; }
+        public List<EventActionBase> AllItems { get; set; } = [];
+        public ObservableCollection<EventActionBase> FilteredItems { get; set; } = [];
+        public EventActionBase SelectedItem { get; set; }
         public bool HasSelectedItem => SelectedItem != null;
+        public List<GlobalVariable> AllVariables { get; set; } = [];
+        public List<GlobalVariable> FilteredVariables { get; set; } = [];
+        public GlobalVariable SelectedVariable { get; set; }
+        public bool HasSelectedVariable => SelectedVariable != null;
+        public bool HasSelectedItemOrVariable => SelectedItem != null || SelectedVariable != null;
+        public bool ShowVariablesSection { get; set; } = false;
+        public ModEventSelectType SelectType { get; set; }
 
-        public void Initialize(ModEventItemType itemType)
+        public void Initialize(ModEventItemType itemType, string returnType, string selectItemName, List<GlobalVariable> vars = null, Dictionary<int, ModEventItemSelectValue> parameterValues = null)
         {
-            ItemType = itemType;
-            WindowTitle = itemType switch
+            Begin();
             {
-                ModEventItemType.Event => "Select Event",
-                ModEventItemType.Action => "Select Action",
-                _ => "Select Item"
-            };
+                ItemType = itemType;
+                WindowTitle = itemType switch
+                {
+                    ModEventItemType.Event => "Select Event",
+                    ModEventItemType.Action => "Select Action",
+                    _ => "Select Item"
+                };
 
-            LoadItems();
-            LoadCategories();
-            SelectedCategory = "All";
-            UpdateFilteredItems();
+                LoadItems();
+                LoadCategories();
+                LoadVariables(vars);
+                SelectedCategory = "All";
+                UpdateFilteredItems();
+
+                // Pre-select item if SelectedItemName is provided
+                if (!string.IsNullOrEmpty(selectItemName))
+                {
+                    var b = FilteredVariables.FirstOrDefault(a => a.Name == selectItemName);
+                    if (b != null)
+                    {
+                        SelectedVariable = b;
+                    }
+
+                    var a = FilteredItems.FirstOrDefault(a => a.Name == selectItemName);
+                    if (a != null)
+                    {
+                        SelectedItem = a;
+                        SelectedItem.ParameterValues = parameterValues;
+                    }
+                }
+            }
+            End();
+            NotifyAll();
         }
 
         private void LoadItems()
@@ -46,44 +77,26 @@ namespace ModCreator.WindowData
             switch (ItemType)
             {
                 case ModEventItemType.Event:
-                    foreach (var evt in ModEventHelper.LoadModEventMethodsFromAssembly())
-                    {
-                        AllItems.Add(new ModEventItemDisplay
-                        {
-                            Category = evt.Category,
-                            Name = evt.Name,
-                            DisplayName = evt.DisplayName,
-                            Description = evt.Description,
-                            Code = evt.Code
-                        });
-                    }
+                    AllItems.AddRange(ModEventHelper.LoadModEventMethodsFromAssembly());
                     break;
                 case ModEventItemType.Action:
                     // Load from modevent-actions.json
-                    foreach (var act in ResourceHelper.ReadEmbeddedResource<List<Models.ActionInfo>>("ModCreator.Resources.modevent-actions.json"))
-                    {
-                        AllItems.Add(new ModEventItemDisplay
-                        {
-                            Category = act.Category,
-                            Name = act.Name,
-                            DisplayName = act.DisplayName,
-                            Description = act.Description,
-                            Code = act.Code
-                        });
-                    }
+                    AllItems.AddRange(ResourceHelper.ReadEmbeddedResource<List<EventActionBase>>("ModCreator.Resources.modevent-actions.json"));
                     // Load from ModLib.Helper.* classes
-                    foreach (var act in ModEventHelper.LoadModActionMethodsFromAssembly())
-                    {
-                        AllItems.Add(new ModEventItemDisplay
-                        {
-                            Category = act.Category,
-                            Name = act.Name,
-                            DisplayName = act.DisplayName,
-                            Description = act.Description,
-                            Code = act.Code
-                        });
-                    }
+                    AllItems.AddRange(ModEventHelper.LoadModActionMethodsFromAssembly());
                     break;
+            }
+
+            if (!string.IsNullOrEmpty(ReturnType))
+            {
+                if (ReturnType == "dynamic")
+                {
+                    AllItems = AllItems.Where(item => item.IsReturn).ToList();
+                }
+                else
+                {
+                    AllItems = AllItems.Where(item => item.Return == ReturnType).ToList();
+                }
             }
         }
 
@@ -95,6 +108,19 @@ namespace ModCreator.WindowData
             {
                 if (!string.IsNullOrEmpty(cat))
                     Categories.Add(cat);
+            }
+        }
+
+        private void LoadVariables(List<GlobalVariable> vars = null)
+        {
+            AllVariables.AddRange(vars);
+
+            if (!string.IsNullOrEmpty(ReturnType))
+            {
+                if (ReturnType != "dynamic")
+                {
+                    AllVariables = AllVariables.Where(item => item.Type == ReturnType).ToList();
+                }
             }
         }
 
@@ -110,29 +136,43 @@ namespace ModCreator.WindowData
 
         private void UpdateFilteredItems()
         {
+            // For events/actions filtering
             FilteredItems.Clear();
 
-            var query = AllItems.AsEnumerable();
+            var query1 = AllItems.AsEnumerable();
 
             if (!string.IsNullOrEmpty(SelectedCategory) && SelectedCategory != "All")
             {
-                query = query.Where(item => item.Category == SelectedCategory);
+                query1 = query1.Where(item => item.Category == SelectedCategory);
             }
 
             if (!string.IsNullOrEmpty(SearchText))
             {
                 var searchLower = SearchText.ToLower();
-                query = query.Where(item =>
+                query1 = query1.Where(item =>
                     item.DisplayName?.ToLower().Contains(searchLower) == true ||
                     item.Description?.ToLower().Contains(searchLower) == true ||
                     item.Name?.ToLower().Contains(searchLower) == true);
             }
 
-            foreach (var item in query)
+            foreach (var item in query1)
                 FilteredItems.Add(item);
 
-            if (FilteredItems.Count == 1)
-                SelectedItem = FilteredItems[0];
+            // For variables filtering
+            FilteredVariables.Clear();
+
+            var query2 = AllVariables.AsEnumerable();
+
+            if (!string.IsNullOrEmpty(SearchText))
+            {
+                var searchLower = SearchText.ToLower();
+                query2 = query2.Where(item =>
+                    item.Description?.ToLower().Contains(searchLower) == true ||
+                    item.Name?.ToLower().Contains(searchLower) == true);
+            }
+
+            foreach (var item in query2)
+                FilteredVariables.Add(item);
         }
     }
 }

@@ -40,16 +40,6 @@
     "Desc": "Array of values"
   },
   {
-    "Name": "List",
-    "Type": "List",
-    "Desc": "List of values"
-  },
-  {
-    "Name": "Dictionary",
-    "Type": "Dictionary",
-    "Desc": "Dictionary of key-value pairs"
-  },
-  {
     "Name": "ModEvent",
     "Type": "modevent",
     "Desc": "Mod Event type",

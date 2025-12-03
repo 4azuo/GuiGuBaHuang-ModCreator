@@ -9,8 +9,8 @@ namespace ModCreator.Helpers
 {
     public static class ModEventHelper
     {
-        private static List<Models.EventInfo> _cachedEvents;
-        private static List<Models.ActionInfo> _cachedActions;
+        private static List<Models.EventActionBase> _cachedEvents;
+        private static List<Models.EventActionBase> _cachedActions;
 
         /// <summary>
         /// Check if a member has a specific attribute
@@ -104,24 +104,36 @@ namespace ModCreator.Helpers
         /// <summary>
         /// Load ModEvent methods from ModLib.dll assembly
         /// </summary>
-        public static List<Models.EventInfo> LoadModEventMethodsFromAssembly(bool forceReload = false)
+        public static List<Models.EventActionBase> LoadModEventMethodsFromAssembly(bool forceReload = false)
         {
             if (!forceReload && _cachedEvents != null)
                 return _cachedEvents;
 
-            var items = LoadMethodsFromAssembly<Models.EventInfo>(
+            var items = LoadMethodsFromAssembly(
                 typeFilter: t => t.FullName == "ModLib.Mod.ModEvent",
                 methodFilter: m => m.IsVirtual && !m.IsSpecialName,
                 categoryAttribute: "ModLib.Attributes.EventCatAttribute",
                 ignoreAttribute: "ModLib.Attributes.EventCatIgnAttribute",
                 bindingFlags: BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly,
-                itemFactory: (typeName, method, category, code) => new Models.EventInfo
+                itemFactory: (typeName, method, category, code, parameters) => new Models.EventActionBase
                 {
                     Category = category,
                     Name = method.Name,
                     DisplayName = method.Name,
                     Description = $"ModEvent method: {method.Name}",
-                    Code = code
+                    Code = code,
+                    Parameters = parameters.Select(p => new Models.ParameterInfo
+                    {
+                        Type = FormatTypeName(p.ParameterType),
+                        Name = p.Name,
+                        IsOptional = p.IsOptional,
+                        DefaultValue = p.HasDefaultValue ? (p.RawDefaultValue?.ToString() ?? "null") : string.Empty
+                    }).ToList(),
+                    Return = FormatTypeName(method.ReturnType),
+                    HasBody = false,
+                    IsHidden = false,
+                    IsCanAddChild = false,
+                    SubItems = []
                 });
 
             _cachedEvents = items;
@@ -131,24 +143,36 @@ namespace ModCreator.Helpers
         /// <summary>
         /// Load Action methods from ModLib.Helper.* classes in ModLib.dll assembly
         /// </summary>
-        public static List<Models.ActionInfo> LoadModActionMethodsFromAssembly(bool forceReload = false)
+        public static List<Models.EventActionBase> LoadModActionMethodsFromAssembly(bool forceReload = false)
         {
             if (!forceReload && _cachedActions != null)
                 return _cachedActions;
 
-            var items = LoadMethodsFromAssembly<Models.ActionInfo>(
+            var items = LoadMethodsFromAssembly(
                 typeFilter: t => t.Namespace != null && t.Namespace.StartsWith("ModLib.Helper"),
                 methodFilter: m => !m.IsSpecialName,
                 categoryAttribute: null,
                 ignoreAttribute: "ModLib.Attributes.ActionCatIgnAttribute",
                 bindingFlags: BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly,
-                itemFactory: (typeName, method, category, code) => new Models.ActionInfo
+                itemFactory: (typeName, method, category, code, parameters) => new Models.EventActionBase
                 {
                     Category = typeName,
                     Name = $"{typeName}.{method.Name}",
                     DisplayName = $"{typeName}.{method.Name}",
                     Description = $"Helper method from {typeName}",
-                    Code = code
+                    Code = code,
+                    Parameters = parameters.Select(p => new Models.ParameterInfo
+                    {
+                        Type = FormatTypeName(p.ParameterType),
+                        Name = p.Name,
+                        IsOptional = p.IsOptional,
+                        DefaultValue = p.HasDefaultValue ? (p.RawDefaultValue?.ToString() ?? "null") : string.Empty
+                    }).ToList(),
+                    Return = FormatTypeName(method.ReturnType),
+                    HasBody = false,
+                    IsHidden = false,
+                    IsCanAddChild = false,
+                    SubItems = []
                 });
 
             _cachedActions = items;
@@ -164,7 +188,7 @@ namespace ModCreator.Helpers
             string categoryAttribute,
             string ignoreAttribute,
             BindingFlags bindingFlags,
-            Func<string, MethodInfo, string, string, T> itemFactory) where T : class
+            Func<string, MethodInfo, string, string, ParameterInfo[], T> itemFactory) where T : Models.EventActionBase
         {
             var items = new List<T>();
 
@@ -201,21 +225,7 @@ namespace ModCreator.Helpers
                             ? "Others"
                             : GetAttributeValue(method, categoryAttribute)?.ToString() ?? "Others";
 
-                        var item = itemFactory(type.Name, method, category, code);
-                        if (item != null)
-                        {
-                            // Populate Parameters and Return properties
-                            if (item is Models.EventActionBase baseItem)
-                            {
-                                baseItem.Parameters = parameters.Select(p => new Models.ParameterInfo
-                                {
-                                    Type = FormatTypeName(p.ParameterType),
-                                    Name = p.Name
-                                }).ToList();
-                                baseItem.Return = FormatTypeName(method.ReturnType);
-                            }
-                            items.Add(item);
-                        }
+                        items.Add(itemFactory(type.Name, method, category, code, parameters));
                     }
                 }
             }, (e) =>

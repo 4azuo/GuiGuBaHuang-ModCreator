@@ -42,14 +42,14 @@
                 </StackPanel>
             </Grid>
         </Border>
-        <TabControl x:Name="tabControl" Grid.Row="1" Margin="10">
+        <TabControl x:Name="tabControl" Grid.Row="1">
             <TabItem Header="{x:Static helper:ProjectEditorWindowText.TabProjectInfo}">
-                <Grid>
+                <Grid Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <Grid Grid.Row="0" Margin="8">
+                    <Grid Grid.Row="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="120"/>
                             <ColumnDefinition Width="15"/>
@@ -58,7 +58,7 @@
                             <ColumnDefinition Width="120"/>
                             <ColumnDefinition Width="15"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="120"/>
                             <ColumnDefinition Width="15"/>
                             <ColumnDefinition Width="*"/>
@@ -97,7 +97,7 @@
                         <TextBlock Grid.Column="0" Grid.Row="10" Text="{x:Static helper:ProjectEditorWindowText.HeaderState}" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource LabelText}" Margin="0,0,10,0"/>
                         <TextBox Grid.Column="2" Grid.Row="10" Grid.ColumnSpan="5" Text="{Binding Project.State}" IsReadOnly="True" Background="#FFF5F5F5" BorderBrush="#FFCCCCCC" BorderThickness="1" Height="32" VerticalContentAlignment="Center" FontSize="13" Padding="8,0"/>
                         <TextBlock Grid.Column="0" Grid.Row="12" Text="{x:Static helper:ProjectEditorWindowText.HeaderTitleImg}" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource LabelText}" Margin="0,10,10,0"/>
-                        <Border x:Name="TitleImageContainer" Grid.Column="1" Grid.Row="12" Grid.ColumnSpan="5" Grid.RowSpan="99" BorderBrush="#FFCCCCCC" BorderThickness="1" Background="#FFF5F5F5" Padding="5" Width="400" Height="300">
+                        <Border x:Name="TitleImageContainer" Grid.Column="2" Grid.Row="12" Grid.ColumnSpan="99" Grid.RowSpan="99" HorizontalAlignment="Left" BorderBrush="#FFCCCCCC" BorderThickness="1" Background="#FFF5F5F5" Padding="5" Width="400" Height="300">
                             <Image Source="{Binding Project.TitleImg, Mode=OneWay, Converter={StaticResource FilePathToImageConverter}}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </Grid>
@@ -319,7 +319,7 @@
                             </StackPanel>
                             <Grid x:Name="guiModePanel" Grid.Row="1" Visibility="Visible">
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">
-                                    <Grid Margin="10" IsEnabled="{Binding HasSelectedEventFile, Mode=OneWay}">
+                                    <Grid IsEnabled="{Binding HasSelectedEventFile, Mode=OneWay}">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="10"/>
@@ -370,7 +370,7 @@
                                                     <ColumnDefinition Width="*"/>
                                                 </Grid.ColumnDefinitions>
                                                 <Button VerticalAlignment="Top" Grid.Column="0" Content="{x:Static helper:ProjectEditorWindowText.AddCondition}" Click="AddCondition_Click" Style="{StaticResource ActionButton}" Background="#FF4CAF50" Foreground="White" Height="24" Margin="0,0,10,0"/>
-                                                <TreeView x:Name="tvConditions" Grid.Column="1" ItemsSource="{Binding SelectedModEvent.Conditions}" AllowDrop="True" Drop="Conditions_Drop" PreviewMouseLeftButtonDown="Conditions_PreviewMouseLeftButtonDown" Height="80" Style="{StaticResource StandardTreeView}">
+                                                <TreeView x:Name="tvConditions" Grid.Column="1" ItemsSource="{Binding SelectedModEvent.Conditions}" AllowDrop="True" Drop="Conditions_Drop" PreviewMouseLeftButtonDown="Conditions_PreviewMouseLeftButtonDown" MouseDoubleClick="Conditions_MouseDoubleClick" KeyDown="Conditions_KeyDown" Height="80" Style="{StaticResource StandardTreeView}">
                                                     <TreeView.ItemContainerStyle>
                                                         <Style TargetType="TreeViewItem">
                                                             <Setter Property="IsExpanded" Value="True"/>
@@ -384,7 +384,7 @@
                                                                     <ColumnDefinition Width="*"/>
                                                                 </Grid.ColumnDefinitions>
                                                                 <Button Grid.Column="0" Content="{x:Static helper:ProjectEditorWindowText.IconRemove}" Click="RemoveCondition_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Width="24" Height="24" Padding="0" Visibility="{Binding Converter={StaticResource RootItemToVisibilityConverter}}"/>
-                                                                <TextBlock Grid.Column="1" Text="{Binding DisplayText}" TextWrapping="Wrap" FontSize="12" VerticalAlignment="Center"/>
+                                                                <TextBlock Grid.Column="1" Text="{Binding ComputedDisplayName}" TextWrapping="Wrap" FontSize="12" VerticalAlignment="Center"/>
                                                             </Grid>
                                                         </HierarchicalDataTemplate>
                                                     </TreeView.ItemTemplate>
@@ -398,7 +398,7 @@
                                                     <RowDefinition Height="*"/>
                                                 </Grid.RowDefinitions>
                                                 <Button Grid.Row="0" Content="{x:Static helper:ProjectEditorWindowText.AddAction}" Click="AddAction_Click" Style="{StaticResource ActionButton}" Background="#FF4CAF50" Foreground="White" Height="24" Padding="10,0" Margin="0,0,0,5" HorizontalAlignment="Left"/>
-                                                <TreeView x:Name="tvActions" Grid.Row="1" ItemsSource="{Binding SelectedModEvent.Actions}" MinHeight="120" AllowDrop="True" Drop="Actions_Drop" PreviewMouseLeftButtonDown="Actions_PreviewMouseLeftButtonDown" Style="{StaticResource StandardTreeView}">
+                                                <TreeView x:Name="tvActions" Grid.Row="1" ItemsSource="{Binding SelectedModEvent.Actions}" MinHeight="120" AllowDrop="True" Drop="Actions_Drop" PreviewMouseLeftButtonDown="Actions_PreviewMouseLeftButtonDown" MouseDoubleClick="Actions_MouseDoubleClick" KeyDown="Actions_KeyDown" Style="{StaticResource StandardTreeView}">
                                                     <TreeView.ItemContainerStyle>
                                                         <Style TargetType="TreeViewItem">
                                                             <Setter Property="IsExpanded" Value="True"/>
@@ -412,7 +412,7 @@
                                                                     <ColumnDefinition Width="*"/>
                                                                 </Grid.ColumnDefinitions>
                                                                 <Button Grid.Column="0" Content="{x:Static helper:ProjectEditorWindowText.IconRemove}" Click="RemoveAction_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Width="24" Height="24" Padding="0" Visibility="{Binding Converter={StaticResource RootItemToVisibilityConverter}}"/>
-                                                                <TextBlock Grid.Column="1" Text="{Binding DisplayText}" TextWrapping="Wrap" FontSize="12" VerticalAlignment="Center"/>
+                                                                <TextBlock Grid.Column="1" Text="{Binding ComputedDisplayName}" TextWrapping="Wrap" FontSize="12" VerticalAlignment="Center"/>
                                                             </Grid>
                                                         </HierarchicalDataTemplate>
                                                     </TreeView.ItemTemplate>

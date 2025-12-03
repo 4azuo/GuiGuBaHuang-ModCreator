@@ -65,12 +65,12 @@ namespace ModCreator.Windows
         private void CreateModEventFolder_Click(object sender, RoutedEventArgs e)
         {
             var modPath = Path.Combine(WindowData.Project.ProjectPath, "ModProject", "ModCode", "ModMain", "Mod");
-            
+
             string parentPath = modPath;
             if (WindowData.SelectedEventItem != null)
             {
-                parentPath = WindowData.SelectedEventItem.IsFolder 
-                    ? WindowData.SelectedEventItem.FullPath 
+                parentPath = WindowData.SelectedEventItem.IsFolder
+                    ? WindowData.SelectedEventItem.FullPath
                     : Path.GetDirectoryName(WindowData.SelectedEventItem.FullPath);
             }
 
@@ -145,7 +145,7 @@ namespace ModCreator.Windows
             var inputWindow = new InputWindow
             {
                 Owner = this,
-                WindowData = { 
+                WindowData = {
                     WindowTitle = MessageHelper.Get("Messages.Dialogs.CreateModEvent.Title"),
                     Label = MessageHelper.Get("Messages.Dialogs.CreateModEvent.Label"),
                     InputValue = MessageHelper.Get("Messages.Dialogs.CreateModEvent.DefaultValue")
@@ -155,7 +155,7 @@ namespace ModCreator.Windows
             if (inputWindow.ShowDialog() != true) return;
 
             var className = inputWindow.WindowData.InputValue;
-            
+
             if (string.IsNullOrWhiteSpace(className) || !System.Text.RegularExpressions.Regex.IsMatch(className, @"^[A-Za-z_][A-Za-z0-9_]*$"))
             {
                 MessageBox.Show(MessageHelper.Get("Messages.Error.InvalidClassName"), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -163,19 +163,19 @@ namespace ModCreator.Windows
             }
 
             var modPath = Path.Combine(WindowData.Project.ProjectPath, "ModProject", "ModCode", "ModMain", "Mod");
-            
+
             string targetPath = modPath;
             if (WindowData.SelectedEventItem != null)
             {
-                targetPath = WindowData.SelectedEventItem.IsFolder 
-                    ? WindowData.SelectedEventItem.FullPath 
+                targetPath = WindowData.SelectedEventItem.IsFolder
+                    ? WindowData.SelectedEventItem.FullPath
                     : Path.GetDirectoryName(WindowData.SelectedEventItem.FullPath);
             }
-            
+
             Directory.CreateDirectory(targetPath);
 
             var filePath = Path.Combine(targetPath, $"{className}.cs");
-            
+
             if (File.Exists(filePath))
             {
                 MessageBox.Show(MessageHelper.GetFormat("Messages.Error.ClassNameExists", className), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -209,14 +209,13 @@ namespace ModCreator.Windows
                 CacheType = "Local",
                 WorkOn = "All",
                 SelectedEvent = "OnTimeUpdate1000ms",
-                ConditionLogic = "AND",
                 FilePath = filePath
             };
 
             File.WriteAllText(filePath, WindowData.GenerateModEventCode(newEvent));
             WindowData.LoadModEventFiles();
             WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.CreatedModEvent", className);
-            
+
             MessageBox.Show(MessageHelper.GetFormat("Messages.Success.ModEventCreated", className), MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
@@ -257,13 +256,12 @@ namespace ModCreator.Windows
                 CacheType = WindowData.SelectedModEvent.CacheType,
                 WorkOn = WindowData.SelectedModEvent.WorkOn,
                 SelectedEvent = WindowData.SelectedModEvent.SelectedEvent,
-                ConditionLogic = WindowData.SelectedModEvent.ConditionLogic,
                 FilePath = newFilePath
             };
 
             foreach (var condition in WindowData.SelectedModEvent.Conditions)
             {
-                clonedEvent.Conditions.Add(new EventActionInfo
+                clonedEvent.Conditions.Add(new EventActionBase
                 {
                     Name = condition.Name,
                     Category = condition.Category,
@@ -275,7 +273,7 @@ namespace ModCreator.Windows
 
             foreach (var action in WindowData.SelectedModEvent.Actions)
             {
-                clonedEvent.Actions.Add(new EventActionInfo
+                clonedEvent.Actions.Add(new EventActionBase
                 {
                     Name = action.Name,
                     Category = action.Category,
@@ -369,7 +367,7 @@ namespace ModCreator.Windows
         {
             if (WindowData.SelectedModEvent == null) return;
 
-            var selectWindow = new ModEventItemSelectWindow { Owner = this, ItemType = Enums.ModEventItemType.Event };
+            var selectWindow = new ModEventItemSelectWindow { Owner = this, ItemType = Enums.ModEventItemType.Event, AllVariables = WindowData.Project.GlobalVariables };
 
             if (selectWindow.ShowDialog() == true)
             {
@@ -386,24 +384,31 @@ namespace ModCreator.Windows
         {
             if (WindowData.SelectedModEvent == null) return;
 
-            var selectWindow = new ModEventItemSelectWindow { Owner = this, ItemType = Enums.ModEventItemType.Action };
+            var selectWindow = new ModEventItemSelectWindow { Owner = this, ItemType = Enums.ModEventItemType.Action, ReturnType = "bool", AllVariables = WindowData.Project.GlobalVariables };
 
             if (selectWindow.ShowDialog() == true)
             {
                 var actionInfo = selectWindow.WindowData.SelectedItem;
                 if (actionInfo != null)
                 {
-                    var newAction = new EventActionInfo
-                    {
-                        Name = actionInfo.Name,
-                        Category = actionInfo.Category,
-                        DisplayName = actionInfo.DisplayName,
-                        Description = actionInfo.Description,
-                        Code = actionInfo.Code
-                    };
+                    var newAction = actionInfo;
 
-                    var selectedItem = tvConditions.SelectedItem as EventActionInfo;
-                    if (selectedItem != null)
+                    // Add SubItems as children if defined
+                    if (newAction.SubItems != null && newAction.SubItems.Count > 0)
+                    {
+                        var allActions = selectWindow.WindowData.AllItems;
+                        foreach (var subItemName in newAction.SubItems)
+                        {
+                            var subAction = allActions.FirstOrDefault(a => a.Name == subItemName);
+                            if (subAction != null)
+                            {
+                                newAction.Children.Add(subAction);
+                            }
+                        }
+                    }
+
+                    var selectedItem = tvConditions.SelectedItem as EventActionBase;
+                    if (selectedItem != null && selectedItem.IsCanAddChild)
                     {
                         selectedItem.Children.Add(newAction);
                     }
@@ -414,12 +419,9 @@ namespace ModCreator.Windows
                         {
                             root.Children.Add(newAction);
                         }
-                        else
-                        {
-                            WindowData.SelectedModEvent.Conditions.Add(newAction);
-                        }
                     }
 
+                    newAction.RefreshDisplayName();
                     WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.AddedCondition", actionInfo.DisplayName);
                 }
             }
@@ -427,35 +429,55 @@ namespace ModCreator.Windows
 
         private void RemoveCondition_Click(object sender, RoutedEventArgs e)
         {
-            var action = (sender as Button)?.Tag as EventActionInfo;
-            if (action == null || WindowData.SelectedModEvent == null) return;
+            var action = (sender as Button)?.Tag as EventActionBase;
+            RemoveConditionItem(action);
+        }
 
-            WindowData.SelectedModEvent.Conditions.Remove(action);
-            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.RemovedCondition", action.DisplayName);
+        private void RemoveConditionItem(EventActionBase item)
+        {
+            if (item == null || WindowData.SelectedModEvent == null) return;
+            if (item.Name == "Root" || item.IsHidden) return;
+
+            if (item.Parent != null)
+            {
+                item.Parent.Children.Remove(item);
+            }
+            else
+            {
+                WindowData.SelectedModEvent.Conditions.Remove(item);
+            }
+            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.RemovedCondition", item.DisplayName);
         }
 
         private void AddAction_Click(object sender, RoutedEventArgs e)
         {
             if (WindowData.SelectedModEvent == null) return;
 
-            var selectWindow = new ModEventItemSelectWindow { Owner = this, ItemType = Enums.ModEventItemType.Action };
+            var selectWindow = new ModEventItemSelectWindow { Owner = this, ItemType = Enums.ModEventItemType.Action, AllVariables = WindowData.Project.GlobalVariables };
 
             if (selectWindow.ShowDialog() == true)
             {
                 var actionInfo = selectWindow.WindowData.SelectedItem;
                 if (actionInfo != null)
                 {
-                    var newAction = new EventActionInfo
-                    {
-                        Name = actionInfo.Name,
-                        Category = actionInfo.Category,
-                        DisplayName = actionInfo.DisplayName,
-                        Description = actionInfo.Description,
-                        Code = actionInfo.Code
-                    };
+                    var newAction = actionInfo;
 
-                    var selectedItem = tvActions.SelectedItem as EventActionInfo;
-                    if (selectedItem != null)
+                    // Add SubItems as children if defined
+                    if (newAction.SubItems != null && newAction.SubItems.Count > 0)
+                    {
+                        var allActions = selectWindow.WindowData.AllItems;
+                        foreach (var subItemName in newAction.SubItems)
+                        {
+                            var subAction = allActions.FirstOrDefault(a => a.Name == subItemName);
+                            if (subAction != null)
+                            {
+                                newAction.Children.Add(subAction);
+                            }
+                        }
+                    }
+
+                    var selectedItem = tvActions.SelectedItem as EventActionBase;
+                    if (selectedItem != null && selectedItem.IsCanAddChild)
                     {
                         selectedItem.Children.Add(newAction);
                     }
@@ -466,12 +488,9 @@ namespace ModCreator.Windows
                         {
                             root.Children.Add(newAction);
                         }
-                        else
-                        {
-                            WindowData.SelectedModEvent.Actions.Add(newAction);
-                        }
                     }
 
+                    newAction.RefreshDisplayName();
                     WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.AddedAction", actionInfo.DisplayName);
                 }
             }
@@ -479,18 +498,113 @@ namespace ModCreator.Windows
 
         private void RemoveAction_Click(object sender, RoutedEventArgs e)
         {
-            var action = (sender as Button)?.Tag as EventActionInfo;
-            if (action == null || WindowData.SelectedModEvent == null) return;
+            var action = (sender as Button)?.Tag as EventActionBase;
+            RemoveActionItem(action);
+        }
 
-            WindowData.SelectedModEvent.Actions.Remove(action);
-            
-            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.RemovedAction", action.DisplayName);
+        private void RemoveActionItem(EventActionBase item)
+        {
+            if (item == null || WindowData.SelectedModEvent == null) return;
+            if (item.Name == "Root" || item.IsHidden) return;
+
+            if (item.Parent != null)
+            {
+                item.Parent.Children.Remove(item);
+            }
+            else
+            {
+                WindowData.SelectedModEvent.Actions.Remove(item);
+            }
+            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.RemovedAction", item.DisplayName);
+        }
+
+        private void Conditions_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var selectedItem = tvConditions.SelectedItem as EventActionBase;
+            if (selectedItem != null && selectedItem.Name != "Root" && !selectedItem.IsHidden)
+            {
+                var selectWindow = new ModEventItemSelectWindow
+                {
+                    Owner = this,
+                    ItemType = Enums.ModEventItemType.Action,
+                    ReturnType = "bool",
+                    SelectedItemName = selectedItem.Name,
+                    AllVariables = WindowData.Project.GlobalVariables,
+                    ParameterValues = selectedItem.ParameterValues
+                };
+
+                if (selectWindow.ShowDialog() == true)
+                {
+                    var newActionInfo = selectWindow.WindowData.SelectedItem;
+                    if (newActionInfo != null && newActionInfo.Name != selectedItem.Name)
+                    {
+                        // Update the item properties using ObjectHelper.Map
+                        ObjectHelper.Map(newActionInfo, selectedItem);
+
+                        WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.UpdatedCondition", selectedItem.DisplayName);
+                    }
+                }
+            }
+        }
+
+        private void Conditions_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Delete)
+            {
+                var selectedItem = tvConditions.SelectedItem as EventActionBase;
+                if (selectedItem != null)
+                {
+                    RemoveConditionItem(selectedItem);
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void Actions_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var selectedItem = tvActions.SelectedItem as EventActionBase;
+            if (selectedItem != null && selectedItem.Name != "Root" && !selectedItem.IsHidden)
+            {
+                var selectWindow = new ModEventItemSelectWindow
+                {
+                    Owner = this,
+                    ItemType = Enums.ModEventItemType.Action,
+                    SelectedItemName = selectedItem.Name,
+                    AllVariables = WindowData.Project.GlobalVariables,
+                    ParameterValues = selectedItem.ParameterValues
+                };
+
+                if (selectWindow.ShowDialog() == true)
+                {
+                    var newActionInfo = selectWindow.WindowData.SelectedItem;
+                    if (newActionInfo != null && newActionInfo.Name != selectedItem.Name)
+                    {
+                        // Update the item properties using ObjectHelper.Map
+                        ObjectHelper.Map(newActionInfo, selectedItem);
+
+                        WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.UpdatedAction", selectedItem.DisplayName);
+                    }
+                }
+            }
+        }
+
+        private void Actions_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Delete)
+            {
+                var selectedItem = tvActions.SelectedItem as EventActionBase;
+                if (selectedItem != null)
+                {
+                    RemoveActionItem(selectedItem);
+                    e.Handled = true;
+                }
+            }
         }
 
         private void OpenModEventFolder_Click(object sender, RoutedEventArgs e)
         {
             if (WindowData?.Project == null) return;
-            
+
             var modPath = Path.Combine(WindowData.Project.ProjectPath, "ModProject", "ModCode", "ModMain", "Mod");
             Directory.CreateDirectory(modPath);
             System.Diagnostics.Process.Start("explorer.exe", modPath);
@@ -544,6 +658,9 @@ namespace ModCreator.Windows
                 if (result != MessageBoxResult.Yes) return;
 
                 WindowData.SelectedModEvent.IsCodeModeOnly = true;
+                WindowData.SelectedModEvent.SelectedEvent = string.Empty;
+                WindowData.SelectedModEvent.Conditions.Clear();
+                WindowData.SelectedModEvent.Actions.Clear();
             }
 
             var guiPanel = this.FindName("guiModePanel") as Grid;
@@ -601,22 +718,40 @@ namespace ModCreator.Windows
         }
 
         // Drag/drop for conditions
-        private EventActionInfo _draggedCondition;
+        private EventActionBase _draggedCondition;
 
         private void Conditions_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            // Don't start drag-drop if clicking on a Button
+            if (e.OriginalSource is DependencyObject dep)
+            {
+                var button = FindAncestor<Button>(dep);
+                if (button != null) return;
+            }
+
             var treeView = sender as System.Windows.Controls.TreeView;
             if (treeView == null) return;
 
             var item = ItemsControl.ContainerFromElement(treeView, e.OriginalSource as DependencyObject) as TreeViewItem;
             if (item != null)
             {
-                _draggedCondition = item.Header as EventActionInfo;
+                _draggedCondition = item.Header as EventActionBase;
                 if (_draggedCondition != null)
                 {
                     DragDrop.DoDragDrop(item, _draggedCondition, System.Windows.DragDropEffects.Move);
                 }
             }
+        }
+
+        private T FindAncestor<T>(DependencyObject current) where T : DependencyObject
+        {
+            while (current != null)
+            {
+                if (current is T ancestor)
+                    return ancestor;
+                current = VisualTreeHelper.GetParent(current);
+            }
+            return null;
         }
 
         private void Conditions_Drop(object sender, System.Windows.DragEventArgs e)
@@ -627,7 +762,7 @@ namespace ModCreator.Windows
             if (treeView == null) return;
 
             var targetItem = ItemsControl.ContainerFromElement(treeView, e.OriginalSource as DependencyObject) as TreeViewItem;
-            var targetAction = targetItem?.Header as EventActionInfo;
+            var targetAction = targetItem?.Header as EventActionBase;
 
             if (targetAction != null && targetAction != _draggedCondition)
             {
@@ -646,17 +781,24 @@ namespace ModCreator.Windows
         }
 
         // Drag/drop for actions
-        private EventActionInfo _draggedAction;
+        private EventActionBase _draggedAction;
 
         private void Actions_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            // Don't start drag-drop if clicking on a Button
+            if (e.OriginalSource is DependencyObject dep)
+            {
+                var button = FindAncestor<Button>(dep);
+                if (button != null) return;
+            }
+
             var treeView = sender as System.Windows.Controls.TreeView;
             if (treeView == null) return;
 
             var item = ItemsControl.ContainerFromElement(treeView, e.OriginalSource as DependencyObject) as TreeViewItem;
             if (item != null)
             {
-                _draggedAction = item.Header as EventActionInfo;
+                _draggedAction = item.Header as EventActionBase;
                 if (_draggedAction != null)
                 {
                     DragDrop.DoDragDrop(item, _draggedAction, System.Windows.DragDropEffects.Move);
@@ -672,7 +814,7 @@ namespace ModCreator.Windows
             if (treeView == null) return;
 
             var targetItem = ItemsControl.ContainerFromElement(treeView, e.OriginalSource as DependencyObject) as TreeViewItem;
-            var targetAction = targetItem?.Header as EventActionInfo;
+            var targetAction = targetItem?.Header as EventActionBase;
 
             if (targetAction != null && targetAction != _draggedAction)
             {
@@ -704,7 +846,7 @@ namespace ModCreator.Windows
 
             var mode = comboBox.SelectedItem as Enums.EventMode?;
             var grpEventSelection = this.FindName("grpEventSelection") as GroupBox;
-            
+
             // Get controls for OrderIndex, CacheType, and WorkOn
             var txtOrderIndexLabel = this.FindName("txtOrderIndexLabel") as TextBlock;
             var txtOrderIndex = this.FindName("txtOrderIndex") as TextBox;
@@ -714,10 +856,10 @@ namespace ModCreator.Windows
             var cmbWorkOn = this.FindName("cmbWorkOn") as ComboBox;
 
             var isModEvent = mode == Enums.EventMode.ModEvent;
-            
+
             if (grpEventSelection != null)
                 grpEventSelection.Visibility = isModEvent ? Visibility.Visible : Visibility.Collapsed;
-                
+
             var targetVisibility = isModEvent ? Visibility.Visible : Visibility.Collapsed;
             if (txtOrderIndexLabel != null) txtOrderIndexLabel.Visibility = targetVisibility;
             if (txtOrderIndex != null) txtOrderIndex.Visibility = targetVisibility;
@@ -745,7 +887,7 @@ namespace ModCreator.Windows
         {
             var txtFind = sender as TextBox;
             var editor = this.FindName("txtEventSourceEditor") as ICSharpCode.AvalonEdit.TextEditor;
-            
+
             if (editor == null || txtFind == null || string.IsNullOrEmpty(txtFind.Text)) return;
 
             var index = editor.Text.IndexOf(txtFind.Text, 0, StringComparison.OrdinalIgnoreCase);
@@ -773,7 +915,7 @@ namespace ModCreator.Windows
         {
             var editor = this.FindName("txtEventSourceEditor") as ICSharpCode.AvalonEdit.TextEditor;
             var txtFind = this.FindName("txtEventFindText") as TextBox;
-            
+
             if (editor == null || txtFind == null || string.IsNullOrEmpty(txtFind.Text)) return;
 
             var searchText = txtFind.Text;
@@ -800,7 +942,7 @@ namespace ModCreator.Windows
             var editor = this.FindName("txtEventSourceEditor") as ICSharpCode.AvalonEdit.TextEditor;
             var txtFind = this.FindName("txtEventFindText") as TextBox;
             var txtReplace = this.FindName("txtEventReplaceText") as TextBox;
-            
+
             if (editor == null || txtFind == null || txtReplace == null || string.IsNullOrEmpty(txtFind.Text)) return;
 
             var searchText = txtFind.Text;
@@ -822,7 +964,7 @@ namespace ModCreator.Windows
             var editor = this.FindName("txtEventSourceEditor") as ICSharpCode.AvalonEdit.TextEditor;
             var txtFind = this.FindName("txtEventFindText") as TextBox;
             var txtReplace = this.FindName("txtEventReplaceText") as TextBox;
-            
+
             if (editor == null || txtFind == null || txtReplace == null || string.IsNullOrEmpty(txtFind.Text)) return;
 
             var searchText = txtFind.Text;

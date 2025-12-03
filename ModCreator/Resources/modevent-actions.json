@@ -114,7 +114,7 @@
   {
     "Category": "Logic",
     "Name": "LogicalNOT",
-    "DisplayName": "not {0}",
+    "DisplayName": "Not {0}",
     "Description": "Logical NOT operator",
     "Code": "!{0}",
     "Parameters": [
@@ -238,7 +238,6 @@
       { "Type": "bool", "Name": "condition" }
     ],
     "Return": "Void",
-    "IsCanAddChild": false,
     "SubItems": ["IfElse_Then", "IfElse_Else"]
   },
   {
@@ -249,6 +248,7 @@
     "Code": "",
     "Return": "Void",
     "HasBody": true,
+    "IsCanAddChild": true,
     "IsHidden": true
   },
   {
@@ -259,6 +259,7 @@
     "Code": "",
     "Return": "Void",
     "HasBody": true,
+    "IsCanAddChild": true,
     "IsHidden": true
   },
   {
@@ -295,6 +296,7 @@
       { "Type": "bool", "Name": "condition" }
     ],
     "Return": "Void",
+    "IsCanAddChild": true,
     "HasBody": true
   },
   {
@@ -308,6 +310,7 @@
       { "Type": "dynamic", "Name": "collection" }
     ],
     "Return": "Void",
+    "IsCanAddChild": true,
     "HasBody": true
   },
   {
@@ -318,7 +321,6 @@
     "Code": "try-catch",
     "Parameters": [],
     "Return": "Void",
-    "IsCanAddChild": false,
     "SubItems": ["TryCatch_Try", "TryCatch_Catch"]
   },
   {
@@ -329,6 +331,7 @@
     "Code": "",
     "Return": "Void",
     "HasBody": true,
+    "IsCanAddChild": true,
     "IsHidden": true
   },
   {
@@ -339,6 +342,7 @@
     "Code": "",
     "Return": "Void",
     "HasBody": true,
+    "IsCanAddChild": true,
     "IsHidden": true
   },
   {
@@ -349,7 +353,6 @@
     "Code": "try-catch-finally",
     "Parameters": [],
     "Return": "Void",
-    "IsCanAddChild": false,
     "SubItems": ["TryCatchFinally_Try", "TryCatchFinally_Catch", "TryCatchFinally_Finally"]
   },
   {
@@ -360,6 +363,7 @@
     "Code": "",
     "Return": "Void",
     "HasBody": true,
+    "IsCanAddChild": true,
     "IsHidden": true
   },
   {
@@ -370,6 +374,7 @@
     "Code": "",
     "Return": "Void",
     "HasBody": true,
+    "IsCanAddChild": true,
     "IsHidden": true
   },
   {
@@ -380,6 +385,7 @@
     "Code": "",
     "Return": "Void",
     "HasBody": true,
+    "IsCanAddChild": true,
     "IsHidden": true
   },
   {

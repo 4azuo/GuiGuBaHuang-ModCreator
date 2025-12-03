@@ -6,7 +6,6 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using EventInfo = ModCreator.Models.EventInfo;
 
 namespace ModCreator.WindowData
 {
@@ -22,7 +21,7 @@ namespace ModCreator.WindowData
         public bool IsGuiMode { get; set; } = true;
         public List<string> CacheTypes { get; set; } = [];
         public List<string> WorkOnTypes { get; set; } = [];
-        public List<EventInfo> AvailableEvents { get; set; } = ModEventHelper.LoadModEventMethodsFromAssembly();
+        public List<EventActionBase> AvailableEvents { get; set; } = ModEventHelper.LoadModEventMethodsFromAssembly();
 
         public void LoadModEventFiles()
         {
@@ -96,7 +95,7 @@ namespace ModCreator.WindowData
 
                 if (SelectedModEvent.Conditions.Count == 0 || SelectedModEvent.Conditions[0].Name != "Root")
                 {
-                    SelectedModEvent.Conditions.Insert(0, new EventActionInfo
+                    SelectedModEvent.Conditions.Insert(0, new EventActionBase
                     {
                         Name = "Root",
                         DisplayName = "Root",
@@ -106,7 +105,7 @@ namespace ModCreator.WindowData
 
                 if (SelectedModEvent.Actions.Count == 0 || SelectedModEvent.Actions[0].Name != "Root")
                 {
-                    SelectedModEvent.Actions.Insert(0, new EventActionInfo
+                    SelectedModEvent.Actions.Insert(0, new EventActionBase
                     {
                         Name = "Root",
                         DisplayName = "Root",
