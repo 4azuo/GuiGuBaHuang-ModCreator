@@ -27,9 +27,25 @@ namespace ModCreator.WindowData
         public List<GlobalVariable> FilteredVariables { get; set; } = [];
         public GlobalVariable SelectedVariable { get; set; }
         public bool HasSelectedVariable => SelectedVariable != null;
-        public bool HasSelectedItemOrVariable => SelectedItem != null || SelectedVariable != null;
+        public string OptionalValue { get; set; }
+        public bool HasOptionalValue => !string.IsNullOrWhiteSpace(OptionalValue);
+        public bool HasAnyChange => SelectedItem != null || SelectedVariable != null || HasOptionalValue;
+        public bool HasNoChange => SelectedItem == null && SelectedVariable == null;
+        public bool HasSelect => SelectedItem != null;
+        public bool HasSelectVariable => SelectedVariable != null;
         public bool ShowVariablesSection { get; set; } = false;
         public ModEventSelectType SelectType { get; set; }
+
+        public void ClearSelection()
+        {
+            Begin();
+            {
+                SelectedItem = null;
+                SelectedVariable = null;
+            }
+            End();
+            NotifyAll();
+        }
 
         public void Initialize(ModEventItemType itemType, string returnType, string selectItemName, List<GlobalVariable> vars = null, Dictionary<int, ModEventItemSelectValue> parameterValues = null)
         {

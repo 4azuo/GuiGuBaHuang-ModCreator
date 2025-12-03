@@ -1,6 +1,7 @@
 using ModCreator.Enums;
 using ModCreator.Models;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -12,22 +13,39 @@ namespace ModCreator.Helpers
 
         public static string BuildNestedDisplayName(ModEventItemSelectValue value)
         {
+            return BuildNestedDisplayName(value, new HashSet<EventActionBase>());
+        }
+
+        private static string BuildNestedDisplayName(ModEventItemSelectValue value, HashSet<EventActionBase> visited)
+        {
             if (value == null)
                 return string.Empty;
 
             if (value.SelectType == ModEventSelectType.Variable)
                 return value.Name;
 
-            return BuildNestedDisplayName(value.SelectedEventAction);
+            if (value.SelectType == ModEventSelectType.OptionalValue)
+                return value.OptionalValue;
+
+            return BuildNestedDisplayName(value.SelectedEventAction, visited);
         }
 
         public static string BuildNestedDisplayName(EventActionBase action)
         {
+            return BuildNestedDisplayName(action, new HashSet<EventActionBase>());
+        }
+
+        private static string BuildNestedDisplayName(EventActionBase action, HashSet<EventActionBase> visited)
+        {
+            if (action == null || string.IsNullOrEmpty(action.DisplayName))
+                return string.Empty;
+
+            // Circular reference detection
+            if (!visited.Add(action))
+                return $"[Circular: {action.DisplayName}]";
+
             try
             {
-                if (action == null || string.IsNullOrEmpty(action.DisplayName))
-                    return string.Empty;
-
                 var displayName = action.DisplayName;
                 var matches = ParameterPlaceholderRegex.Matches(displayName);
 
@@ -46,10 +64,10 @@ namespace ModCreator.Helpers
                         action.ParameterValues[paramIndex] != null)
                     {
                         var paramValue = action.ParameterValues[paramIndex];
-                        var nestedDisplay = BuildNestedDisplayName(paramValue);
+                        var nestedDisplay = BuildNestedDisplayName(paramValue, visited);
 
                         var needsParentheses = paramValue.SelectType == ModEventSelectType.EventAction &&
-                                               paramValue.SelectedEventAction?.ParameterValues?.Count > 0;
+                                                paramValue.SelectedEventAction?.ParameterValues?.Count > 0;
 
                         result.Append(needsParentheses ? $"({nestedDisplay})" : nestedDisplay);
                     }
@@ -64,10 +82,9 @@ namespace ModCreator.Helpers
                 result.Append(displayName.Substring(lastIndex));
                 return result.ToString();
             }
-            catch (Exception ex)
+            finally
             {
-                DebugHelper.Error(ex, "Error building nested display name.");
-                throw ex;
+                visited.Remove(action);
             }
         }
     }

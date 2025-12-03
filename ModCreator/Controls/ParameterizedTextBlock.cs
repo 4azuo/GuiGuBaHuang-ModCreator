@@ -116,20 +116,32 @@ namespace ModCreator.Controls
                 vars = parentWindow.WindowData.AllVariables;
             }
 
+            var p = item.ParameterValues.ContainsKey(paramIndex) ? item.ParameterValues[paramIndex] : null;
             var selectWindow = new ModEventItemSelectWindow
             {
                 Owner = window,
                 ItemType = ModEventItemType.Action,
                 ReturnType = parameter.Type,
                 AllVariables = vars,
-                ParameterValues = item.ParameterValues,
-                SelectedItemName = item.Name,
+                ParameterValues = p != null && p.SelectType == ModEventSelectType.EventAction ? p.SelectedEventAction.ParameterValues : [],
+                SelectedItemName = p?.Name,
                 ShowVariablesSection = true
             };
 
-            if (selectWindow.ShowDialog() == true && selectWindow.WindowData.SelectedItem != null)
+            if (selectWindow.ShowDialog() == true)
             {
-                item.ParameterValues[paramIndex] = new ModEventItemSelectValue(selectWindow.WindowData.SelectedItem);
+                if (selectWindow.WindowData.SelectType == ModEventSelectType.EventAction && selectWindow.WindowData.SelectedItem != null)
+                {
+                    item.ParameterValues[paramIndex] = new ModEventItemSelectValue(selectWindow.WindowData.SelectedItem);
+                }
+                else if (selectWindow.WindowData.SelectType == ModEventSelectType.Variable && selectWindow.WindowData.SelectedVariable != null)
+                {
+                    item.ParameterValues[paramIndex] = new ModEventItemSelectValue(selectWindow.WindowData.SelectedVariable);
+                }
+                else if (selectWindow.WindowData.SelectType == ModEventSelectType.OptionalValue && selectWindow.WindowData.HasOptionalValue)
+                {
+                    item.ParameterValues[paramIndex] = new ModEventItemSelectValue(selectWindow.WindowData.OptionalValue, parameter.Type);
+                }
 
                 item.RefreshDisplayName();
                 UpdateText(item);

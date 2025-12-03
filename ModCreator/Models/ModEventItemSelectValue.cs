@@ -9,6 +9,7 @@ namespace ModCreator.Models
 
         public EventActionBase SelectedEventAction { get; private set; }
         public GlobalVariable SelectedVariable { get; private set; }
+        public string OptionalValue { get; private set; }
         public ModEventSelectType SelectType { get; private set; }
 
         public ModEventItemSelectValue(EventActionBase eventAction)
@@ -23,6 +24,12 @@ namespace ModCreator.Models
             SelectType = ModEventSelectType.Variable;
         }
 
+        public ModEventItemSelectValue(string optionalValue, string returnType)
+        {
+            OptionalValue = optionalValue;
+            SelectType = ModEventSelectType.OptionalValue;
+        }
+
         public string Category
         {
             get => SelectType == ModEventSelectType.EventAction ? SelectedEventAction?.Category : SelectedVariable?.Name;
@@ -35,7 +42,9 @@ namespace ModCreator.Models
 
         public string Name
         {
-            get => SelectType == ModEventSelectType.EventAction ? SelectedEventAction?.Name : SelectedVariable?.Name;
+            get => SelectType == ModEventSelectType.EventAction ? SelectedEventAction?.Name : 
+                   SelectType == ModEventSelectType.Variable ? SelectedVariable?.Name : 
+                   OptionalValue;
             set
             {
                 if (SelectType == ModEventSelectType.EventAction && SelectedEventAction != null)
@@ -47,7 +56,9 @@ namespace ModCreator.Models
 
         public string DisplayName
         {
-            get => SelectType == ModEventSelectType.EventAction ? DisplayNameHelper.BuildNestedDisplayName(this) : SelectedVariable?.Name;
+            get => SelectType == ModEventSelectType.EventAction ? DisplayNameHelper.BuildNestedDisplayName(this) : 
+                   SelectType == ModEventSelectType.Variable ? SelectedVariable?.Name : 
+                   OptionalValue;
             set
             {
                 if (SelectType == ModEventSelectType.EventAction && SelectedEventAction != null)
@@ -69,7 +80,9 @@ namespace ModCreator.Models
 
         public string Code
         {
-            get => SelectType == ModEventSelectType.EventAction ? SelectedEventAction?.Code : SelectedVariable?.Name;
+            get => SelectType == ModEventSelectType.EventAction ? SelectedEventAction?.Code : 
+                   SelectType == ModEventSelectType.Variable ? SelectedVariable?.Name : 
+                   OptionalValue;
             set
             {
                 if (SelectType == ModEventSelectType.EventAction && SelectedEventAction != null)

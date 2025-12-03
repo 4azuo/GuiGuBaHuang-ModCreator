@@ -107,7 +107,7 @@ namespace ModCreator.Helpers
         public static List<Models.EventActionBase> LoadModEventMethodsFromAssembly(bool forceReload = false)
         {
             if (!forceReload && _cachedEvents != null)
-                return _cachedEvents;
+                return _cachedEvents.Clone();
 
             var items = LoadMethodsFromAssembly(
                 typeFilter: t => t.FullName == "ModLib.Mod.ModEvent",
@@ -146,7 +146,7 @@ namespace ModCreator.Helpers
         public static List<Models.EventActionBase> LoadModActionMethodsFromAssembly(bool forceReload = false)
         {
             if (!forceReload && _cachedActions != null)
-                return _cachedActions;
+                return _cachedActions.Clone();
 
             var items = LoadMethodsFromAssembly(
                 typeFilter: t => t.Namespace != null && t.Namespace.StartsWith("ModLib.Helper"),

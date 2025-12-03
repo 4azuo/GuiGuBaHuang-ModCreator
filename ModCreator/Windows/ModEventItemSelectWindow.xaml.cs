@@ -46,8 +46,21 @@ namespace ModCreator.Windows
 
         private void OK_Click(object sender, RoutedEventArgs e)
         {
-            if (WindowData.SelectedItem != null || WindowData.SelectedVariable != null)
+            if (WindowData.SelectedItem != null)
             {
+                WindowData.SelectType = ModEventSelectType.EventAction;
+                DialogResult = true;
+                Close();
+            }
+            else if (WindowData.SelectedVariable != null)
+            {
+                WindowData.SelectType = ModEventSelectType.Variable;
+                DialogResult = true;
+                Close();
+            }
+            else if (WindowData.HasOptionalValue)
+            {
+                WindowData.SelectType = ModEventSelectType.OptionalValue;
                 DialogResult = true;
                 Close();
             }
@@ -77,6 +90,11 @@ namespace ModCreator.Windows
                 DialogResult = true;
                 Close();
             }
+        }
+
+        private void Clear_Click(object sender, RoutedEventArgs e)
+        {
+            WindowData.ClearSelection();
         }
     }
 }

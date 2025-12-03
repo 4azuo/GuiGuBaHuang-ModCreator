@@ -37,21 +37,82 @@
                     <ListBox ItemsSource="{Binding FilteredVariables}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedVariable}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" MouseDoubleClick="VariablesListBox_MouseDoubleClick"/>
                 </GroupBox>
             </Grid>
-            <GroupBox Grid.Column="1" Header="{x:Static helpers:ModEventItemSelectWindowText.Description}">
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <StackPanel Margin="10">
-                        <controls:ParameterizedTextBlock Item="{Binding SelectedItem}" AllVariables="{Binding AllVariables}" FontWeight="Bold" FontSize="14" TextWrapping="Wrap" Margin="0,0,0,10"/>
-                        <TextBlock Text="{Binding SelectedItem.Description}" TextWrapping="Wrap" FontSize="12" Foreground="#FF666666" Margin="0,0,0,10"/>
-                        <TextBlock Text="{x:Static helpers:ModEventItemSelectWindowText.Code}" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,5"/>
-                        <Border Background="#FFF5F5F5" BorderBrush="#FFCCCCCC" BorderThickness="1" Padding="8" CornerRadius="3">
-                            <TextBlock Text="{Binding SelectedItem.Code}" TextWrapping="Wrap" FontFamily="Consolas" FontSize="11" Foreground="#FF333333"/>
-                        </Border>
-                    </StackPanel>
-                </ScrollViewer>
+            <GroupBox Header="Details" Grid.Column="1">
+                <Grid>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="10">
+                        <StackPanel Margin="10">
+                            <GroupBox Header="Optional Value" Visibility="{Binding HasNoChange, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="Value:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <TextBox Grid.Column="1" Text="{Binding OptionalValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="28" VerticalContentAlignment="Center" FontFamily="Consolas"/>
+                                </Grid>
+                            </GroupBox>
+                            <GroupBox Header="Details" Visibility="{Binding HasSelect, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="10"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="10"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="10"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <controls:ParameterizedTextBlock Grid.Row="0" Item="{Binding SelectedItem}" AllVariables="{Binding AllVariables}" FontWeight="Bold" FontSize="14" TextWrapping="Wrap"/>
+                                    <TextBlock Grid.Row="2" Text="{Binding SelectedItem.Description}" TextWrapping="Wrap" FontSize="12" Foreground="#FF666666"/>
+                                    <TextBlock Grid.Row="4" Text="{x:Static helpers:ModEventItemSelectWindowText.Code}" FontWeight="SemiBold" FontSize="12"/>
+                                    <Border Grid.Row="6" Background="#FFF5F5F5" BorderBrush="#FFCCCCCC" BorderThickness="1" Padding="8" CornerRadius="3">
+                                        <TextBlock Text="{Binding SelectedItem.Code}" TextWrapping="Wrap" FontFamily="Consolas" FontSize="11" Foreground="#FF333333"/>
+                                    </Border>
+                                </Grid>
+                            </GroupBox>
+                            <GroupBox Header="Details" Visibility="{Binding HasSelectVariable, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <Grid Margin="5">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="10"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="10"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="10"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Name:" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SelectedVariable.Name}" TextWrapping="Wrap" FontFamily="Consolas" FontSize="12"/>
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Type:" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SelectedVariable.Type}" TextWrapping="Wrap" FontFamily="Consolas" FontSize="12" Foreground="#FF0066CC"/>
+
+                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Default:" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                                    <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding SelectedVariable.Value}" TextWrapping="Wrap" FontFamily="Consolas" FontSize="12" Foreground="#FF009900"/>
+
+                                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Description:" FontWeight="SemiBold" Margin="0,0,10,0" VerticalAlignment="Top"/>
+                                    <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding SelectedVariable.Description}" TextWrapping="Wrap" FontSize="12" Foreground="#FF666666"/>
+                                </Grid>
+                            </GroupBox>
+                        </StackPanel>
+                    </ScrollViewer>
+                    <Button Content="✕" VerticalAlignment="Top" HorizontalAlignment="Left"
+                                Width="32" Height="32" Padding="0" FontSize="20" 
+                                Background="Transparent" BorderThickness="0" 
+                                Foreground="#FF666666" FontWeight="Bold"
+                                Click="Clear_Click" Cursor="Hand"
+                                ToolTip="Clear selection"
+                                Visibility="{Binding HasAnyChange, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                </Grid>
             </GroupBox>
         </Grid>
         <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
-            <Button Content="{x:Static helpers:ModEventItemSelectWindowText.OK}" Click="OK_Click" Style="{StaticResource PrimaryButton}" Width="100" Margin="0,0,10,0" IsEnabled="{Binding HasSelectedItemOrVariable}"/>
+            <Button Content="{x:Static helpers:ModEventItemSelectWindowText.OK}" Click="OK_Click" Style="{StaticResource PrimaryButton}" Width="100" Margin="0,0,10,0" IsEnabled="{Binding HasAnyChange}"/>
             <Button Content="{x:Static helpers:ModEventItemSelectWindowText.Cancel}" Click="Cancel_Click" Style="{StaticResource ActionButton}" Width="100"/>
         </StackPanel>
     </Grid>

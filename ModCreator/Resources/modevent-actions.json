@@ -1,5 +1,16 @@
 [
   {
+    "Category": "Custom",
+    "Name": "CustomAction",
+    "DisplayName": "Do: {0}",
+    "Description": "Do specified action",
+    "Code": "{0}",
+    "Return": "dynamic",
+    "Parameters": [
+      { "Type": "string", "Name": "customCode" }
+    ]
+  },
+  {
     "Category": "Basic",
     "Name": "True",
     "DisplayName": "Always True",
