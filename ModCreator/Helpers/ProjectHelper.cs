@@ -33,33 +33,69 @@ namespace ModCreator.Helpers
         }
 
         /// <summary>
-        /// Load all projects from data file
+        /// Load all projects from individual project.json files in WorkplacePath
         /// </summary>
         public static List<ModProject> LoadProjects()
         {
-            var filePath = GetProjectsDataFilePath();
-            if (!File.Exists(filePath))
-                return new List<ModProject>();
+            var projects = new List<ModProject>();
+            var workplacePath = Properties.Settings.Default.WorkplacePath;
+
+            if (string.IsNullOrEmpty(workplacePath) || !Directory.Exists(workplacePath))
+                return projects;
 
             try
             {
-                var json = FileHelper.ReadTextFile(filePath);
-                return JsonConvert.DeserializeObject<List<ModProject>>(json) ?? new List<ModProject>();
+                // Get all subdirectories in workplace
+                var projectDirs = Directory.GetDirectories(workplacePath);
+
+                foreach (var projectDir in projectDirs)
+                {
+                    var projectFilePath = Path.Combine(projectDir, "project.json");
+                    if (File.Exists(projectFilePath))
+                    {
+                        try
+                        {
+                            var json = FileHelper.ReadTextFile(projectFilePath);
+                            var project = JsonConvert.DeserializeObject<ModProject>(json);
+                            if (project != null)
+                            {
+                                projects.Add(project);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            DebugHelper.Warning($"Failed to load project from {projectFilePath}: {ex.Message}");
+                        }
+                    }
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                return new List<ModProject>();
+                DebugHelper.Error($"Error loading projects: {ex.Message}");
             }
+
+            return projects;
         }
 
         /// <summary>
-        /// Save all projects to data file
+        /// Save individual project to its project.json file
         /// </summary>
-        public static void SaveProjects(List<ModProject> projects)
+        public static void SaveProject(ModProject project)
         {
-            var filePath = GetProjectsDataFilePath();
-            var json = JsonConvert.SerializeObject(projects, Formatting.Indented);
-            FileHelper.WriteTextFile(filePath, json);
+            if (project == null || string.IsNullOrEmpty(project.ProjectPath))
+                return;
+
+            try
+            {
+                var projectFilePath = Path.Combine(project.ProjectPath, "project.json");
+                var json = JsonConvert.SerializeObject(project, Formatting.Indented);
+                FileHelper.WriteTextFile(projectFilePath, json);
+            }
+            catch (Exception ex)
+            {
+                DebugHelper.Error($"Failed to save project {project.ProjectName}: {ex.Message}");
+                throw;
+            }
         }
 
         /// <summary>
@@ -111,6 +147,9 @@ namespace ModCreator.Helpers
 
             // Apply replacements based on project-replacements.json
             ApplyProjectReplacements(projectPath, project);
+
+            // Save project.json
+            SaveProject(project);
 
             return project;
         }
@@ -217,13 +256,29 @@ namespace ModCreator.Helpers
         /// </summary>
         public static void DeleteProject(ModProject project, bool deleteFiles = false)
         {
-            var projects = LoadProjects();
-            projects.RemoveAll(p => p.ProjectId == project.ProjectId);
-            SaveProjects(projects);
+            if (project == null)
+                return;
 
-            if (deleteFiles && Directory.Exists(project.ProjectPath))
+            try
             {
-                FileHelper.DeleteFolderSafe(project.ProjectPath);
+                if (deleteFiles && Directory.Exists(project.ProjectPath))
+                {
+                    FileHelper.DeleteFolderSafe(project.ProjectPath);
+                }
+                else
+                {
+                    // Just delete the project.json file
+                    var projectFilePath = Path.Combine(project.ProjectPath, "project.json");
+                    if (File.Exists(projectFilePath))
+                    {
+                        File.Delete(projectFilePath);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                DebugHelper.Error($"Failed to delete project {project.ProjectName}: {ex.Message}");
+                throw;
             }
         }
 

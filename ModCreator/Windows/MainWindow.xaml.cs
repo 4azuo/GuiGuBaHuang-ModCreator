@@ -83,7 +83,6 @@ namespace ModCreator
             if (newProject == null) return;
             
             WindowData.AllProjects.Add(newProject);
-            ProjectHelper.SaveProjects(WindowData.AllProjects);
             WindowData.UpdateFilteredProjects(WindowData, null, null, null);
             WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.CreatedProject", newProject.ProjectName);
             MessageBox.Show(MessageHelper.GetFormat("Messages.Success.ProjectSuccessMessage", newProject.ProjectPath), 

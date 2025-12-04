@@ -77,20 +77,8 @@ namespace ModCreator.WindowData
 
             Project.LastModifiedDate = DateTime.Now;
             
-            // Load all projects, update current project, then save
-            var projects = ProjectHelper.LoadProjects();
-            var existingProject = projects.FirstOrDefault(p => p.ProjectId == Project.ProjectId);
-            if (existingProject != null)
-            {
-                var index = projects.IndexOf(existingProject);
-                projects[index] = Project;
-            }
-            else
-            {
-                projects.Add(Project);
-            }
-            
-            ProjectHelper.SaveProjects(projects);
+            // Save current project to its project.json file
+            ProjectHelper.SaveProject(Project);
             BackupProject(); // Update backup after successful save
         }
 

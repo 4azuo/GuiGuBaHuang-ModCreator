@@ -101,7 +101,6 @@ namespace ModCreator.WindowData
         {
             var newProject = ProjectHelper.CreateProject(projectName, targetDirectory, description);
             AllProjects.Add(newProject);
-            ProjectHelper.SaveProjects(AllProjects);
             UpdateFilteredProjects(this, null, null, null);
             StatusMessage = MessageHelper.GetFormat("Messages.Success.CreatedProject", projectName);
             return newProject;
@@ -115,7 +114,6 @@ namespace ModCreator.WindowData
             var projectName = SelectedProject.ProjectName;
             ProjectHelper.DeleteProject(SelectedProject, deleteFiles);
             AllProjects.Remove(SelectedProject);
-            ProjectHelper.SaveProjects(AllProjects);
             SelectedProject = null;
             UpdateFilteredProjects(this, null, null, null);
             StatusMessage = MessageHelper.GetFormat("Messages.Success.DeletedProject", projectName);
