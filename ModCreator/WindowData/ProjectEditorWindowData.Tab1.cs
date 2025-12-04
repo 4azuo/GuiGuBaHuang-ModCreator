@@ -10,7 +10,7 @@ namespace ModCreator.WindowData
 {
     public partial class ProjectEditorWindowData : CWindowData
     {
-        internal ModProject _originalProject;
+        private ModProject _originalProject;
         private string _statusMessage;
 
         [NotifyMethod(nameof(LoadProjectData))]
@@ -35,17 +35,13 @@ namespace ModCreator.WindowData
         public void BackupProject()
         {
             if (Project == null) return;
-
-            var json = JsonConvert.SerializeObject(Project);
-            _originalProject = JsonConvert.DeserializeObject<ModProject>(json);
+            _originalProject = Project.Clone();
         }
 
         public void RestoreProject()
         {
-            if (_originalProject == null || Project == null) return;
-
-            Helpers.ObjectHelper.CopyProperties(_originalProject, Project);
-            LoadGlobalVariables();
+            if (_originalProject == null) return;
+            Project = _originalProject.Clone();
         }
 
         public void LoadProjectData(object obj, PropertyInfo prop, object oldValue, object newValue)
@@ -71,9 +67,7 @@ namespace ModCreator.WindowData
         {
             if (Project == null) return;
 
-            if (HasSelectedConfFile && !string.IsNullOrEmpty(SelectedConfContent))
-                SaveConfContent();
-
+            SaveConfContent();
             SaveGlobalVariables();
 
             Project.LastModifiedDate = DateTime.Now;

@@ -132,16 +132,52 @@ namespace ModCreator.WindowData
 
             var filePath = Path.Combine(Project.ProjectPath, "ModProject", "ModConf", SelectedConfFile);
             SelectedConfContent = File.Exists(filePath) ? File.ReadAllText(filePath) : string.Empty;
+            
+            // Update the content in the corresponding FileItem
+            if (SelectedConfItem != null && !SelectedConfItem.IsFolder)
+            {
+                SelectedConfItem.Content = SelectedConfContent;
+            }
         }
 
         public void SaveConfContent()
         {
-            if (string.IsNullOrEmpty(SelectedConfFile) || Project == null || string.IsNullOrEmpty(SelectedConfContent))
+            if (Project == null)
                 return;
 
-            var filePath = Path.Combine(Project.ProjectPath, "ModProject", "ModConf", SelectedConfFile);
-            File.WriteAllText(filePath, SelectedConfContent);
-            StatusMessage = MessageHelper.GetFormat("Messages.Success.SavedConfigurationFile", SelectedConfFile);
+            // Update current item's content
+            if (SelectedConfItem != null && !SelectedConfItem.IsFolder && !string.IsNullOrEmpty(SelectedConfContent))
+            {
+                SelectedConfItem.Content = SelectedConfContent;
+            }
+
+            // Save all files in ConfItems
+            int savedCount = 0;
+            SaveAllConfItems(ConfItems, ref savedCount);
+            
+            if (savedCount > 0)
+                StatusMessage = MessageHelper.GetFormat("Messages.Success.SavedConfigurationFiles", savedCount);
+        }
+
+        private void SaveAllConfItems(ObservableCollection<FileItem> items, ref int savedCount)
+        {
+            foreach (var item in items)
+            {
+                if (item.IsFolder)
+                {
+                    // Recursively save children
+                    SaveAllConfItems(item.Children, ref savedCount);
+                }
+                else
+                {
+                    // Save file if it has content
+                    if (!string.IsNullOrEmpty(item.Content) && File.Exists(item.FullPath))
+                    {
+                        File.WriteAllText(item.FullPath, item.Content);
+                        savedCount++;
+                    }
+                }
+            }
         }
     }
 }

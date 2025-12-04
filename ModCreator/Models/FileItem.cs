@@ -37,5 +37,10 @@ namespace ModCreator.Models
         /// Parent folder item
         /// </summary>
         public FileItem Parent { get; set; }
+
+        /// <summary>
+        /// File content (for files only)
+        /// </summary>
+        public string Content { get; set; }
     }
 }
