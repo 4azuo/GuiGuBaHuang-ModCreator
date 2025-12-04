@@ -1,0 +1,19 @@
+using EGameTypeData;
+using ModLib.Enum;
+using ModLib.Mod;
+using System.Collections.Generic;
+using UnityEngine.Events;
+using UnityEngine.UI;
+using ModLib.Helper
+using ModLib.Attributes;
+
+namespace ModCreatorChildEvent
+{
+    [Cache("#CLASSNAME#", CacheType = #CACHETYPE#, WorkOn = #WORKON#, OrderIndex = #ORDERINDEX#)]
+    public class #CLASSNAME# : ModEvent
+    {
+        public static #CLASSNAME# Instance { get; set; }
+
+        #EVENTCONTENT#
+    }
+}
