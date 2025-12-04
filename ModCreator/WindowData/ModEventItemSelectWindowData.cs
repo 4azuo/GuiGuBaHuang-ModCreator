@@ -34,6 +34,7 @@ namespace ModCreator.WindowData
         public bool HasSelect => SelectedItem != null;
         public bool HasSelectVariable => SelectedVariable != null;
         public bool ShowVariablesSection { get; set; } = false;
+        public bool ShowOptionalValueSection { get; set; } = false;
         public ModEventSelectType SelectType { get; set; }
 
         public void ClearSelection()

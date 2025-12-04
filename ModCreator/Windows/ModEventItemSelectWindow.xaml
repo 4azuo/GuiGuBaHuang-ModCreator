@@ -41,7 +41,13 @@
                 <Grid>
                     <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="10">
                         <StackPanel Margin="10">
-                            <GroupBox Header="Optional Value" Visibility="{Binding HasNoChange, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <GroupBox Header="Optional Value">
+                                <GroupBox.Visibility>
+                                    <MultiBinding Converter="{StaticResource MultiBoolToVisibilityConverter}">
+                                        <Binding Path="HasNoChange"/>
+                                        <Binding Path="ShowOptionalValueSection"/>
+                                    </MultiBinding>
+                                </GroupBox.Visibility>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>

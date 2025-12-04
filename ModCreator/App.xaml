@@ -9,6 +9,7 @@
             </ResourceDictionary.MergedDictionaries>
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
             <converters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
+            <converters:MultiBoolToVisibilityConverter x:Key="MultiBoolToVisibilityConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

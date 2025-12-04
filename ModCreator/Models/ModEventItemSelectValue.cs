@@ -7,10 +7,15 @@ namespace ModCreator.Models
     public class ModEventItemSelectValue : AutoNotifiableObject
     {
 
-        public EventActionBase SelectedEventAction { get; private set; }
-        public GlobalVariable SelectedVariable { get; private set; }
-        public string OptionalValue { get; private set; }
-        public ModEventSelectType SelectType { get; private set; }
+        public EventActionBase SelectedEventAction { get; set; }
+        public GlobalVariable SelectedVariable { get; set; }
+        public string OptionalValue { get; set; }
+        public ModEventSelectType SelectType { get; set; }
+
+        public ModEventItemSelectValue()
+        {
+            // Default constructor
+        }
 
         public ModEventItemSelectValue(EventActionBase eventAction)
         {

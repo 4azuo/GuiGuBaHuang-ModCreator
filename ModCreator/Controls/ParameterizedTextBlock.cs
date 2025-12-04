@@ -125,7 +125,8 @@ namespace ModCreator.Controls
                 AllVariables = vars,
                 ParameterValues = p != null && p.SelectType == ModEventSelectType.EventAction ? p.SelectedEventAction.ParameterValues : [],
                 SelectedItemName = p?.Name,
-                ShowVariablesSection = true
+                ShowVariablesSection = true,
+                ShowOptionalValueSection = true
             };
 
             if (selectWindow.ShowDialog() == true)

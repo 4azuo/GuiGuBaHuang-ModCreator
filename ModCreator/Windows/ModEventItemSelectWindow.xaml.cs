@@ -20,6 +20,7 @@ namespace ModCreator.Windows
         public List<GlobalVariable> AllVariables { get; set; } = [];
         public Dictionary<int, ModEventItemSelectValue> ParameterValues { get; set; } = [];
         public bool ShowVariablesSection { get; set; } = false;
+        public bool ShowOptionalValueSection { get; set; } = false;
 
         public override ModEventItemSelectWindowData InitData(CancelEventArgs e)
         {
@@ -33,6 +34,7 @@ namespace ModCreator.Windows
                 Top += offset;
 
                 data.ShowVariablesSection = ShowVariablesSection;
+                data.ShowOptionalValueSection = ShowOptionalValueSection;
                 data.Initialize(ItemType, ReturnType, SelectedItemName, AllVariables, ParameterValues);
             };
 
