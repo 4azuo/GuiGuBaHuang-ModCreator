@@ -122,6 +122,12 @@ namespace ModCreator.WindowData
             EventSourceContent = SelectedModEvent != null && File.Exists(SelectedModEvent.FilePath)
                 ? File.ReadAllText(SelectedModEvent.FilePath)
                 : string.Empty;
+            
+            // Update the content in the corresponding FileItem
+            if (SelectedEventItem != null && !SelectedEventItem.IsFolder && SelectedModEvent != null)
+            {
+                SelectedEventItem.Content = EventSourceContent;
+            }
         }
 
         public void SaveModEvent()
@@ -132,6 +138,76 @@ namespace ModCreator.WindowData
             var content = IsGuiMode ? GenerateModEventCode(SelectedModEvent) : EventSourceContent;
             File.WriteAllText(SelectedModEvent.FilePath, content);
             StatusMessage = MessageHelper.GetFormat("Messages.Success.SavedModEventFile", Path.GetFileName(SelectedModEvent.FilePath));
+        }
+
+        public void SaveModEvents()
+        {
+            if (Project == null)
+                return;
+
+            // Update current item's content
+            if (SelectedEventItem != null && !SelectedEventItem.IsFolder && SelectedModEvent != null)
+            {
+                var content = IsGuiMode ? GenerateModEventCode(SelectedModEvent) : EventSourceContent;
+                SelectedEventItem.Content = content;
+            }
+
+            // Save all files in EventItems
+            int savedCount = 0;
+            SaveAllEventItems(EventItems, ref savedCount);
+            
+            if (savedCount > 0)
+                StatusMessage = MessageHelper.GetFormat("Messages.Success.SavedModEventFiles", savedCount);
+        }
+
+        private void SaveAllEventItems(ObservableCollection<FileItem> items, ref int savedCount)
+        {
+            foreach (var item in items)
+            {
+                if (item.IsFolder)
+                {
+                    // Recursively save children
+                    SaveAllEventItems(item.Children, ref savedCount);
+                }
+                else
+                {
+                    // Find the ModEventItem for this file
+                    var modEvent = Project?.ModEvents?.FirstOrDefault(e => e.FilePath == item.FullPath);
+                    if (modEvent != null)
+                    {
+                        var content = string.Empty;
+                        
+                        // If this is the selected item, use current GUI/code mode
+                        if (item == SelectedEventItem)
+                        {
+                            content = IsGuiMode ? GenerateModEventCode(modEvent) : EventSourceContent;
+                        }
+                        else
+                        {
+                            // For other items, check if they have stored content or generate from ModEventItem
+                            if (!string.IsNullOrEmpty(item.Content))
+                            {
+                                content = item.Content;
+                            }
+                            else if (!modEvent.IsCodeModeOnly)
+                            {
+                                content = GenerateModEventCode(modEvent);
+                            }
+                            else if (File.Exists(item.FullPath))
+                            {
+                                // Code mode only, keep existing file content
+                                content = File.ReadAllText(item.FullPath);
+                            }
+                        }
+                        
+                        if (!string.IsNullOrEmpty(content))
+                        {
+                            File.WriteAllText(item.FullPath, content);
+                            savedCount++;
+                        }
+                    }
+                }
+            }
         }
 
         public string GenerateModEventCode(ModEventItem modEvent)

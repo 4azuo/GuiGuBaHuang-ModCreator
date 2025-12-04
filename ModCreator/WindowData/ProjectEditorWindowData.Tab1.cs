@@ -4,6 +4,7 @@ using ModCreator.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace ModCreator.WindowData
@@ -29,6 +30,8 @@ namespace ModCreator.WindowData
         public bool HasUnsavedChanges()
         {
             if (Project == null || _originalProject == null) return false;
+            
+            // Only check ModProject properties, not nested collections
             return !Helpers.ObjectHelper.ArePropertiesEqual(Project, _originalProject);
         }
 
@@ -42,6 +45,7 @@ namespace ModCreator.WindowData
         {
             if (_originalProject == null) return;
             Project = _originalProject.Clone();
+            SaveProject();
         }
 
         public void LoadProjectData(object obj, PropertyInfo prop, object oldValue, object newValue)
@@ -69,9 +73,25 @@ namespace ModCreator.WindowData
 
             SaveConfContent();
             SaveGlobalVariables();
+            SaveModEvents();
 
             Project.LastModifiedDate = DateTime.Now;
-            ProjectHelper.SaveProjects(ProjectHelper.LoadProjects());
+            
+            // Load all projects, update current project, then save
+            var projects = ProjectHelper.LoadProjects();
+            var existingProject = projects.FirstOrDefault(p => p.ProjectId == Project.ProjectId);
+            if (existingProject != null)
+            {
+                var index = projects.IndexOf(existingProject);
+                projects[index] = Project;
+            }
+            else
+            {
+                projects.Add(Project);
+            }
+            
+            ProjectHelper.SaveProjects(projects);
+            BackupProject(); // Update backup after successful save
         }
 
         public void LoadModResources()

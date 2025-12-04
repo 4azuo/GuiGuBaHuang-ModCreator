@@ -140,8 +140,6 @@ namespace ModCreator.Windows
                 MessageHelper.Get("Messages.Success.Title"), 
                 MessageBoxButton.OK, 
                 MessageBoxImage.Information);
-            
-            WindowData.BackupProject();
         }
 
         private void Help_Click(object sender, RoutedEventArgs e)

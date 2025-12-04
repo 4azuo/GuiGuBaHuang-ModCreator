@@ -1,3 +1,4 @@
+using ModCreator.Commons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,12 @@ namespace ModCreator.Helpers
             PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.Objects,
         };
 
+        public static Type[] IgnoredTypes { get; } = new Type[]
+        {
+            typeof(AutoNotifiableObject),
+            typeof(HistorableObject),
+        };
+
         public static T Clone<T>(this T obj)
         {
             return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(Newtonsoft.Json.JsonConvert.SerializeObject(obj, CLONE_JSON_SETTINGS), CLONE_JSON_SETTINGS);
@@ -31,7 +38,7 @@ namespace ModCreator.Helpers
         {
             foreach (var p in objType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
-                if (!p.CanWrite || !p.CanRead)
+                if (!p.CanWrite || !p.CanRead || IgnoredTypes.Contains(p.DeclaringType))
                     continue;
                 var srcValue = p.GetValue(src);
                 if (srcValue != null)
@@ -44,7 +51,7 @@ namespace ModCreator.Helpers
             foreach (var p1 in src.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 var p2 = dest.GetType().GetProperty(p1.Name, BindingFlags.Public | BindingFlags.Instance);
-                if (p2 == null || !p2.CanWrite || !p1.CanRead)
+                if (p2 == null || !p2.CanWrite || !p1.CanRead || IgnoredTypes.Contains(p2.DeclaringType))
                     continue;
                 var srcValue = p1.GetValue(src);
                 if (srcValue != null)
@@ -57,7 +64,7 @@ namespace ModCreator.Helpers
             foreach (var p1 in dest.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 var p2 = src.GetType().GetProperty(p1.Name, BindingFlags.Public | BindingFlags.Instance);
-                if (p2 == null || !p1.CanWrite || !p2.CanRead)
+                if (p2 == null || !p1.CanWrite || !p2.CanRead || IgnoredTypes.Contains(p1.DeclaringType))
                     continue;
                 var srcValue = p2.GetValue(src);
                 if (srcValue != null)
@@ -160,7 +167,7 @@ namespace ModCreator.Helpers
 
             var type = typeof(T);
             var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(p => p.CanRead && !ignoreProperties.Contains(p.Name));
+                .Where(p => p.CanRead && !ignoreProperties.Contains(p.Name) && !IgnoredTypes.Contains(p.DeclaringType));
 
             foreach (var property in properties)
             {
@@ -191,7 +198,7 @@ namespace ModCreator.Helpers
 
             var type = typeof(T);
             var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(p => p.CanRead && !ignoreProperties.Contains(p.Name));
+                .Where(p => p.CanRead && !ignoreProperties.Contains(p.Name) && !IgnoredTypes.Contains(p.DeclaringType));
 
             foreach (var property in properties)
             {
@@ -276,6 +283,12 @@ namespace ModCreator.Helpers
             if (value1 == null && value2 == null) return true;
             if (value1 == null || value2 == null) return false;
 
+            // Handle strings separately to avoid treating them as IEnumerable
+            if (value1 is string || value2 is string)
+            {
+                return Equals(value1, value2);
+            }
+
             // Handle collections
             if (value1 is System.Collections.IEnumerable enum1 && value2 is System.Collections.IEnumerable enum2)
             {
@@ -293,7 +306,32 @@ namespace ModCreator.Helpers
                 return true;
             }
 
-            return Equals(value1, value2);
+            // Handle complex objects by comparing their properties
+            var type1 = value1.GetType();
+            var type2 = value2.GetType();
+            
+            if (type1 != type2) return false;
+            
+            // If it's a value type or primitive, use Equals
+            if (type1.IsValueType || type1.IsPrimitive || type1.IsEnum)
+            {
+                return Equals(value1, value2);
+            }
+
+            // For complex objects, compare properties recursively
+            var properties = type1.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(p => p.CanRead && !IgnoredTypes.Contains(p.DeclaringType));
+
+            foreach (var property in properties)
+            {
+                var propValue1 = property.GetValue(value1);
+                var propValue2 = property.GetValue(value2);
+
+                if (!AreValuesEqual(propValue1, propValue2))
+                    return false;
+            }
+
+            return true;
         }
 
         /// <summary>
