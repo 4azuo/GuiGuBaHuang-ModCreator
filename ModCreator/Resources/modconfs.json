@@ -223,5 +223,263 @@
     "VarType": "string",
     "Enable": true,
     "Required": true
+  },
+  {
+    "Name": "DramaDialogue.id",
+    "Type": "textbox",
+    "Label": "Dialogue ID",
+    "Description": "Unique identifier for the dialogue",
+    "VarType": "string",
+    "Enable": true,
+    "Required": true
+  },
+  {
+    "Name": "DramaDialogue.uiType",
+    "Type": "combo",
+    "Label": "UI Type",
+    "Description": "UI display type for the dialogue",
+    "VarType": "string",
+    "Enable": true,
+    "Required": true,
+    "Options": ["DramaUITypes"],
+    "Value": "1"
+  },
+  {
+    "Name": "DramaDialogue.condition",
+    "Type": "textbox",
+    "Label": "Condition",
+    "Description": "Condition for the dialogue to appear",
+    "VarType": "string",
+    "Enable": true,
+    "Required": false,
+    "Value": "0"
+  },
+  {
+    "Name": "DramaDialogue.weight",
+    "Type": "textbox",
+    "Label": "Weight",
+    "Description": "Weight for random selection",
+    "VarType": "string",
+    "Enable": true,
+    "Required": false,
+    "Value": "1"
+  },
+  {
+    "Name": "DramaDialogue.npcLeft",
+    "Type": "textbox",
+    "Label": "NPC Left",
+    "Description": "NPC ID on the left side",
+    "VarType": "string",
+    "Enable": true,
+    "Required": false,
+    "Value": "0"
+  },
+  {
+    "Name": "DramaDialogue.npcRight",
+    "Type": "textbox",
+    "Label": "NPC Right",
+    "Description": "NPC ID on the right side",
+    "VarType": "string",
+    "Enable": true,
+    "Required": false,
+    "Value": "0"
+  },
+  {
+    "Name": "DramaDialogue.speaker",
+    "Type": "combo",
+    "Label": "Speaker",
+    "Description": "Which NPC is speaking",
+    "VarType": "string",
+    "Enable": true,
+    "Required": false,
+    "Options": ["SpeakerPosition"],
+    "Value": "0"
+  },
+  {
+    "Name": "DramaDialogue.backgroud",
+    "Type": "textbox",
+    "Label": "Background",
+    "Description": "Background image ID",
+    "VarType": "string",
+    "Enable": true,
+    "Required": false,
+    "Value": "0"
+  },
+  {
+    "Name": "DramaDialogue.soundsBg",
+    "Type": "textbox",
+    "Label": "Background Sound",
+    "Description": "Background sound ID",
+    "VarType": "string",
+    "Enable": true,
+    "Required": false,
+    "Value": "0"
+  },
+  {
+    "Name": "DramaDialogue.soundsEffect",
+    "Type": "textbox",
+    "Label": "Sound Effect",
+    "Description": "Sound effect ID",
+    "VarType": "string",
+    "Enable": true,
+    "Required": false,
+    "Value": "0"
+  },
+  {
+    "Name": "DramaDialogue.title",
+    "Type": "textbox",
+    "Label": "Title",
+    "Description": "Dialogue title",
+    "VarType": "string",
+    "Enable": true,
+    "Required": false,
+    "Value": "0"
+  },
+  {
+    "Name": "DramaDialogue.dialogue",
+    "Type": "textbox",
+    "Label": "Dialogue",
+    "Description": "Dialogue text key (links to LocalText)",
+    "VarType": "string",
+    "Enable": true,
+    "Required": true
+  },
+  {
+    "Name": "DramaDialogue.openFunction",
+    "Type": "textbox",
+    "Label": "Open Function",
+    "Description": "Function to execute when dialogue opens",
+    "VarType": "string",
+    "Enable": true,
+    "Required": false,
+    "Value": "0"
+  },
+  {
+    "Name": "DramaDialogue.function",
+    "Type": "textbox",
+    "Label": "Function",
+    "Description": "Function to execute",
+    "VarType": "string",
+    "Enable": true,
+    "Required": false,
+    "Value": "0"
+  },
+  {
+    "Name": "DramaDialogue.options",
+    "Type": "textbox",
+    "Label": "Options",
+    "Description": "Option IDs separated by | (e.g., 420041124|420041125)",
+    "VarType": "string",
+    "Enable": true,
+    "Required": false
+  },
+  {
+    "Name": "DramaDialogue.nextDialogue",
+    "Type": "textbox",
+    "Label": "Next Dialogue",
+    "Description": "Next dialogue ID to show",
+    "VarType": "string",
+    "Enable": true,
+    "Required": false,
+    "Value": "0"
+  },
+  {
+    "Name": "DramaOptions.id",
+    "Type": "textbox",
+    "Label": "Option ID",
+    "Description": "Unique identifier for the option",
+    "VarType": "string",
+    "Enable": true,
+    "Required": true
+  },
+  {
+    "Name": "DramaOptions.condition",
+    "Type": "textbox",
+    "Label": "Condition",
+    "Description": "Condition for the option to appear",
+    "VarType": "string",
+    "Enable": true,
+    "Required": false,
+    "Value": "0"
+  },
+  {
+    "Name": "DramaOptions.hue",
+    "Type": "combo",
+    "Label": "Hue",
+    "Description": "Color hue for the option",
+    "VarType": "string",
+    "Enable": true,
+    "Required": false,
+    "Options": ["OptionHue"],
+    "Value": "0"
+  },
+  {
+    "Name": "DramaOptions.optionsHide",
+    "Type": "textbox",
+    "Label": "Options Hide",
+    "Description": "Hide this option flag",
+    "VarType": "string",
+    "Enable": true,
+    "Required": false,
+    "Value": "0"
+  },
+  {
+    "Name": "DramaOptions.text",
+    "Type": "textbox",
+    "Label": "Text",
+    "Description": "Option text key (links to LocalText)",
+    "VarType": "string",
+    "Enable": true,
+    "Required": true
+  },
+  {
+    "Name": "DramaOptions.cost",
+    "Type": "textbox",
+    "Label": "Cost",
+    "Description": "Cost to select this option",
+    "VarType": "string",
+    "Enable": true,
+    "Required": false,
+    "Value": "0"
+  },
+  {
+    "Name": "DramaOptions.costHide",
+    "Type": "textbox",
+    "Label": "Cost Hide",
+    "Description": "Hide cost flag",
+    "VarType": "string",
+    "Enable": true,
+    "Required": false,
+    "Value": "0"
+  },
+  {
+    "Name": "DramaOptions.function",
+    "Type": "textbox",
+    "Label": "Function",
+    "Description": "Function to execute when option is selected",
+    "VarType": "string",
+    "Enable": true,
+    "Required": false,
+    "Value": "0"
+  },
+  {
+    "Name": "DramaOptions.clickTip",
+    "Type": "textbox",
+    "Label": "Click Tip",
+    "Description": "Tip to show when option is clicked",
+    "VarType": "string",
+    "Enable": true,
+    "Required": false,
+    "Value": "0"
+  },
+  {
+    "Name": "DramaOptions.nextDialogue",
+    "Type": "textbox",
+    "Label": "Next Dialogue",
+    "Description": "Next dialogue ID after selecting this option",
+    "VarType": "string",
+    "Enable": true,
+    "Required": false,
+    "Value": "0"
   }
 ]

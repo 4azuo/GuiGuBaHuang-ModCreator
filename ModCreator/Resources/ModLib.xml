@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ModLib</name>
+    </assembly>
+    <members>
+        <member name="T:ModLib.Enum.ItemTypeEnum">
+            <summary>
+            ItemType.json
+            </summary>
+        </member>
+        <member name="T:ModLib.Enum.EffectTypeEnum">
+            <summary>
+            1-ChangeStats
+            2-LockedStats
+            3-SpecialFunction
+            
+            101-对自己使用效果
+            102-对鼠标位置使用武技
+            201-战斗外使用（增加属性）
+            301-突破用的丹药
+            302-逃跑用的丹药
+            401-兴趣道具
+            501-战斗战败喂丹
+            </summary>
+        </member>
+        <member name="T:ModLib.Helper.AttributeTargetHelper`1">
+            <summary>
+            Helps in discovery of the target of an Attribute
+            </summary>
+            <typeparam name="TAttribute">An Attribute derived type</typeparam>
+            <remarks>
+            The .NET framework does not provide navigation from attributes back to their targets, principally for the reason that 
+            in typical usage scenarios for attributes, the attribute is discovered by a routine which already has a reference to a 
+            member type.
+            
+            There are, however, bona-fide cases where an attribute needs to detect it's target - an example is a localizable sub-class of the 
+            DescriptionAttribute. In order for the DescriptionAttribute to return a localized string, it requires a resource key and, ideally,
+            a type reference as the base-key for the ResourceManager. A DescriptionAttribute could not provide this information without
+            a reference to it's target type.
+            
+            Note to callers:
+            
+            Your Attribute-derived class must implement Equals and GetHashCode, otherwise a run-time exception will occur, since this class
+            creates a dictionary of attributes in order to speed up target lookups.
+            </remarks>
+        </member>
+        <member name="F:ModLib.Helper.AttributeTargetHelper`1.targetMap">
+            <summary>
+            Map of attributes and their respective targets
+            </summary>
+        </member>
+        <member name="F:ModLib.Helper.AttributeTargetHelper`1.skipAssemblies">
+            <summary>
+            List of assemblies that should not be rescanned for types.
+            </summary>
+        </member>
+        <member name="M:ModLib.Helper.AttributeTargetHelper`1.Add(`0,System.Object)">
+            <summary>
+            Adds an attribute and it's target to the dictionary
+            </summary>
+            <param name="attribute"></param>
+            <param name="item"></param>
+        </member>
+        <member name="M:ModLib.Helper.AttributeTargetHelper`1.ScanAssembly(System.Reflection.Assembly)">
+            <summary>
+            Scans an assembly for all instances of the attribute.
+            </summary>
+            <param name="assembly"></param>
+        </member>
+        <member name="M:ModLib.Helper.AttributeTargetHelper`1.GetTarget(`0)">
+            <summary>
+            Returns the target of an attribute.
+            </summary>
+            <param name="attribute">The attribute for which a target is sought</param>
+            <returns>The target of the attribute - either an Assembly, Type or MemberInfo instance.</returns>
+        </member>
+        <member name="M:ModLib.Helper.AttributeTargetHelper`1.#cctor">
+            <summary>
+            Static constructor for type.
+            </summary>
+        </member>
+        <member name="T:ModLib.Helper.AttributeHelperExtension">
+            <summary>
+            Extends attributes so that their targets can be discovered
+            </summary>
+        </member>
+        <member name="M:ModLib.Helper.AttributeHelperExtension.GetTarget``1(``0)">
+            <summary>
+            Gets the target of an attribute
+            </summary>
+            <typeparam name="TAttribute"></typeparam>
+            <param name="attribute">The attribute for which a target is sought</param>
+            <returns>The target of the attribute - either an Assembly, Type or MemberInfo instance.</returns>
+        </member>
+        <member name="M:ModLib.Helper.ParseHelper.ParseJson``1(System.Object)">
+            <summary>
+            Oに変換する
+            ※別な変数を作成する
+            </summary>
+            <typeparam name="O"></typeparam>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ModLib.Helper.ParseHelper.ParseUnknown(System.Object,System.Type)">
+            <summary>
+            toTypeに変換する
+            </summary>
+            <param name="value"></param>
+            <param name="toType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ModLib.Helper.ParseHelper.Parse``1(System.Object,``0)">
+            <summary>
+            Oに変換する
+            </summary>
+            <typeparam name="O"></typeparam>
+            <param name="value"></param>
+            <param name="def"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ModLib.Helper.ParseHelper.ToJson(System.Object,Newtonsoft.Json.JsonSerializerSettings)">
+            <summary>
+            JSONに変換
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ModLib.Example">
+            <summary>
+            部分常用API接口，和简单的例子
+            </summary>
+        </member>
+        <member name="M:ModLib.Example.TestTimer">
+            <summary>
+            g.timer：延迟控制，游戏中大部分类都是不继承MonoBehaviour，且IL2CPP下不能动态载入Mono，在普通类想做延迟调用，或者每帧调用则可以利用g.timer
+            </summary>
+        </member>
+        <member name="M:ModLib.Example.TestEvents">
+            <summary>
+            g.events：事件，游戏中所有的广播都是通过这个广播的。
+            EGameType：游戏通用广播
+            EMapType：在大地图时的广播
+            EBattleType：在战斗场景时的广播
+            </summary>
+        </member>
+        <member name="M:ModLib.Example.OnUnitHitDynIntHandler(ETypeData)">
+            <summary>
+            广播的参数只需要一个：ETypeData e
+            </summary>
+        </member>
+        <member name="M:ModLib.Example.TestWorld">
+            <summary>
+            g.world：管理游戏中世界实例，例如，宗门，城镇，事件，NPC，等等等等
+            </summary>
+        </member>
+        <member name="M:ModLib.Example.Battle">
+            <summary>
+            当你在战斗中的时候，可以通过SceneType.battle访问管理器入口
+            </summary>
+        </member>
+        <member name="M:ModLib.Example.TestRes">
+            <summary>
+            g.res：加载资源，可以加载Resources的资源，也能加载自定义AB资源
+            </summary>
+        </member>
+        <member name="M:ModLib.Example.TestSounds">
+            <summary>
+            g.sounds：播放声音，可以播放Resources/Sounds下的声音
+            </summary>
+        </member>
+        <member name="M:ModLib.Example.TestConf">
+            <summary>
+            g.conf：游戏中所有的配置都存放在这里
+            </summary>
+        </member>
+        <member name="M:ModLib.Example.TestData">
+            <summary>
+            g.data：游戏中存放存档的数据
+            </summary>
+        </member>
+        <member name="M:ModLib.Example.TestUI">
+            <summary>
+            g.ui：游戏中控制UI的打开关闭
+            </summary>
+        </member>
+        <member name="M:ModLib.Example.TestTool">
+            <summary>
+            游戏中常用工具类
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -373,5 +373,52 @@
         "Value": "moodMax"
       }
     ]
+  },
+  {
+    "Name": "DramaUITypes",
+    "Values": [
+      {
+        "DisplayName": "Standard",
+        "Value": "1"
+      },
+      {
+        "DisplayName": "Custom",
+        "Value": "2"
+      }
+    ]
+  },
+  {
+    "Name": "SpeakerPosition",
+    "Values": [
+      {
+        "DisplayName": "Left",
+        "Value": "0"
+      },
+      {
+        "DisplayName": "Right",
+        "Value": "1"
+      }
+    ]
+  },
+  {
+    "Name": "OptionHue",
+    "Values": [
+      {
+        "DisplayName": "Default",
+        "Value": "0"
+      },
+      {
+        "DisplayName": "Green (Positive)",
+        "Value": "1"
+      },
+      {
+        "DisplayName": "Red (Negative)",
+        "Value": "2"
+      },
+      {
+        "DisplayName": "Blue (Neutral)",
+        "Value": "3"
+      }
+    ]
   }
 ]

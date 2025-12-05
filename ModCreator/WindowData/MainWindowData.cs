@@ -171,7 +171,7 @@ namespace ModCreator.WindowData
         {
             if (SelectedProject == null) return;
 
-            var scriptPath = Path.Combine(SelectedProject.ProjectPath, ".vscode", "rebuild-project.ps1");
+            var scriptPath = Path.Combine(SelectedProject.ProjectPath, "tasks", "rebuild-project.ps1");
             if (!File.Exists(scriptPath))
             {
                 System.Windows.MessageBox.Show(
@@ -198,7 +198,7 @@ namespace ModCreator.WindowData
         {
             if (SelectedProject == null) return;
 
-            var scriptPath = Path.Combine(SelectedProject.ProjectPath, ".vscode", "rebuild-and-deploy.ps1");
+            var scriptPath = Path.Combine(SelectedProject.ProjectPath, "tasks", "rebuild-and-deploy.ps1");
             if (!File.Exists(scriptPath))
             {
                 System.Windows.MessageBox.Show(
@@ -225,7 +225,7 @@ namespace ModCreator.WindowData
         {
             if (SelectedProject == null) return;
 
-            var scriptPath = Path.Combine(SelectedProject.ProjectPath, ".vscode", "rebuild-project.ps1");
+            var scriptPath = Path.Combine(SelectedProject.ProjectPath, "tasks", "rebuild-project.ps1");
             if (!File.Exists(scriptPath))
             {
                 System.Windows.MessageBox.Show(
@@ -285,7 +285,7 @@ namespace ModCreator.WindowData
         {
             if (SelectedProject == null) return;
 
-            var scriptPath = Path.Combine(SelectedProject.ProjectPath, ".vscode", "rebuild-project.ps1");
+            var scriptPath = Path.Combine(SelectedProject.ProjectPath, "tasks", "rebuild-project.ps1");
             if (!File.Exists(scriptPath))
             {
                 System.Windows.MessageBox.Show(

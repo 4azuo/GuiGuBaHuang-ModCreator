@@ -1,6 +1,6 @@
 {
   "Position": [
-    ".vscode/settings.json",
+    "tasks/settings.json",
     "ModProject/ModCode/ModMain/ModMain.cs",
     "ModProject/ModCode/ModMain/ModMain.csproj",
     "ModProject/ModData.cache",

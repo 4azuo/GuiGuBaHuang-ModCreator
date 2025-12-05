@@ -1,7 +1,21 @@
 [
   {
-    "Name": "RoleCreateFeature",
-    "Description": "Create character creation feature",
+    "Name": "Text",
+    "Description": "Create localization texts for game",
+    "Files": [
+      {
+        "FileName": "RoleEffect.json",
+        "Elements": [
+          "RoleEffect.id",
+          "RoleEffect.effectType",
+          "RoleEffect.value"
+        ]
+      }
+    ]
+  },
+  {
+    "Name": "Destiny",
+    "Description": "Create character destiny",
     "Files": [
       {
         "FileName": "RoleCreateFeature.json",
@@ -41,8 +55,8 @@
     ]
   },
   {
-    "Name": "RoleEffect",
-    "Description": "Create role effect configuration",
+    "Name": "Destiny Effect",
+    "Description": "Create destiny effect",
     "Files": [
       {
         "FileName": "RoleEffect.json",
@@ -50,6 +64,56 @@
           "RoleEffect.id",
           "RoleEffect.effectType",
           "RoleEffect.value"
+        ]
+      }
+    ]
+  },
+  {
+    "Name": "Drama Dialogue",
+    "Description": "Create drama dialogue for interactive conversations",
+    "Files": [
+      {
+        "FileName": "DramaDialogue.json",
+        "Elements": [
+          "DramaDialogue.id",
+          "DramaDialogue.uiType",
+          "DramaDialogue.condition",
+          "DramaDialogue.weight",
+          "DramaDialogue.npcLeft",
+          "DramaDialogue.npcRight",
+          "DramaDialogue.speaker",
+          "DramaDialogue.backgroud",
+          "DramaDialogue.soundsBg",
+          "DramaDialogue.soundsEffect",
+          "DramaDialogue.title",
+          "DramaDialogue.dialogue:[LocalText.key]",
+          "DramaDialogue.openFunction",
+          "DramaDialogue.function",
+          "DramaDialogue.options",
+          "DramaDialogue.nextDialogue"
+        ]
+      },
+      {
+        "FileName": "DramaOptions.json",
+        "Elements": [
+          "DramaOptions.id",
+          "DramaOptions.condition",
+          "DramaOptions.hue",
+          "DramaOptions.optionsHide",
+          "DramaOptions.text:[LocalText.key]",
+          "DramaOptions.cost",
+          "DramaOptions.costHide",
+          "DramaOptions.function",
+          "DramaOptions.clickTip",
+          "DramaOptions.nextDialogue"
+        ]
+      },
+      {
+        "FileName": "LocalText.json",
+        "Elements": [
+          "LocalText.id",
+          "LocalText.key:{LocalText.id}dramaOpt",
+          "LocalText.en"
         ]
       }
     ]
