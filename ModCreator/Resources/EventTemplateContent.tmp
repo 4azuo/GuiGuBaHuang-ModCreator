@@ -3,11 +3,11 @@
             #BASECALL#
             if (CheckCondition())
             {
-                #ACTION#
+#ACTION#
             }
         }
 
         public bool CheckCondition()
         {
-            return #CONDITION#
+            return #CONDITION#;
         }

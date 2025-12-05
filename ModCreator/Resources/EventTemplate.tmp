@@ -14,6 +14,6 @@ namespace ModCreatorChildEvent
     {
         public static #CLASSNAME# Instance { get; set; }
 
-        #EVENTCONTENT#
+#EVENTCONTENT#
     }
 }
