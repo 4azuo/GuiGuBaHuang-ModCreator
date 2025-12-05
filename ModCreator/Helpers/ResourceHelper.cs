@@ -6,7 +6,7 @@ namespace ModCreator.Helpers
 {
     public static class ResourceHelper
     {
-        private static string ReadEmbeddedResource(string resourceName)
+        public static string ReadEmbeddedResource(string resourceName)
         {
             var assembly = Assembly.GetExecutingAssembly();
             using var stream = assembly.GetManifestResourceStream(resourceName);

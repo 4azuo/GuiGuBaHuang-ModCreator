@@ -53,6 +53,8 @@
 
   <ItemGroup>
     <None Remove="Resources\embeded-settings.json" />
+    <None Remove="Resources\EventTemplate.tmp" />
+    <None Remove="Resources\EventTemplateContent.tmp" />
     <None Remove="Resources\messages.json" />
     <None Remove="Resources\modevent-actions.json" />
     <None Remove="Resources\modevent-cachetype.json" />
@@ -64,6 +66,8 @@
     <None Remove="Resources\modconf-patterns.json" />
     <None Remove="Resources\modconfs.json" />
     <None Remove="Resources\modconf-values.json" />
+    <None Remove="Resources\VarTemplate.tmp" />
+    <None Remove="Resources\VarTemplateContent.tmp" />
     <None Remove="Styles\Json.xshd" />
   </ItemGroup>
 
@@ -71,6 +75,8 @@
     <EmbeddedResource Include="Resources\embeded-settings.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\EventTemplate.tmp" />
+    <EmbeddedResource Include="Resources\EventTemplateContent.tmp" />
     <EmbeddedResource Include="Resources\messages.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -98,6 +104,8 @@
     <EmbeddedResource Include="Resources\modconf-values.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\VarTemplate.tmp" />
+    <EmbeddedResource Include="Resources\VarTemplateContent.tmp" />
     <EmbeddedResource Include="Styles\Json.xshd">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>

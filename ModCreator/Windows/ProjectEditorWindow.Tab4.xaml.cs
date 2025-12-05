@@ -53,7 +53,7 @@ namespace ModCreator.Windows
             WindowData.GlobalVariables.Add(new GlobalVariable
             {
                 Name = "",
-                Type = "dynamic",
+                Type = "Object",
                 Value = "",
                 Description = ""
             });
@@ -180,23 +180,11 @@ namespace ModCreator.Windows
                 return;
             }
 
-            var varTemplatePath = Path.Combine(WindowData.Project.ProjectPath, "VarTemplate.tmp");
-            var varTemplateContentPath = Path.Combine(WindowData.Project.ProjectPath, "VarTemplateContent.tmp");
+            var varTemplate = ResourceHelper.ReadEmbeddedResource("ModCreator.Resources.VarTemplate.tmp");
+            var varTemplateContent = ResourceHelper.ReadEmbeddedResource("ModCreator.Resources.VarTemplateContent.tmp");
 
-            if (!File.Exists(varTemplatePath))
-            {
-                MessageBox.Show(MessageHelper.GetFormat("Messages.Error.TemplateFileNotFound", varTemplatePath, "VarTemplate.tmp"), MessageHelper.Get("Messages.Error.Title"), MessageBoxButton.OK, MessageBoxImage.Error);
+            if (string.IsNullOrEmpty(varTemplate) || string.IsNullOrEmpty(varTemplateContent))
                 return;
-            }
-
-            if (!File.Exists(varTemplateContentPath))
-            {
-                MessageBox.Show(MessageHelper.GetFormat("Messages.Error.TemplateFileNotFound", varTemplateContentPath, "VarTemplateContent.tmp"), MessageHelper.Get("Messages.Error.Title"), MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            var varTemplate = File.ReadAllText(varTemplatePath);
-            var varTemplateContent = File.ReadAllText(varTemplateContentPath);
 
             var variableProperties = new System.Text.StringBuilder();
             foreach (var variable in WindowData.GlobalVariables)
@@ -231,12 +219,12 @@ namespace ModCreator.Windows
             // Default values when Value is empty
             var defaultValues = new Dictionary<string, string>
             {
-                ["string"] = "\"\"",
-                ["bool"] = "false",
-                ["int"] = "0",
-                ["long"] = "0L",
-                ["float"] = "0f",
-                ["double"] = "0.0"
+                ["String"] = "\"\"",
+                ["Boolean"] = "false",
+                ["Int32"] = "0",
+                ["Int64"] = "0L",
+                ["Single"] = "0f",
+                ["Double"] = "0.0"
             };
 
             if (string.IsNullOrWhiteSpace(variable.Value))
@@ -251,11 +239,11 @@ namespace ModCreator.Windows
             // Format value based on type
             return varType switch
             {
-                "string" => value.StartsWith("\"") && value.EndsWith("\"") ? value : $"\"{value}\"",
-                "bool" => value.ToLower() is "true" or "false" ? value.ToLower() : "false",
-                "float" => value.EndsWith("f") || value.EndsWith("F") ? value : $"{value}f",
-                "long" => value.EndsWith("L") || value.EndsWith("l") ? value : $"{value}L",
-                _ => value // Arrays, dynamic and other types return as-is
+                "String" => value.StartsWith("\"") && value.EndsWith("\"") ? value : $"\"{value}\"",
+                "Boolean" => value.ToLower() is "true" or "false" ? value.ToLower() : "false",
+                "Single" => value.EndsWith("f") || value.EndsWith("F") ? value : $"{value}f",
+                "Int64" => value.EndsWith("L") || value.EndsWith("l") ? value : $"{value}L",
+                _ => value
             };
         }
 

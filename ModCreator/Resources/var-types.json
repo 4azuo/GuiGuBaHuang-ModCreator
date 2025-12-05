@@ -1,37 +1,37 @@
 [
   {
     "Name": "Any",
-    "Type": "dynamic",
-    "Desc": "Dynamic type"
+    "Type": "Object",
+    "Desc": "Object type"
   },
   {
     "Name": "Boolean",
-    "Type": "bool",
+    "Type": "Boolean",
     "Desc": "True or False value"
   },
   {
     "Name": "Int32",
-    "Type": "int",
+    "Type": "Int32",
     "Desc": "32-bit integer number"
   },
   {
     "Name": "Int64",
-    "Type": "long",
+    "Type": "Int64",
     "Desc": "64-bit integer number"
   },
   {
     "Name": "Single",
-    "Type": "float",
+    "Type": "Single",
     "Desc": "Single precision floating point number"
   },
   {
     "Name": "Double",
-    "Type": "double",
+    "Type": "Double",
     "Desc": "Double precision floating point number"
   },
   {
     "Name": "String",
-    "Type": "string",
+    "Type": "String",
     "Desc": "Text value"
   },
   {

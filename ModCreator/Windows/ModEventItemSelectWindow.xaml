@@ -33,7 +33,7 @@
                 <GroupBox Grid.Row="0" Header="{x:Static helpers:ModEventItemSelectWindowText.SelectItem}" Margin="0,0,10,5">
                     <ListBox ItemsSource="{Binding FilteredItems}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" DisplayMemberPath="DisplayText" ScrollViewer.HorizontalScrollBarVisibility="Disabled" MouseDoubleClick="ListBox_MouseDoubleClick"/>
                 </GroupBox>
-                <GroupBox Grid.Row="1" Header="Variables" Margin="0,5,10,0" Visibility="{Binding ShowVariablesSection, Converter={StaticResource BoolToVisibilityConverter}}" Height="200">
+                <GroupBox Grid.Row="1" Header="Variables" Margin="0,5,10,0" Visibility="{Binding HasReturn, Converter={StaticResource BoolToVisibilityConverter}}" Height="200">
                     <ListBox ItemsSource="{Binding FilteredVariables}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedVariable}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" MouseDoubleClick="VariablesListBox_MouseDoubleClick"/>
                 </GroupBox>
             </Grid>
@@ -67,14 +67,53 @@
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="10"/>
                                         <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="10"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="10"/>
+                                        <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
                                     <controls:ParameterizedTextBlock Grid.Row="0" Item="{Binding SelectedItem}" AllVariables="{Binding AllVariables}" FontWeight="Bold" FontSize="14" TextWrapping="Wrap"/>
                                     <TextBlock Grid.Row="2" Text="{Binding SelectedItem.Description}" TextWrapping="Wrap" FontSize="12" Foreground="#FF666666"/>
-                                    <TextBlock Grid.Row="4" Text="{x:Static helpers:ModEventItemSelectWindowText.Code}" FontWeight="SemiBold" FontSize="12"/>
-                                    <Border Grid.Row="6" Background="#FFF5F5F5" BorderBrush="#FFCCCCCC" BorderThickness="1" Padding="8" CornerRadius="3">
+                                    <Grid Grid.Row="4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="Return Type:" FontWeight="SemiBold" FontSize="12" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding SelectedItem.Return}" FontFamily="Consolas" FontSize="12" Foreground="#FF6600CC" VerticalAlignment="Center"/>
+                                    </Grid>
+                                    <TextBlock Grid.Row="6" Text="{x:Static helpers:ModEventItemSelectWindowText.Code}" FontWeight="SemiBold" FontSize="12"/>
+                                    <Border Grid.Row="8" Background="#FFF5F5F5" BorderBrush="#FFCCCCCC" BorderThickness="1" Padding="8" CornerRadius="3">
                                         <TextBlock Text="{Binding SelectedItem.Code}" TextWrapping="Wrap" FontFamily="Consolas" FontSize="11" Foreground="#FF333333"/>
                                     </Border>
+                                    <GroupBox Grid.Row="10" Header="Parameters" Visibility="{Binding HasParameters, Converter={StaticResource BoolToVisibilityConverter}}">
+                                        <ItemsControl ItemsSource="{Binding SelectedItem.Parameters}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border BorderBrush="#FFDDDDDD" BorderThickness="0,0,0,1" Padding="5" Margin="0,2">
+                                                        <Grid>
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="Auto"/>
+                                                                <RowDefinition Height="Auto"/>
+                                                                <RowDefinition Height="Auto"/>
+                                                            </Grid.RowDefinitions>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="80"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Name:" FontWeight="SemiBold" FontSize="11" Foreground="#FF555555"/>
+                                                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Name}" FontFamily="Consolas" FontSize="11" Foreground="#FF0066CC"/>
+                                                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Type:" FontWeight="SemiBold" FontSize="11" Foreground="#FF555555"/>
+                                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Type}" FontFamily="Consolas" FontSize="11" Foreground="#FF009900"/>
+                                                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Description:" FontWeight="SemiBold" FontSize="11" Foreground="#FF555555" VerticalAlignment="Top"/>
+                                                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Description}" TextWrapping="Wrap" FontSize="11" Foreground="#FF666666"/>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </GroupBox>
                                 </Grid>
                             </GroupBox>
                             <GroupBox Header="Details" Visibility="{Binding HasSelectVariable, Converter={StaticResource BoolToVisibilityConverter}}">

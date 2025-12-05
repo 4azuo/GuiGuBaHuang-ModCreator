@@ -207,7 +207,7 @@ namespace ModCreator.Windows
             {
                 OrderIndex = maxOrder + 1,
                 CacheType = "Local",
-                WorkOn = "All",
+                WorkOn = "Local",
                 SelectedEvent = "OnTimeUpdate1000ms",
                 FilePath = filePath
             };
@@ -367,7 +367,7 @@ namespace ModCreator.Windows
         {
             if (WindowData.SelectedModEvent == null) return;
 
-            var selectWindow = new ModEventItemSelectWindow { Owner = this, ItemType = Enums.ModEventItemType.Event, AllVariables = WindowData.Project.GlobalVariables };
+            var selectWindow = new ModEventItemSelectWindow { Owner = this, ItemType = Enums.ModEventItemType.Event };
 
             if (selectWindow.ShowDialog() == true)
             {
@@ -384,7 +384,7 @@ namespace ModCreator.Windows
         {
             if (WindowData.SelectedModEvent == null) return;
 
-            var selectWindow = new ModEventItemSelectWindow { Owner = this, ItemType = Enums.ModEventItemType.Action, ReturnType = "bool", AllVariables = WindowData.Project.GlobalVariables };
+            var selectWindow = new ModEventItemSelectWindow { Owner = this, ItemType = Enums.ModEventItemType.Action, ReturnType = "bool" };
 
             if (selectWindow.ShowDialog() == true)
             {
@@ -453,7 +453,7 @@ namespace ModCreator.Windows
         {
             if (WindowData.SelectedModEvent == null) return;
 
-            var selectWindow = new ModEventItemSelectWindow { Owner = this, ItemType = Enums.ModEventItemType.Action, AllVariables = WindowData.Project.GlobalVariables };
+            var selectWindow = new ModEventItemSelectWindow { Owner = this, ItemType = Enums.ModEventItemType.Action };
 
             if (selectWindow.ShowDialog() == true)
             {
@@ -529,7 +529,6 @@ namespace ModCreator.Windows
                     ItemType = Enums.ModEventItemType.Action,
                     ReturnType = "bool",
                     SelectedItemName = selectedItem.Name,
-                    AllVariables = WindowData.Project.GlobalVariables,
                     ParameterValues = selectedItem.ParameterValues
                 };
 
@@ -570,7 +569,6 @@ namespace ModCreator.Windows
                     Owner = this,
                     ItemType = Enums.ModEventItemType.Action,
                     SelectedItemName = selectedItem.Name,
-                    AllVariables = WindowData.Project.GlobalVariables,
                     ParameterValues = selectedItem.ParameterValues
                 };
 
@@ -846,27 +844,10 @@ namespace ModCreator.Windows
 
             var mode = comboBox.SelectedItem as Enums.EventMode?;
             var grpEventSelection = this.FindName("grpEventSelection") as GroupBox;
-
-            // Get controls for OrderIndex, CacheType, and WorkOn
-            var txtOrderIndexLabel = this.FindName("txtOrderIndexLabel") as TextBlock;
-            var txtOrderIndex = this.FindName("txtOrderIndex") as TextBox;
-            var txtCacheTypeLabel = this.FindName("txtCacheTypeLabel") as TextBlock;
-            var cmbCacheType = this.FindName("cmbCacheType") as ComboBox;
-            var txtWorkOnLabel = this.FindName("txtWorkOnLabel") as TextBlock;
-            var cmbWorkOn = this.FindName("cmbWorkOn") as ComboBox;
-
             var isModEvent = mode == Enums.EventMode.ModEvent;
 
             if (grpEventSelection != null)
                 grpEventSelection.Visibility = isModEvent ? Visibility.Visible : Visibility.Collapsed;
-
-            var targetVisibility = isModEvent ? Visibility.Visible : Visibility.Collapsed;
-            if (txtOrderIndexLabel != null) txtOrderIndexLabel.Visibility = targetVisibility;
-            if (txtOrderIndex != null) txtOrderIndex.Visibility = targetVisibility;
-            if (txtCacheTypeLabel != null) txtCacheTypeLabel.Visibility = targetVisibility;
-            if (cmbCacheType != null) cmbCacheType.Visibility = targetVisibility;
-            if (txtWorkOnLabel != null) txtWorkOnLabel.Visibility = targetVisibility;
-            if (cmbWorkOn != null) cmbWorkOn.Visibility = targetVisibility;
         }
 
         // Event editor search/replace handlers

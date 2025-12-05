@@ -216,20 +216,19 @@ namespace ModCreator.WindowData
                 return string.Empty;
 
             // Load templates
-            var eventTemplatePath = Path.Combine(Project.ProjectPath, "EventTemplate.tmp");
-            var eventTemplateContentPath = Path.Combine(Project.ProjectPath, "EventTemplateContent.tmp");
+            var eventTemplate = ResourceHelper.ReadEmbeddedResource("ModCreator.Resources.EventTemplate.tmp");
+            var eventTemplateContent = ResourceHelper.ReadEmbeddedResource("ModCreator.Resources.EventTemplateContent.tmp");
 
-            if (!File.Exists(eventTemplatePath) || !File.Exists(eventTemplateContentPath))
+            if (string.IsNullOrEmpty(eventTemplate) || string.IsNullOrEmpty(eventTemplateContent))
                 return string.Empty;
-
-            var eventTemplate = File.ReadAllText(eventTemplatePath);
-            var eventTemplateContent = File.ReadAllText(eventTemplateContentPath);
 
             // Get class name from file name
             var className = modEvent.FileName;
 
-            // Generate event method signature
+            // Generate event method signature and base call
             string eventMethod;
+            string baseCall = string.Empty;
+            
             if (modEvent.EventMode == Enums.EventMode.ModEvent && !string.IsNullOrEmpty(modEvent.SelectedEvent))
             {
                 // Find the event method signature from available events
@@ -237,10 +236,22 @@ namespace ModCreator.WindowData
                 if (selectedEvent != null)
                 {
                     eventMethod = $"public override {selectedEvent.Code}";
+                    
+                    // Generate base call with parameters
+                    if (selectedEvent.Parameters != null && selectedEvent.Parameters.Count > 0)
+                    {
+                        var paramNames = string.Join(", ", selectedEvent.Parameters.Select(p => p.Name));
+                        baseCall = $"base.{selectedEvent.Name}({paramNames});";
+                    }
+                    else
+                    {
+                        baseCall = $"base.{selectedEvent.Name}();";
+                    }
                 }
                 else
                 {
                     eventMethod = $"public override void {modEvent.SelectedEvent}()";
+                    baseCall = $"base.{modEvent.SelectedEvent}();";
                 }
             }
             else
@@ -248,6 +259,7 @@ namespace ModCreator.WindowData
                 // NonEvent mode - use custom event name or default "Run"
                 var methodName = string.IsNullOrEmpty(modEvent.CustomEventName) ? "Run" : modEvent.CustomEventName;
                 eventMethod = $"public void {methodName}()";
+                // No base call for non-event methods
             }
 
             // Generate condition code
@@ -262,16 +274,17 @@ namespace ModCreator.WindowData
 
             // Replace placeholders in event content
             var eventContent = eventTemplateContent
+                .Replace("#BASECALL#", baseCall)
                 .Replace("#EVENTMETHOD#", eventMethod)
                 .Replace("#CONDITION#", conditionCode)
                 .Replace("#ACTION#", actionCode);
 
             // Replace placeholders in main template
-            var cacheType = string.IsNullOrEmpty(modEvent.CacheType) ? "CacheAttribute.CType.Local" : $"CacheAttribute.CType.{modEvent.CacheType}";
-            var workOn = string.IsNullOrEmpty(modEvent.WorkOn) ? "CacheAttribute.WType.All" : $"CacheAttribute.WType.{modEvent.WorkOn}";
+            var cacheType = string.IsNullOrEmpty(modEvent.CacheType) ? "Local" : $"{modEvent.CacheType}";
+            var workOn = string.IsNullOrEmpty(modEvent.WorkOn) ? "Local" : $"{modEvent.WorkOn}";
 
             var generatedCode = eventTemplate
-                .Replace("#PROJECTID#", Project.ProjectID)
+                .Replace("#PROJECTID#", Project.ProjectId)
                 .Replace("#CLASSNAME#", className)
                 .Replace("#CACHETYPE#", cacheType)
                 .Replace("#WORKON#", workOn)

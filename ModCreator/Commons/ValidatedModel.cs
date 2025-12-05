@@ -1,4 +1,3 @@
-using ModCreator.Attributes;
 using ModCreator.Helpers;
 using ModCreator.Models;
 using System.Collections.Generic;
@@ -8,7 +7,7 @@ namespace ModCreator.Commons
 {
     public abstract class ValidatedModel : AutoNotifiableObject
     {
-        private static List<VarType> _varTypes;
+        public static List<VarType> VarTypes { get; private set; }
 
         static ValidatedModel()
         {
@@ -17,7 +16,7 @@ namespace ModCreator.Commons
 
         private static void LoadVarTypes()
         {
-            _varTypes = ResourceHelper.ReadEmbeddedResource<List<VarType>>("ModCreator.Resources.var-types.json");
+            VarTypes = ResourceHelper.ReadEmbeddedResource<List<VarType>>("ModCreator.Resources.var-types.json");
         }
 
         public string ValidationError { get; set; }
@@ -29,7 +28,7 @@ namespace ModCreator.Commons
             if (string.IsNullOrEmpty(varType))
                 return true;
 
-            var typeInfo = _varTypes.FirstOrDefault(t => t.Type == varType);
+            var typeInfo = VarTypes.FirstOrDefault(t => t.Type == varType);
             if (typeInfo == null)
                 return true;
 

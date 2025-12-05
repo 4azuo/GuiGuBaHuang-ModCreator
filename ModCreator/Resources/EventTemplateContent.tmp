@@ -1,5 +1,6 @@
         #EVENTMETHOD#
         {
+            #BASECALL#
             if (CheckCondition())
             {
                 #ACTION#

@@ -5,9 +5,12 @@
     "DisplayName": "Do: {0}",
     "Description": "Do specified action",
     "Code": "{0}",
-    "Return": "dynamic",
+    "Return": "Object",
     "Parameters": [
-      { "Type": "string", "Name": "customCode" }
+      {
+        "Type": "String",
+        "Name": "customCode"
+      }
     ]
   },
   {
@@ -16,7 +19,7 @@
     "DisplayName": "Always True",
     "Description": "Condition that always returns true",
     "Code": "true",
-    "Return": "bool"
+    "Return": "Boolean"
   },
   {
     "Category": "Basic",
@@ -24,7 +27,7 @@
     "DisplayName": "Always False",
     "Description": "Condition that always returns false",
     "Code": "false",
-    "Return": "bool"
+    "Return": "Boolean"
   },
   {
     "Category": "Comparison",
@@ -33,10 +36,16 @@
     "Description": "Less than comparison",
     "Code": "{0} < {1}",
     "Parameters": [
-      { "Type": "dynamic", "Name": "left" },
-      { "Type": "dynamic", "Name": "right" }
+      {
+        "Type": "Object",
+        "Name": "left"
+      },
+      {
+        "Type": "Object",
+        "Name": "right"
+      }
     ],
-    "Return": "bool"
+    "Return": "Boolean"
   },
   {
     "Category": "Comparison",
@@ -45,10 +54,16 @@
     "Description": "Less than or equal comparison",
     "Code": "{0} <= {1}",
     "Parameters": [
-      { "Type": "dynamic", "Name": "left" },
-      { "Type": "dynamic", "Name": "right" }
+      {
+        "Type": "Object",
+        "Name": "left"
+      },
+      {
+        "Type": "Object",
+        "Name": "right"
+      }
     ],
-    "Return": "bool"
+    "Return": "Boolean"
   },
   {
     "Category": "Comparison",
@@ -57,10 +72,16 @@
     "Description": "Equality comparison",
     "Code": "{0} == {1}",
     "Parameters": [
-      { "Type": "dynamic", "Name": "left" },
-      { "Type": "dynamic", "Name": "right" }
+      {
+        "Type": "Object",
+        "Name": "left"
+      },
+      {
+        "Type": "Object",
+        "Name": "right"
+      }
     ],
-    "Return": "bool"
+    "Return": "Boolean"
   },
   {
     "Category": "Comparison",
@@ -69,10 +90,16 @@
     "Description": "Greater than or equal comparison",
     "Code": "{0} >= {1}",
     "Parameters": [
-      { "Type": "dynamic", "Name": "left" },
-      { "Type": "dynamic", "Name": "right" }
+      {
+        "Type": "Object",
+        "Name": "left"
+      },
+      {
+        "Type": "Object",
+        "Name": "right"
+      }
     ],
-    "Return": "bool"
+    "Return": "Boolean"
   },
   {
     "Category": "Comparison",
@@ -81,10 +108,16 @@
     "Description": "Greater than comparison",
     "Code": "{0} > {1}",
     "Parameters": [
-      { "Type": "dynamic", "Name": "left" },
-      { "Type": "dynamic", "Name": "right" }
+      {
+        "Type": "Object",
+        "Name": "left"
+      },
+      {
+        "Type": "Object",
+        "Name": "right"
+      }
     ],
-    "Return": "bool"
+    "Return": "Boolean"
   },
   {
     "Category": "Comparison",
@@ -93,10 +126,16 @@
     "Description": "Not equal comparison",
     "Code": "{0} != {1}",
     "Parameters": [
-      { "Type": "dynamic", "Name": "left" },
-      { "Type": "dynamic", "Name": "right" }
+      {
+        "Type": "Object",
+        "Name": "left"
+      },
+      {
+        "Type": "Object",
+        "Name": "right"
+      }
     ],
-    "Return": "bool"
+    "Return": "Boolean"
   },
   {
     "Category": "Logic",
@@ -105,10 +144,16 @@
     "Description": "Logical AND operator",
     "Code": "{0} && {1}",
     "Parameters": [
-      { "Type": "bool", "Name": "left" },
-      { "Type": "bool", "Name": "right" }
+      {
+        "Type": "Boolean",
+        "Name": "left"
+      },
+      {
+        "Type": "Boolean",
+        "Name": "right"
+      }
     ],
-    "Return": "bool"
+    "Return": "Boolean"
   },
   {
     "Category": "Logic",
@@ -117,10 +162,16 @@
     "Description": "Logical OR operator",
     "Code": "{0} || {1}",
     "Parameters": [
-      { "Type": "bool", "Name": "left" },
-      { "Type": "bool", "Name": "right" }
+      {
+        "Type": "Boolean",
+        "Name": "left"
+      },
+      {
+        "Type": "Boolean",
+        "Name": "right"
+      }
     ],
-    "Return": "bool"
+    "Return": "Boolean"
   },
   {
     "Category": "Logic",
@@ -129,9 +180,12 @@
     "Description": "Logical NOT operator",
     "Code": "!{0}",
     "Parameters": [
-      { "Type": "bool", "Name": "value" }
+      {
+        "Type": "Boolean",
+        "Name": "value"
+      }
     ],
-    "Return": "bool"
+    "Return": "Boolean"
   },
   {
     "Category": "Variable",
@@ -140,9 +194,12 @@
     "Description": "Get variable value",
     "Code": "{0}",
     "Parameters": [
-      { "Type": "dynamic", "Name": "variableName" }
+      {
+        "Type": "Object",
+        "Name": "variableName"
+      }
     ],
-    "Return": "dynamic"
+    "Return": "Object"
   },
   {
     "Category": "Variable",
@@ -151,8 +208,14 @@
     "Description": "Set variable value",
     "Code": "{0} = {1}",
     "Parameters": [
-      { "Type": "dynamic", "Name": "variableName" },
-      { "Type": "dynamic", "Name": "value" }
+      {
+        "Type": "Object",
+        "Name": "variableName"
+      },
+      {
+        "Type": "Object",
+        "Name": "value"
+      }
     ],
     "Return": "Void"
   },
@@ -164,10 +227,16 @@
     "Description": "Addition",
     "Code": "{0} + {1}",
     "Parameters": [
-      { "Type": "dynamic", "Name": "left" },
-      { "Type": "dynamic", "Name": "right" }
+      {
+        "Type": "Object",
+        "Name": "left"
+      },
+      {
+        "Type": "Object",
+        "Name": "right"
+      }
     ],
-    "Return": "dynamic"
+    "Return": "Object"
   },
   {
     "Category": "Math",
@@ -176,10 +245,16 @@
     "Description": "Subtraction",
     "Code": "{0} - {1}",
     "Parameters": [
-      { "Type": "dynamic", "Name": "left" },
-      { "Type": "dynamic", "Name": "right" }
+      {
+        "Type": "Object",
+        "Name": "left"
+      },
+      {
+        "Type": "Object",
+        "Name": "right"
+      }
     ],
-    "Return": "dynamic"
+    "Return": "Object"
   },
   {
     "Category": "Math",
@@ -188,10 +263,16 @@
     "Description": "Multiplication",
     "Code": "{0} * {1}",
     "Parameters": [
-      { "Type": "dynamic", "Name": "left" },
-      { "Type": "dynamic", "Name": "right" }
+      {
+        "Type": "Object",
+        "Name": "left"
+      },
+      {
+        "Type": "Object",
+        "Name": "right"
+      }
     ],
-    "Return": "dynamic"
+    "Return": "Object"
   },
   {
     "Category": "Math",
@@ -200,10 +281,16 @@
     "Description": "Division",
     "Code": "{0} / {1}",
     "Parameters": [
-      { "Type": "dynamic", "Name": "left" },
-      { "Type": "dynamic", "Name": "right" }
+      {
+        "Type": "Object",
+        "Name": "left"
+      },
+      {
+        "Type": "Object",
+        "Name": "right"
+      }
     ],
-    "Return": "dynamic"
+    "Return": "Object"
   },
   {
     "Category": "Math",
@@ -212,10 +299,16 @@
     "Description": "Modulo operation",
     "Code": "{0} % {1}",
     "Parameters": [
-      { "Type": "dynamic", "Name": "left" },
-      { "Type": "dynamic", "Name": "right" }
+      {
+        "Type": "Object",
+        "Name": "left"
+      },
+      {
+        "Type": "Object",
+        "Name": "right"
+      }
     ],
-    "Return": "dynamic"
+    "Return": "Object"
   },
   {
     "Category": "Math",
@@ -224,9 +317,12 @@
     "Description": "Increment by 1",
     "Code": "{0}++",
     "Parameters": [
-      { "Type": "dynamic", "Name": "variable" }
+      {
+        "Type": "Object",
+        "Name": "variable"
+      }
     ],
-    "Return": "dynamic"
+    "Return": "Object"
   },
   {
     "Category": "Math",
@@ -235,9 +331,12 @@
     "Description": "Decrement by 1",
     "Code": "{0}--",
     "Parameters": [
-      { "Type": "dynamic", "Name": "variable" }
+      {
+        "Type": "Object",
+        "Name": "variable"
+      }
     ],
-    "Return": "dynamic"
+    "Return": "Object"
   },
   {
     "Category": "Control Flow",
@@ -246,10 +345,13 @@
     "Description": "If-Else statement",
     "Code": "if ({0})",
     "Parameters": [
-      { "Type": "bool", "Name": "condition" }
+      {
+        "Type": "Boolean",
+        "Name": "condition"
+      }
     ],
     "Return": "Void",
-    "SubItems": ["IfElse_Then", "IfElse_Else"]
+    "SubItems": [ "IfElse_Then", "IfElse_Else" ]
   },
   {
     "Category": "Control Flow",
@@ -304,7 +406,10 @@
     "Description": "While loop",
     "Code": "while ({0})",
     "Parameters": [
-      { "Type": "bool", "Name": "condition" }
+      {
+        "Type": "Boolean",
+        "Name": "condition"
+      }
     ],
     "Return": "Void",
     "IsCanAddChild": true,
@@ -317,8 +422,14 @@
     "Description": "ForEach loop",
     "Code": "foreach (var {0} in {1})",
     "Parameters": [
-      { "Type": "dynamic", "Name": "item" },
-      { "Type": "dynamic", "Name": "collection" }
+      {
+        "Type": "Object",
+        "Name": "item"
+      },
+      {
+        "Type": "Object",
+        "Name": "collection"
+      }
     ],
     "Return": "Void",
     "IsCanAddChild": true,
@@ -332,7 +443,7 @@
     "Code": "try-catch",
     "Parameters": [],
     "Return": "Void",
-    "SubItems": ["TryCatch_Try", "TryCatch_Catch"]
+    "SubItems": [ "TryCatch_Try", "TryCatch_Catch" ]
   },
   {
     "Category": "Exception",
@@ -364,7 +475,7 @@
     "Code": "try-catch-finally",
     "Parameters": [],
     "Return": "Void",
-    "SubItems": ["TryCatchFinally_Try", "TryCatchFinally_Catch", "TryCatchFinally_Finally"]
+    "SubItems": [ "TryCatchFinally_Try", "TryCatchFinally_Catch", "TryCatchFinally_Finally" ]
   },
   {
     "Category": "Exception",
@@ -406,7 +517,10 @@
     "Description": "Call NonEvent method",
     "Code": "{0}.Instance.Run()",
     "Parameters": [
-      { "Type": "nonevent", "Name": "nonEvent" }
+      {
+        "Type": "nonevent",
+        "Name": "NonEvent"
+      }
     ],
     "Return": "Void"
   },
@@ -417,9 +531,12 @@
     "Description": "Get array length",
     "Code": "{0}.Length",
     "Parameters": [
-      { "Type": "Array", "Name": "array" }
+      {
+        "Type": "Array",
+        "Name": "array"
+      }
     ],
-    "Return": "int"
+    "Return": "Int32"
   },
   {
     "Category": "Data",
@@ -428,9 +545,12 @@
     "Description": "Get list count",
     "Code": "{0}.Count",
     "Parameters": [
-      { "Type": "List", "Name": "list" }
+      {
+        "Type": "List",
+        "Name": "list"
+      }
     ],
-    "Return": "int"
+    "Return": "Int32"
   },
   {
     "Category": "Data",
@@ -439,9 +559,30 @@
     "Description": "Get dictionary count",
     "Code": "{0}.Count",
     "Parameters": [
-      { "Type": "Dictionary", "Name": "dictionary" }
+      {
+        "Type": "Dictionary",
+        "Name": "dictionary"
+      }
     ],
-    "Return": "int"
+    "Return": "Int32"
+  },
+  {
+    "Category": "String",
+    "Name": "GetChar",
+    "DisplayName": "{0}[{1}]",
+    "Description": "Get character from string",
+    "Code": "{0}[{1}]",
+    "Parameters": [
+      {
+        "Type": "String",
+        "Name": "String"
+      },
+      {
+        "Type": "Int32",
+        "Name": "index"
+      }
+    ],
+    "Return": "Char"
   },
   {
     "Category": "String",
@@ -450,10 +591,16 @@
     "Description": "Format string",
     "Code": "string.Format({0}, {1})",
     "Parameters": [
-      { "Type": "string", "Name": "format" },
-      { "Type": "IEnumerable", "Name": "args" }
+      {
+        "Type": "String",
+        "Name": "format"
+      },
+      {
+        "Type": "IEnumerable",
+        "Name": "args"
+      }
     ],
-    "Return": "string"
+    "Return": "String"
   },
   {
     "Category": "String",
@@ -462,20 +609,40 @@
     "Description": "Get string length",
     "Code": "{0}.Length",
     "Parameters": [
-      { "Type": "string", "Name": "text" }
+      {
+        "Type": "String",
+        "Name": "text"
+      }
     ],
-    "Return": "int"
+    "Return": "Int32"
   },
   {
     "Category": "Type Conversion",
     "Name": "ToInt",
     "DisplayName": "(int){0}",
-    "Description": "Convert to int",
+    "Description": "Convert to Int32",
     "Code": "(int){0}",
     "Parameters": [
-      { "Type": "dynamic", "Name": "value" }
+      {
+        "Type": "Object",
+        "Name": "value"
+      }
     ],
-    "Return": "int"
+    "Return": "Int32"
+  },
+  {
+    "Category": "Type Conversion",
+    "Name": "ToLong",
+    "DisplayName": "(long){0}",
+    "Description": "Convert to Int64",
+    "Code": "(long){0}",
+    "Parameters": [
+      {
+        "Type": "Object",
+        "Name": "value"
+      }
+    ],
+    "Return": "Int64"
   },
   {
     "Category": "Type Conversion",
@@ -484,9 +651,12 @@
     "Description": "Convert to float",
     "Code": "(float){0}",
     "Parameters": [
-      { "Type": "dynamic", "Name": "value" }
+      {
+        "Type": "Object",
+        "Name": "value"
+      }
     ],
-    "Return": "float"
+    "Return": "Single"
   },
   {
     "Category": "Type Conversion",
@@ -495,9 +665,12 @@
     "Description": "Convert to double",
     "Code": "(double){0}",
     "Parameters": [
-      { "Type": "dynamic", "Name": "value" }
+      {
+        "Type": "Object",
+        "Name": "value"
+      }
     ],
-    "Return": "double"
+    "Return": "Double"
   },
   {
     "Category": "Type Conversion",
@@ -506,9 +679,12 @@
     "Description": "Convert to string",
     "Code": "(string){0}",
     "Parameters": [
-      { "Type": "dynamic", "Name": "value" }
+      {
+        "Type": "Object",
+        "Name": "value"
+      }
     ],
-    "Return": "string"
+    "Return": "String"
   },
   {
     "Category": "Type Conversion",
@@ -517,9 +693,12 @@
     "Description": "Convert to bool",
     "Code": "(bool){0}",
     "Parameters": [
-      { "Type": "dynamic", "Name": "value" }
+      {
+        "Type": "Object",
+        "Name": "value"
+      }
     ],
-    "Return": "bool"
+    "Return": "Boolean"
   },
   {
     "Category": "Null Check",
@@ -528,9 +707,12 @@
     "Description": "Check if value is null",
     "Code": "{0} == null",
     "Parameters": [
-      { "Type": "dynamic", "Name": "value" }
+      {
+        "Type": "Object",
+        "Name": "value"
+      }
     ],
-    "Return": "bool"
+    "Return": "Boolean"
   },
   {
     "Category": "Null Check",
@@ -539,9 +721,12 @@
     "Description": "Check if value is not null",
     "Code": "{0} != null",
     "Parameters": [
-      { "Type": "dynamic", "Name": "value" }
+      {
+        "Type": "Object",
+        "Name": "value"
+      }
     ],
-    "Return": "bool"
+    "Return": "Boolean"
   },
   {
     "Category": "Null Check",
@@ -550,9 +735,15 @@
     "Description": "Null coalescing operator",
     "Code": "{0} ?? {1}",
     "Parameters": [
-      { "Type": "dynamic", "Name": "value" },
-      { "Type": "dynamic", "Name": "defaultValue" }
+      {
+        "Type": "Object",
+        "Name": "value"
+      },
+      {
+        "Type": "Object",
+        "Name": "defaultValue"
+      }
     ],
-    "Return": "dynamic"
+    "Return": "Object"
   }
 ]

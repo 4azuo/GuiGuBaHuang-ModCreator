@@ -154,25 +154,41 @@ namespace ModCreator.Helpers
                 categoryAttribute: null,
                 ignoreAttribute: "ModLib.Attributes.ActionCatIgnAttribute",
                 bindingFlags: BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly,
-                itemFactory: (typeName, method, category, code, parameters) => new Models.EventActionBase
+                itemFactory: (typeName, method, category, code, parameters) =>
                 {
-                    Category = typeName,
-                    Name = $"{typeName}.{method.Name}",
-                    DisplayName = $"{typeName}.{method.Name}",
-                    Description = $"Helper method from {typeName}",
-                    Code = code,
-                    Parameters = parameters.Select(p => new Models.ParameterInfo
+                    // Generate parameter placeholders {0}, {1}, etc.
+                    var paramPlaceholders = string.Join(", ", Enumerable.Range(0, parameters.Length).Select(i => $"{{{i}}}"));
+                    
+                    // Generate display name with parameters
+                    var displayName = parameters.Length > 0
+                        ? $"{typeName}.{method.Name}({paramPlaceholders})"
+                        : $"{typeName}.{method.Name}()";
+                    
+                    // Generate code with method call syntax
+                    var methodCode = parameters.Length > 0
+                        ? $"{typeName}.{method.Name}({paramPlaceholders})"
+                        : $"{typeName}.{method.Name}()";
+                    
+                    return new Models.EventActionBase
                     {
-                        Type = FormatTypeName(p.ParameterType),
-                        Name = p.Name,
-                        IsOptional = p.IsOptional,
-                        DefaultValue = p.HasDefaultValue ? (p.RawDefaultValue?.ToString() ?? "null") : string.Empty
-                    }).ToList(),
-                    Return = FormatTypeName(method.ReturnType),
-                    HasBody = false,
-                    IsHidden = false,
-                    IsCanAddChild = false,
-                    SubItems = []
+                        Category = typeName,
+                        Name = $"{typeName}.{method.Name}",
+                        DisplayName = displayName,
+                        Description = $"Helper method from {typeName}",
+                        Code = methodCode,
+                        Parameters = parameters.Select(p => new Models.ParameterInfo
+                        {
+                            Type = FormatTypeName(p.ParameterType),
+                            Name = p.Name,
+                            IsOptional = p.IsOptional,
+                            DefaultValue = p.HasDefaultValue ? (p.RawDefaultValue?.ToString() ?? "null") : string.Empty
+                        }).ToList(),
+                        Return = FormatTypeName(method.ReturnType),
+                        HasBody = false,
+                        IsHidden = false,
+                        IsCanAddChild = false,
+                        SubItems = []
+                    };
                 });
 
             _cachedActions = items;

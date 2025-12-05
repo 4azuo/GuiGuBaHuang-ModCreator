@@ -9,7 +9,7 @@ using ModLib.Attributes;
 
 namespace ModCreatorChildEvent
 {
-    [Cache("#PROJECTID#.#CLASSNAME#", CacheType = #CACHETYPE#, WorkOn = #WORKON#, OrderIndex = #ORDERINDEX#)]
+    [Cache("#PROJECTID#.#CLASSNAME#", CacheType = CacheAttribute.CType.#CACHETYPE#, WorkOn = CacheAttribute.WType.#WORKON#, OrderIndex = #ORDERINDEX#)]
     public class #CLASSNAME# : ModEvent
     {
         public static #CLASSNAME# Instance { get; set; }

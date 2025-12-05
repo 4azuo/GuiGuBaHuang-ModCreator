@@ -122,10 +122,8 @@ namespace ModCreator.Controls
                 Owner = window,
                 ItemType = ModEventItemType.Action,
                 ReturnType = parameter.Type,
-                AllVariables = vars,
                 ParameterValues = p != null && p.SelectType == ModEventSelectType.EventAction ? p.SelectedEventAction.ParameterValues : [],
                 SelectedItemName = p?.Name,
-                ShowVariablesSection = true,
                 ShowOptionalValueSection = true
             };
 

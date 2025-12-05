@@ -1,11 +1,14 @@
 using ModCreator.Attributes;
+using ModCreator.Commons;
 using ModCreator.Enums;
 using ModCreator.Helpers;
 using ModCreator.Models;
+using ModCreator.Windows;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using System.Windows;
 
 namespace ModCreator.WindowData
 {
@@ -14,6 +17,7 @@ namespace ModCreator.WindowData
         public string WindowTitle { get; set; } = "Select Item";
         public ModEventItemType ItemType { get; set; }
         public string ReturnType { get; set; }
+        public bool HasReturn => !string.IsNullOrEmpty(ReturnType) && ReturnType != "Void";
         public ObservableCollection<string> Categories { get; set; } = [];
         [NotifyMethod(nameof(OnCategoryChanged))]
         public string SelectedCategory { get; set; }
@@ -33,7 +37,7 @@ namespace ModCreator.WindowData
         public bool HasNoChange => SelectedItem == null && SelectedVariable == null;
         public bool HasSelect => SelectedItem != null;
         public bool HasSelectVariable => SelectedVariable != null;
-        public bool ShowVariablesSection { get; set; } = false;
+        public bool HasParameters => SelectedItem?.Parameters != null && SelectedItem.Parameters.Count > 0;
         public bool ShowOptionalValueSection { get; set; } = false;
         public ModEventSelectType SelectType { get; set; }
 
@@ -48,11 +52,12 @@ namespace ModCreator.WindowData
             NotifyAll();
         }
 
-        public void Initialize(ModEventItemType itemType, string returnType, string selectItemName, List<GlobalVariable> vars = null, Dictionary<int, ModEventItemSelectValue> parameterValues = null)
+        public void Initialize(ModEventItemType itemType, string returnType, string selectItemName, Dictionary<int, ModEventItemSelectValue> parameterValues = null)
         {
             Begin();
             {
                 ItemType = itemType;
+                ReturnType = returnType;
                 WindowTitle = itemType switch
                 {
                     ModEventItemType.Event => "Select Event",
@@ -62,7 +67,7 @@ namespace ModCreator.WindowData
 
                 LoadItems();
                 LoadCategories();
-                LoadVariables(vars);
+                LoadVariables();
                 SelectedCategory = "All";
                 UpdateFilteredItems();
 
@@ -103,16 +108,21 @@ namespace ModCreator.WindowData
                     AllItems.AddRange(ModEventHelper.LoadModActionMethodsFromAssembly());
                     break;
             }
-
+            
             if (!string.IsNullOrEmpty(ReturnType))
             {
-                if (ReturnType == "dynamic")
+                switch (ReturnType)
                 {
-                    AllItems = AllItems.Where(item => item.IsReturn).ToList();
-                }
-                else
-                {
-                    AllItems = AllItems.Where(item => item.Return == ReturnType).ToList();
+                    case "Object":
+                        AllItems = AllItems.Where(item => item.IsReturn).ToList();
+                        break;
+                    default:
+                        if (ValidatedModel.VarTypes.Any(x => x.Type == ReturnType))
+                            AllItems = AllItems.Where(item => item.Return == ReturnType).ToList();
+                        else
+                            AllItems = AllItems.Where(item => item.IsReturn).ToList();
+                        break;
+
                 }
             }
         }
@@ -128,13 +138,14 @@ namespace ModCreator.WindowData
             }
         }
 
-        private void LoadVariables(List<GlobalVariable> vars = null)
+        private void LoadVariables()
         {
-            AllVariables.AddRange(vars);
+            var editor = Application.Current.Windows.OfType<CWindow<ProjectEditorWindowData>>().FirstOrDefault();
+            AllVariables.AddRange(editor.WindowData.GlobalVariables);
 
             if (!string.IsNullOrEmpty(ReturnType))
             {
-                if (ReturnType != "dynamic")
+                if (ReturnType != "Object")
                 {
                     AllVariables = AllVariables.Where(item => item.Type == ReturnType).ToList();
                 }
