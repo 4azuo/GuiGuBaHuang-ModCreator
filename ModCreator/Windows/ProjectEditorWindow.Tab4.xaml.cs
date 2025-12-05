@@ -208,7 +208,7 @@ namespace ModCreator.Windows
                     .Replace("#VARNAME#", variable.Name)
                     .Replace("#VARVALUE#", FormatVariableValue(variable));
 
-                variableProperties.AppendLine($"        {propertyCode.Trim()} // {variable.Description}");
+                variableProperties.AppendLine($"{propertyCode.Trim()} // {variable.Description}");
             }
 
             var generatedCode = varTemplate.Replace("#VARIABLES#", variableProperties.ToString());

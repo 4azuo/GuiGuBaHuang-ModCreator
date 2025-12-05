@@ -402,9 +402,9 @@
   {
     "Category": "Method Call",
     "Name": "CallNonEvent",
-    "DisplayName": "Call {0}.Run()",
+    "DisplayName": "Call NonEvent {0}",
     "Description": "Call NonEvent method",
-    "Code": "{0}.Run()",
+    "Code": "{0}.Instance.Run()",
     "Parameters": [
       { "Type": "nonevent", "Name": "nonEvent" }
     ],
