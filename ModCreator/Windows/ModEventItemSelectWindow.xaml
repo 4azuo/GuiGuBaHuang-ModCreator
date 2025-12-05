@@ -25,7 +25,7 @@
         </Grid>
         <Grid Grid.Row="3" Margin="10,0,10,10">
             <Grid.ColumnDefinitions><ColumnDefinition Width="400"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-            <Grid Grid.Column="0">
+            <Grid Grid.Column="0" Visibility="{Binding IsNotNonEventMode, Converter={StaticResource BoolToVisibilityConverter}}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
@@ -37,6 +37,14 @@
                     <ListBox ItemsSource="{Binding FilteredVariables}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedVariable}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" MouseDoubleClick="VariablesListBox_MouseDoubleClick"/>
                 </GroupBox>
             </Grid>
+            <Grid Grid.Column="0" Visibility="{Binding IsNonEventMode, Converter={StaticResource BoolToVisibilityConverter}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <GroupBox Grid.Row="0" Header="NonEvents" Margin="0,0,10,0">
+                    <ListBox ItemsSource="{Binding FilteredNonEvents}" DisplayMemberPath="FileName" SelectedItem="{Binding SelectedNonEvent}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" MouseDoubleClick="NonEventsListBox_MouseDoubleClick"/>
+                </GroupBox>
+            </Grid>
             <GroupBox Header="Details" Grid.Column="1">
                 <Grid>
                     <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="10">
@@ -45,6 +53,7 @@
                                 <GroupBox.Visibility>
                                     <MultiBinding Converter="{StaticResource MultiBoolToVisibilityConverter}">
                                         <Binding Path="HasNoChange"/>
+                                        <Binding Path="IsNotNonEventMode"/>
                                         <Binding Path="ShowOptionalValueSection"/>
                                     </MultiBinding>
                                 </GroupBox.Visibility>
@@ -97,6 +106,8 @@
                                                                 <RowDefinition Height="Auto"/>
                                                                 <RowDefinition Height="Auto"/>
                                                                 <RowDefinition Height="Auto"/>
+                                                                <RowDefinition Height="Auto"/>
+                                                                <RowDefinition Height="Auto"/>
                                                             </Grid.RowDefinitions>
                                                             <Grid.ColumnDefinitions>
                                                                 <ColumnDefinition Width="80"/>
@@ -106,8 +117,12 @@
                                                             <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Name}" FontFamily="Consolas" FontSize="11" Foreground="#FF0066CC"/>
                                                             <TextBlock Grid.Row="1" Grid.Column="0" Text="Type:" FontWeight="SemiBold" FontSize="11" Foreground="#FF555555"/>
                                                             <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Type}" FontFamily="Consolas" FontSize="11" Foreground="#FF009900"/>
-                                                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Description:" FontWeight="SemiBold" FontSize="11" Foreground="#FF555555" VerticalAlignment="Top"/>
-                                                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Description}" TextWrapping="Wrap" FontSize="11" Foreground="#FF666666"/>
+                                                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Optional:" FontWeight="SemiBold" FontSize="11" Foreground="#FF555555"/>
+                                                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding IsOptional}" FontFamily="Consolas" FontSize="11" Foreground="#FF993300"/>
+                                                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Default:" FontWeight="SemiBold" FontSize="11" Foreground="#FF555555"/>
+                                                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding DefaultValue}" FontFamily="Consolas" FontSize="11" Foreground="#FF666666"/>
+                                                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Description:" FontWeight="SemiBold" FontSize="11" Foreground="#FF555555" VerticalAlignment="Top"/>
+                                                            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding Description}" TextWrapping="Wrap" FontSize="11" Foreground="#FF666666"/>
                                                         </Grid>
                                                     </Border>
                                                 </DataTemplate>
@@ -142,6 +157,24 @@
 
                                     <TextBlock Grid.Row="6" Grid.Column="0" Text="Description:" FontWeight="SemiBold" Margin="0,0,10,0" VerticalAlignment="Top"/>
                                     <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding SelectedVariable.Description}" TextWrapping="Wrap" FontSize="12" Foreground="#FF666666"/>
+                                </Grid>
+                            </GroupBox>
+                            <GroupBox Header="NonEvent Details" Visibility="{Binding IsNonEventMode, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <Grid Margin="5">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="10"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="File Name:" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SelectedNonEvent.FileName}" TextWrapping="Wrap" FontFamily="Consolas" FontSize="12"/>
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="File Path:" FontWeight="SemiBold" Margin="0,0,10,0" VerticalAlignment="Top"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SelectedNonEvent.FilePath}" TextWrapping="Wrap" FontSize="11" Foreground="#FF666666"/>
                                 </Grid>
                             </GroupBox>
                         </StackPanel>

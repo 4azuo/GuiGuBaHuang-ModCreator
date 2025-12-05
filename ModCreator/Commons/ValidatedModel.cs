@@ -101,15 +101,15 @@ namespace ModCreator.Commons
         public void ClearValidation()
         {
             ValidationError = null;
-            Notify(this, nameof(ValidationError));
-            Notify(this, nameof(IsValid));
+            Notify(nameof(ValidationError));
+            Notify(nameof(IsValid));
         }
 
         public void SetValidationError(string error)
         {
             ValidationError = error;
-            Notify(this, nameof(ValidationError));
-            Notify(this, nameof(IsValid));
+            Notify(nameof(ValidationError));
+            Notify(nameof(IsValid));
         }
     }
 }

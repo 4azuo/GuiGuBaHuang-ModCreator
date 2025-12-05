@@ -28,7 +28,7 @@ namespace ModCreator.Models
 
                 if (oldValue != value)
                 {
-                    Notify(this, nameof(Value));
+                    Notify(nameof(Value));
                     ProcessElementFormat();
                 }
             }
@@ -60,7 +60,7 @@ namespace ModCreator.Models
                     var targetBinding = _allBindings.FirstOrDefault(b => b.Element.Name == element.Name);
                     if (targetBinding != null)
                     {
-                        targetBinding.Notify(targetBinding, nameof(Value));
+                        targetBinding.Notify(nameof(Value));
                     }
                 }
             }

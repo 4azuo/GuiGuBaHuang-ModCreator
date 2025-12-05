@@ -57,6 +57,13 @@ namespace ModCreator.Windows
                 DialogResult = true;
                 Close();
             }
+            else if (WindowData.SelectedNonEvent != null)
+            {
+                WindowData.SelectType = ModEventSelectType.OptionalValue;
+                WindowData.OptionalValue = WindowData.SelectedNonEvent.FileName;
+                DialogResult = true;
+                Close();
+            }
             else if (WindowData.HasOptionalValue)
             {
                 WindowData.SelectType = ModEventSelectType.OptionalValue;
@@ -86,6 +93,17 @@ namespace ModCreator.Windows
             if (WindowData.SelectedVariable != null)
             {
                 WindowData.SelectType = ModEventSelectType.Variable;
+                DialogResult = true;
+                Close();
+            }
+        }
+
+        private void NonEventsListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (WindowData.SelectedNonEvent != null)
+            {
+                WindowData.SelectType = ModEventSelectType.OptionalValue;
+                WindowData.OptionalValue = WindowData.SelectedNonEvent.FileName;
                 DialogResult = true;
                 Close();
             }

@@ -138,14 +138,14 @@ namespace ModCreator.WindowData
         public void SetProjectPath(string projectPath)
         {
             _projectPath = projectPath;
-            Notify(this, nameof(HasExistingFiles));
+            Notify(nameof(HasExistingFiles));
         }
 
         public void LoadExistingFiles(object obj, System.Reflection.PropertyInfo prop, object oldValue, object newValue)
         {
             if (string.IsNullOrEmpty(_projectPath) || SelectedPattern == null)
             {
-                Notify(this, nameof(HasExistingFiles));
+                Notify(nameof(HasExistingFiles));
                 return;
             }
 
@@ -201,7 +201,7 @@ namespace ModCreator.WindowData
                 }
             }
 
-            Notify(this, nameof(HasExistingFiles));
+            Notify(nameof(HasExistingFiles));
         }
 
         public void LoadPatterns()
@@ -323,7 +323,7 @@ namespace ModCreator.WindowData
                     Value = value
                 });
             }
-            element.Notify(element, nameof(element.Options));
+            element.Notify(nameof(element.Options));
         }
 
         public void FilterPatterns(object obj, System.Reflection.PropertyInfo prop, object oldValue, object newValue)

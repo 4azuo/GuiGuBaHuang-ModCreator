@@ -4,6 +4,7 @@ using ModCreator.Enums;
 using ModCreator.Helpers;
 using ModCreator.Models;
 using ModCreator.Windows;
+using ModLib.Mod;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -31,10 +32,15 @@ namespace ModCreator.WindowData
         public List<GlobalVariable> FilteredVariables { get; set; } = [];
         public GlobalVariable SelectedVariable { get; set; }
         public bool HasSelectedVariable => SelectedVariable != null;
+        public List<ModEventItem> AllNonEvents { get; set; } = [];
+        public List<ModEventItem> FilteredNonEvents { get; set; } = [];
+        public ModEventItem SelectedNonEvent { get; set; }
+        public bool IsNonEventMode => ReturnType == "NonEvent";
+        public bool IsNotNonEventMode => ReturnType != "NonEvent";
         public string OptionalValue { get; set; }
         public bool HasOptionalValue => !string.IsNullOrWhiteSpace(OptionalValue);
-        public bool HasAnyChange => SelectedItem != null || SelectedVariable != null || HasOptionalValue;
-        public bool HasNoChange => SelectedItem == null && SelectedVariable == null;
+        public bool HasAnyChange => SelectedItem != null || SelectedVariable != null || SelectedNonEvent != null || HasOptionalValue;
+        public bool HasNoChange => SelectedItem == null && SelectedVariable == null && SelectedNonEvent == null;
         public bool HasSelect => SelectedItem != null;
         public bool HasSelectVariable => SelectedVariable != null;
         public bool HasParameters => SelectedItem?.Parameters != null && SelectedItem.Parameters.Count > 0;
@@ -47,6 +53,7 @@ namespace ModCreator.WindowData
             {
                 SelectedItem = null;
                 SelectedVariable = null;
+                SelectedNonEvent = null;
             }
             End();
             NotifyAll();
@@ -68,11 +75,24 @@ namespace ModCreator.WindowData
                 LoadItems();
                 LoadCategories();
                 LoadVariables();
+                LoadNonEvents();
                 SelectedCategory = "All";
                 UpdateFilteredItems();
 
+                if (IsNonEventMode)
+                {
+                    // Pre-select NonEvent if SelectedItemName is provided
+                    if (!string.IsNullOrEmpty(selectItemName))
+                    {
+                        var c = FilteredNonEvents.FirstOrDefault(a => a.FileName == selectItemName);
+                        if (c != null)
+                        {
+                            SelectedNonEvent = c;
+                        }
+                    }
+                }
                 // Pre-select item if SelectedItemName is provided
-                if (!string.IsNullOrEmpty(selectItemName))
+                else if (!string.IsNullOrEmpty(selectItemName))
                 {
                     var b = FilteredVariables.FirstOrDefault(a => a.Name == selectItemName);
                     if (b != null)
@@ -152,6 +172,23 @@ namespace ModCreator.WindowData
             }
         }
 
+        private void LoadNonEvents()
+        {
+            AllNonEvents.Clear();
+
+            var editor = Application.Current.Windows.OfType<CWindow<ProjectEditorWindowData>>().FirstOrDefault();
+            if (editor != null)
+            {
+                var nonEventFiles = GetNonEventFiles(editor.WindowData.Project.ModEvents);
+                AllNonEvents.AddRange(nonEventFiles);
+            }
+        }
+
+        private List<ModEventItem> GetNonEventFiles(List<ModEventItem> items)
+        {
+            return items.Where(x => x.EventMode == EventMode.NonEvent).ToList();
+        }
+
         public void OnCategoryChanged(object obj, PropertyInfo prop, object oldValue, object newValue)
         {
             UpdateFilteredItems();
@@ -201,6 +238,21 @@ namespace ModCreator.WindowData
 
             foreach (var item in query2)
                 FilteredVariables.Add(item);
+
+            // For NonEvents filtering
+            FilteredNonEvents.Clear();
+
+            var query3 = AllNonEvents.AsEnumerable();
+
+            if (!string.IsNullOrEmpty(SearchText))
+            {
+                var searchLower = SearchText.ToLower();
+                query3 = query3.Where(item =>
+                    item.FileName?.ToLower().Contains(searchLower) == true);
+            }
+
+            foreach (var item in query3)
+                FilteredNonEvents.Add(item);
         }
     }
 }

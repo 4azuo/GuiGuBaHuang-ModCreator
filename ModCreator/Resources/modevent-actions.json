@@ -518,7 +518,7 @@
     "Code": "{0}.Instance.Run()",
     "Parameters": [
       {
-        "Type": "nonevent",
+        "Type": "NonEvent",
         "Name": "NonEvent"
       }
     ],

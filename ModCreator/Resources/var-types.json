@@ -41,13 +41,13 @@
   },
   {
     "Name": "ModEvent",
-    "Type": "modevent",
+    "Type": "ModEvent",
     "Desc": "Mod Event type",
     "IsHidden": true
   },
   {
     "Name": "NonEvent",
-    "Type": "nonevent",
+    "Type": "NonEvent",
     "Desc": "Non Event type",
     "IsHidden": true
   },

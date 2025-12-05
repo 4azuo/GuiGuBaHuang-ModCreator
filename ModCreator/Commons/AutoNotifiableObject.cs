@@ -112,7 +112,7 @@ namespace ModCreator.Commons
             }
         }
 
-        public void Notify(object obj, string propName)
+        public void Notify(string propName)
         {
             var p = ListNotifyProperties[GetType()].FirstOrDefault(x => x.Name == propName);
             if (p != null)
@@ -122,9 +122,9 @@ namespace ModCreator.Commons
             }
         }
 
-        public void Notify(object obj, PropertyInfo prop)
+        public void Notify(PropertyInfo prop)
         {
-            Notify(obj, prop.Name);
+            Notify(prop.Name);
         }
 
         public void RefreshAll(bool recursive = false)

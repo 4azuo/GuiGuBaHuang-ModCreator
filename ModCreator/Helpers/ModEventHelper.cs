@@ -1,3 +1,5 @@
+using ModCreator.Models;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -129,6 +131,9 @@ namespace ModCreator.Helpers
                         IsOptional = p.IsOptional,
                         DefaultValue = p.HasDefaultValue ? (p.RawDefaultValue?.ToString() ?? "null") : string.Empty
                     }).ToList(),
+                    ParameterValues = parameters
+                            .Select((p, i) => new { Index = i, IsOptional = p.IsOptional && p.HasDefaultValue, Value = p.RawDefaultValue?.ToString() }).Where(x => x.IsOptional && !string.IsNullOrEmpty(x.Value))
+                            .ToDictionary(x => x.Index, x => new ModEventItemSelectValue { SelectType = Enums.ModEventSelectType.OptionalValue, OptionalValue = x.Value }),
                     Return = FormatTypeName(method.ReturnType),
                     HasBody = false,
                     IsHidden = false,
@@ -168,7 +173,7 @@ namespace ModCreator.Helpers
                     var methodCode = parameters.Length > 0
                         ? $"{typeName}.{method.Name}({paramPlaceholders})"
                         : $"{typeName}.{method.Name}()";
-                    
+
                     return new Models.EventActionBase
                     {
                         Category = typeName,
@@ -183,6 +188,9 @@ namespace ModCreator.Helpers
                             IsOptional = p.IsOptional,
                             DefaultValue = p.HasDefaultValue ? (p.RawDefaultValue?.ToString() ?? "null") : string.Empty
                         }).ToList(),
+                        ParameterValues = parameters
+                            .Select((p, i) => new { Index = i, IsOptional = p.IsOptional && p.HasDefaultValue, Value = p.RawDefaultValue?.ToString() }).Where(x => x.IsOptional && !string.IsNullOrEmpty(x.Value))
+                            .ToDictionary(x => x.Index, x => new ModEventItemSelectValue { SelectType = Enums.ModEventSelectType.OptionalValue, OptionalValue = x.Value }),
                         Return = FormatTypeName(method.ReturnType),
                         HasBody = false,
                         IsHidden = false,
@@ -204,7 +212,7 @@ namespace ModCreator.Helpers
             string categoryAttribute,
             string ignoreAttribute,
             BindingFlags bindingFlags,
-            Func<string, MethodInfo, string, string, ParameterInfo[], T> itemFactory) where T : Models.EventActionBase
+            Func<string, MethodInfo, string, string, System.Reflection.ParameterInfo[], T> itemFactory) where T : Models.EventActionBase
         {
             var items = new List<T>();
 

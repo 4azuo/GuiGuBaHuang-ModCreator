@@ -15,11 +15,6 @@ namespace ModCreator.Models
         public EventMode EventMode { get; set; } = EventMode.ModEvent;
 
         /// <summary>
-        /// Custom event method name (for NonEvent mode)
-        /// </summary>
-        public string CustomEventName { get; set; } = "Run";
-
-        /// <summary>
         /// Cache type for the event (e.g., Local, Global)
         /// </summary>
         public string CacheType { get; set; }

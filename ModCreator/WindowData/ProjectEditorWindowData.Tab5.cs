@@ -257,8 +257,7 @@ namespace ModCreator.WindowData
             else
             {
                 // NonEvent mode - use custom event name or default "Run"
-                var methodName = string.IsNullOrEmpty(modEvent.CustomEventName) ? "Run" : modEvent.CustomEventName;
-                eventMethod = $"public void {methodName}()";
+                eventMethod = $"public void Run()";
                 // No base call for non-event methods
             }
 

@@ -74,7 +74,7 @@ namespace ModCreator.Models
 
         public void RefreshDisplayName()
         {
-            Notify(this, nameof(ComputedDisplayName));
+            Notify(nameof(ComputedDisplayName));
         }
     }
 }
