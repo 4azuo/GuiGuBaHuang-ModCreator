@@ -436,7 +436,7 @@ namespace ModCreator.Windows
         private void RemoveConditionItem(EventActionBase item)
         {
             if (item == null || WindowData.SelectedModEvent == null) return;
-            if (item.Name == "Root" || item.IsHidden) return;
+            if (item.Name == Constants.EventActionRootElement.Name || item.IsHidden) return;
 
             if (item.Parent != null)
             {
@@ -483,7 +483,7 @@ namespace ModCreator.Windows
                     }
                     else
                     {
-                        var root = WindowData.SelectedModEvent.Actions.FirstOrDefault(a => a.Name == "Root");
+                        var root = WindowData.SelectedModEvent.Actions.FirstOrDefault(a => a.Name == Constants.EventActionRootElement.Name);
                         if (root != null)
                         {
                             root.Children.Add(newAction);
@@ -505,7 +505,7 @@ namespace ModCreator.Windows
         private void RemoveActionItem(EventActionBase item)
         {
             if (item == null || WindowData.SelectedModEvent == null) return;
-            if (item.Name == "Root" || item.IsHidden) return;
+            if (item.Name == Constants.EventActionRootElement.Name || item.IsHidden) return;
 
             if (item.Parent != null)
             {
@@ -521,13 +521,13 @@ namespace ModCreator.Windows
         private void Conditions_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             var selectedItem = tvConditions.SelectedItem as EventActionBase;
-            if (selectedItem != null && selectedItem.Name != "Root" && !selectedItem.IsHidden)
+            if (selectedItem != null && selectedItem.Name != Constants.EventActionRootElement.Name && !selectedItem.IsHidden)
             {
                 var selectWindow = new ModEventItemSelectWindow
                 {
                     Owner = this,
                     ItemType = Enums.ModEventItemType.Action,
-                    ReturnType = "bool",
+                    ReturnType = "Boolean",
                     SelectedItemName = selectedItem.Name,
                     ParameterValues = selectedItem.ParameterValues
                 };
@@ -562,7 +562,7 @@ namespace ModCreator.Windows
         private void Actions_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             var selectedItem = tvActions.SelectedItem as EventActionBase;
-            if (selectedItem != null && selectedItem.Name != "Root" && !selectedItem.IsHidden)
+            if (selectedItem != null && selectedItem.Name != Constants.EventActionRootElement.Name && !selectedItem.IsHidden)
             {
                 var selectWindow = new ModEventItemSelectWindow
                 {

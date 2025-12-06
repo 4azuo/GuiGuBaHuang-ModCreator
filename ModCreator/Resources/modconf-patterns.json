@@ -104,8 +104,8 @@
           "DramaOptions.cost",
           "DramaOptions.costHide",
           "DramaOptions.function",
-          "DramaOptions.clickTip",
-          "DramaOptions.nextDialogue"
+          "DramaOptions.clickTip:[LocalText.key]",
+          "DramaOptions.nextDialogue:[DramaDialogue.id]"
         ]
       },
       {

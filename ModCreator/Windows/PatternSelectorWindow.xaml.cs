@@ -179,5 +179,13 @@ namespace ModCreator.Windows
                 WindowData.LoadDynamicOptionsForElement(binding.Element);
             }
         }
+
+        private void MultiSelectComboBox_DropDownOpened(object sender, EventArgs e)
+        {
+            if (sender is Controls.MultiSelectComboBox multiCombo && multiCombo.Tag is RowElementBinding binding)
+            {
+                WindowData.LoadDynamicOptionsForElement(binding.Element);
+            }
+        }
     }
 }

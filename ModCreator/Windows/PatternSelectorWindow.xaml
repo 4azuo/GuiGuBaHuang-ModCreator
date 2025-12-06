@@ -3,12 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:ModCreator.Windows"
         xmlns:localData="clr-namespace:ModCreator.WindowData" xmlns:helpers="clr-namespace:ModCreator.Helpers"
-        xmlns:converter="clr-namespace:ModCreator.Converters" mc:Ignorable="d"
+        xmlns:converter="clr-namespace:ModCreator.Converters" xmlns:controls="clr-namespace:ModCreator.Controls" mc:Ignorable="d"
         Title="{x:Static helpers:PatternSelectorWindowText.WindowTitle}" Height="900" Width="1500" WindowStartupLocation="CenterOwner"
         Icon="/Resources/app-icon.png" FontFamily="Segoe UI">
     <Window.Resources>
         <converter:TextBoxVisibilityConverter x:Key="TextBoxVisibilityConverter"/>
         <converter:ComboBoxVisibilityConverter x:Key="ComboBoxVisibilityConverter"/>
+        <converter:MultiComboBoxVisibilityConverter x:Key="MultiComboBoxVisibilityConverter"/>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -39,7 +40,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <GroupBox Grid.Row="0" Header="{x:Static helpers:PatternSelectorWindowText.Prefix}" Margin="0,0,10,5">
-                    <TextBox Text="{Binding Prefix, UpdateSourceTrigger=PropertyChanged}" Padding="5" VerticalContentAlignment="Center"/>
+                    <TextBox Text="{Binding Prefix, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Padding="5" VerticalContentAlignment="Center"/>
                 </GroupBox>
                 <GroupBox Grid.Row="1" Header="{x:Static helpers:PatternSelectorWindowText.SelectPattern}" Margin="0,0,10,0">
                     <ListBox ItemsSource="{Binding FilteredPatterns}" SelectedItem="{Binding SelectedPattern, Mode=TwoWay}" DisplayMemberPath="Name" ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
@@ -117,6 +118,7 @@
                                                                                             </TextBox.Style>
                                                                                         </TextBox>
                                                                                         <ComboBox ItemsSource="{Binding Element.Options}" SelectedValue="{Binding Value, Mode=TwoWay}" SelectedValuePath="Value" DisplayMemberPath="DisplayName" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Element.Type, Converter={StaticResource ComboBoxVisibilityConverter}}" DropDownOpened="ComboBox_DropDownOpened" Tag="{Binding}"/>
+                                                                                        <controls:MultiSelectComboBox ItemsSource="{Binding Element.Options}" SelectedValue="{Binding Value, Mode=TwoWay}" Separator="{Binding Element.Separator}" Visibility="{Binding Element.Type, Converter={StaticResource MultiComboBoxVisibilityConverter}}" Tag="{Binding}" DropDownOpened="MultiSelectComboBox_DropDownOpened"/>
                                                                                     </Grid>
                                                                                 </Border>
                                                                             </DataTemplate>

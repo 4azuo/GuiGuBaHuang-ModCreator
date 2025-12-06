@@ -121,7 +121,6 @@ namespace ModCreator.WindowData
                     }
                 }
 
-                displayFile.AddRow();
                 DisplayFiles.Add(displayFile);
             }
 
@@ -155,6 +154,8 @@ namespace ModCreator.WindowData
 
             foreach (var file in DisplayFiles)
             {
+                file.Rows.Clear();
+
                 var fileName = GetPrefixedFileName(file.FileName);
                 var filePath = System.IO.Path.Combine(confPath, fileName);
 
@@ -168,7 +169,6 @@ namespace ModCreator.WindowData
                 var jsonArray = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(jsonContent);
                 if (jsonArray != null && jsonArray.Count > 0)
                 {
-                    file.Rows.Clear();
                     foreach (var jsonObject in jsonArray)
                     {
                         var row = new Dictionary<string, string>();
@@ -250,9 +250,9 @@ namespace ModCreator.WindowData
                 Separator = element.Separator
             };
 
-            if (pattern != null && pattern.StartsWith("[") && pattern.EndsWith("]"))
+            if (pattern != null && ((pattern.StartsWith("[") && pattern.EndsWith("]")) || (pattern.StartsWith("#") && pattern.EndsWith("#"))))
             {
-                patternElement.Type = "combo";
+                patternElement.Type = pattern.StartsWith("#") ? "multicombo" : "combo";
                 patternElement.ElementFormat = pattern;
             }
             else if (pattern != null)
