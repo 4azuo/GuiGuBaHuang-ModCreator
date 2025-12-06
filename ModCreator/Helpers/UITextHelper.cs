@@ -249,8 +249,7 @@ namespace ModCreator.Helpers
         public static string Prefix => MessageHelper.Get("Windows.PatternSelectorWindow.Prefix");
         public static string SelectPattern => MessageHelper.Get("Windows.PatternSelectorWindow.SelectPattern");
         public static string PatternDetails => MessageHelper.Get("Windows.PatternSelectorWindow.PatternDetails");
-        public static string Create => MessageHelper.Get("Windows.PatternSelectorWindow.Create");
-        public static string Update => MessageHelper.Get("Windows.PatternSelectorWindow.Update");
+        public static string Save => MessageHelper.Get("Windows.PatternSelectorWindow.Save");
         public static string Cancel => MessageHelper.Get("Windows.PatternSelectorWindow.Cancel");
         public static string AddRow => MessageHelper.Get("Windows.PatternSelectorWindow.AddRow");
         public static string RemoveRow => MessageHelper.Get("Windows.PatternSelectorWindow.RemoveRow");

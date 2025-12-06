@@ -378,12 +378,36 @@
     "Name": "DramaUITypes",
     "Values": [
       {
-        "DisplayName": "Standard",
+        "DisplayName": "Normal",
         "Value": "1"
       },
       {
-        "DisplayName": "Custom",
+        "DisplayName": "Adventure",
         "Value": "2"
+      },
+      {
+        "DisplayName": "Full screen",
+        "Value": "3"
+      },
+      {
+        "DisplayName": "Artifact Spirit",
+        "Value": "4"
+      },
+      {
+        "DisplayName": "Artifact Spirit (no character, no button)",
+        "Value": "5"
+      },
+      {
+        "DisplayName": "Mail",
+        "Value": "6"
+      },
+      {
+        "DisplayName": "Secret Order",
+        "Value": "7"
+      },
+      {
+        "DisplayName": "Mail (silk texture)",
+        "Value": "8"
       }
     ]
   },
@@ -392,11 +416,11 @@
     "Values": [
       {
         "DisplayName": "Left",
-        "Value": "0"
+        "Value": "1"
       },
       {
         "DisplayName": "Right",
-        "Value": "1"
+        "Value": "2"
       }
     ]
   },
@@ -404,20 +428,12 @@
     "Name": "OptionHue",
     "Values": [
       {
-        "DisplayName": "Default",
+        "DisplayName": "Hide",
         "Value": "0"
       },
       {
-        "DisplayName": "Green (Positive)",
+        "DisplayName": "Show",
         "Value": "1"
-      },
-      {
-        "DisplayName": "Red (Negative)",
-        "Value": "2"
-      },
-      {
-        "DisplayName": "Blue (Neutral)",
-        "Value": "3"
       }
     ]
   }

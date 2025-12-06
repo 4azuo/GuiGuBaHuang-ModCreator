@@ -50,11 +50,5 @@
     "Type": "NonEvent",
     "Desc": "Non Event type",
     "IsHidden": true
-  },
-  {
-    "Name": "IEnumerable",
-    "Type": "IEnumerable",
-    "Desc": "IEnumerable",
-    "IsHidden": true
   }
 ]

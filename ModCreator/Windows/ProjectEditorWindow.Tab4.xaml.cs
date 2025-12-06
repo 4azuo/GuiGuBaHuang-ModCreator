@@ -192,7 +192,7 @@ namespace ModCreator.Windows
                 if (string.IsNullOrWhiteSpace(variable.Name)) continue;
 
                 var propertyCode = varTemplateContent
-                    .Replace("#VARTYPE#", variable.Type ?? "string")
+                    .Replace("#VARTYPE#", variable.Type ?? "String")
                     .Replace("#VARNAME#", variable.Name)
                     .Replace("#VARVALUE#", FormatVariableValue(variable));
 

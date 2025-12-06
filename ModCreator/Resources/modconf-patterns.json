@@ -29,7 +29,7 @@
           "RoleCreateFeature.refreshType",
           "RoleCreateFeature.name:[LocalText.key]",
           "RoleCreateFeature.tips:[LocalText.key]",
-          "RoleCreateFeature.effect",
+          "RoleCreateFeature.effect:#RoleEffect.id#",
           "RoleCreateFeature.iconAndDesc",
           "RoleCreateFeature.lockLuck",
           "RoleCreateFeature.introduceText",
@@ -89,7 +89,7 @@
           "DramaDialogue.dialogue:[LocalText.key]",
           "DramaDialogue.openFunction",
           "DramaDialogue.function",
-          "DramaDialogue.options",
+          "DramaDialogue.options:#DramaOptions.id#",
           "DramaDialogue.nextDialogue"
         ]
       },

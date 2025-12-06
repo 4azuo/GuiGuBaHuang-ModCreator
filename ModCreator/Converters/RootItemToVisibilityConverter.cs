@@ -11,7 +11,7 @@ namespace ModCreator.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is EventActionBase action)
-                return action.Name == "Root" ? Visibility.Collapsed : Visibility.Visible;
+                return action.Name == Constants.EventActionRootElement.Name ? Visibility.Collapsed : Visibility.Visible;
             
             return Visibility.Visible;
         }

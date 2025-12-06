@@ -596,7 +596,7 @@
         "Name": "format"
       },
       {
-        "Type": "IEnumerable",
+        "Type": "Array",
         "Name": "args"
       }
     ],

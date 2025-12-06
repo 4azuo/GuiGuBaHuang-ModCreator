@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace ModCreator.Commons
 {
+    /// <summary>
+    /// var-types.json driven model with validation capabilities
+    /// </summary>
     public abstract class ValidatedModel : AutoNotifiableObject
     {
         public static List<VarType> VarTypes { get; private set; }
@@ -37,7 +40,7 @@ namespace ModCreator.Commons
 
             switch (varType)
             {
-                case "bool":
+                case "Boolean":
                     if (!bool.TryParse(value, out _))
                     {
                         ValidationError = $"Invalid boolean value: {value}";
@@ -45,7 +48,7 @@ namespace ModCreator.Commons
                     }
                     break;
 
-                case "int":
+                case "Int32":
                     if (!int.TryParse(value, out _))
                     {
                         ValidationError = $"Invalid integer value: {value}";
@@ -53,7 +56,7 @@ namespace ModCreator.Commons
                     }
                     break;
 
-                case "long":
+                case "Int64":
                     if (!long.TryParse(value, out _))
                     {
                         ValidationError = $"Invalid long value: {value}";
@@ -61,7 +64,7 @@ namespace ModCreator.Commons
                     }
                     break;
 
-                case "float":
+                case "Single":
                     if (!float.TryParse(value, out _))
                     {
                         ValidationError = $"Invalid float value: {value}";
@@ -69,7 +72,7 @@ namespace ModCreator.Commons
                     }
                     break;
 
-                case "double":
+                case "Double":
                     if (!double.TryParse(value, out _))
                     {
                         ValidationError = $"Invalid double value: {value}";
@@ -77,20 +80,13 @@ namespace ModCreator.Commons
                     }
                     break;
 
-                case "string":
+                case "String":
+                    break;
+
+                case "Array":
                     break;
 
                 default:
-                    if (varType.EndsWith("[]"))
-                    {
-                        var baseType = varType.Substring(0, varType.Length - 2);
-                        var values = value.Split(',');
-                        foreach (var val in values)
-                        {
-                            if (!ValidateValue(val.Trim(), baseType))
-                                return false;
-                        }
-                    }
                     break;
             }
 

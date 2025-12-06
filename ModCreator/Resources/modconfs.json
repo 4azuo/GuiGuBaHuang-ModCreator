@@ -4,7 +4,7 @@
     "Type": "textbox",
     "Label": "Feature ID",
     "Description": "Unique identifier for the feature",
-    "VarType": "int",
+    "VarType": "Int32",
     "Enable": true,
     "Required": true
   },
@@ -13,7 +13,7 @@
     "Type": "combo",
     "Label": "Feature Type",
     "Description": "Feature type identifier",
-    "VarType": "int",
+    "VarType": "Int32",
     "Enable": true,
     "Required": true,
     "Options": ["FeatureTypes"],
@@ -24,7 +24,7 @@
     "Type": "textbox",
     "Label": "Group",
     "Description": "Feature group identifier",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": false
   },
@@ -33,7 +33,7 @@
     "Type": "combo",
     "Label": "Level",
     "Description": "Feature level identifier",
-    "VarType": "int",
+    "VarType": "Int32",
     "Enable": true,
     "Required": true,
     "Options": ["FeatureLevels"],
@@ -44,7 +44,7 @@
     "Type": "textbox",
     "Label": "Duration",
     "Description": "Duration of the feature effect",
-    "VarType": "int",
+    "VarType": "Int32",
     "Enable": true,
     "Required": false
   },
@@ -53,7 +53,7 @@
     "Type": "combo",
     "Label": "Conceal",
     "Description": "Conceal type of the feature effect",
-    "VarType": "int",
+    "VarType": "Int32",
     "Enable": true,
     "Required": false,
     "Options": ["ConcealTypes"],
@@ -64,7 +64,7 @@
     "Type": "combo",
     "Label": "Refresh Type",
     "Description": "Refresh type of the feature effect",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": true,
     "Options": ["RefreshTypes"]
@@ -74,7 +74,7 @@
     "Type": "textbox",
     "Label": "Name",
     "Description": "Name of the feature",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": true
   },
@@ -83,16 +83,17 @@
     "Type": "textbox",
     "Label": "Tips",
     "Description": "Tips of the feature",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": false
   },
   {
     "Name": "RoleCreateFeature.effect",
     "Type": "textbox",
-    "Label": "Effect",
-    "Description": "Effect of the feature",
-    "VarType": "string",
+    "Label": "Effects",
+    "Description": "Effects of the feature",
+    "VarType": "Array",
+    "Separator": "|",
     "Enable": true,
     "Required": false
   },
@@ -101,7 +102,7 @@
     "Type": "textbox",
     "Label": "Icon and Description",
     "Description": "Icon and description of the feature",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": false
   },
@@ -110,7 +111,7 @@
     "Type": "textbox",
     "Label": "Lock Luck",
     "Description": "Lock luck value of the feature",
-    "VarType": "int",
+    "VarType": "Int32",
     "Enable": true,
     "Required": false
   },
@@ -119,7 +120,7 @@
     "Type": "textbox",
     "Label": "Introduce Text",
     "Description": "Introduce text of the feature",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": false
   },
@@ -128,7 +129,7 @@
     "Type": "textbox",
     "Label": "Weight",
     "Description": "Weight of the feature",
-    "VarType": "int",
+    "VarType": "Int32",
     "Enable": true,
     "Required": false
   },
@@ -137,7 +138,7 @@
     "Type": "textbox",
     "Label": "Local text ID",
     "Description": "Unique identifier for the localized text",
-    "VarType": "int",
+    "VarType": "Int32",
     "Enable": true,
     "Required": true
   },
@@ -146,7 +147,7 @@
     "Type": "textbox",
     "Label": "Local text key",
     "Description": "Key for mapping localized text",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": true
   },
@@ -155,7 +156,7 @@
     "Type": "textbox",
     "Label": "Local text",
     "Description": "Localized text",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": true
   },
@@ -164,7 +165,7 @@
     "Type": "textbox",
     "Label": "Effect ID",
     "Description": "Unique identifier for the role effect",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": true
   },
@@ -173,7 +174,7 @@
     "Type": "combo",
     "Label": "Effect Type",
     "Description": "Type of the effect",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": true,
     "Options": ["RoleEffectTypes"],
@@ -184,7 +185,7 @@
     "Type": "composite",
     "Label": "Value",
     "Description": "Effect value (format: property_effectType_value, e.g., luck_1_20)",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": true,
     "Separator": "_",
@@ -199,7 +200,7 @@
     "Type": "combo",
     "Label": "Property",
     "Description": "Property name (e.g., luck, atk, def)",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": true,
     "Options": ["EffectProperties"]
@@ -209,7 +210,7 @@
     "Type": "combo",
     "Label": "Effect Type",
     "Description": "Effect type for the value",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": true,
     "Options": ["ValueEffectTypes"],
@@ -220,7 +221,7 @@
     "Type": "textbox",
     "Label": "Value",
     "Description": "Numeric value for the effect",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": true
   },
@@ -229,7 +230,7 @@
     "Type": "textbox",
     "Label": "Dialogue ID",
     "Description": "Unique identifier for the dialogue",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": true
   },
@@ -238,7 +239,7 @@
     "Type": "combo",
     "Label": "UI Type",
     "Description": "UI display type for the dialogue",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": true,
     "Options": ["DramaUITypes"],
@@ -249,7 +250,7 @@
     "Type": "textbox",
     "Label": "Condition",
     "Description": "Condition for the dialogue to appear",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": false,
     "Value": "0"
@@ -259,7 +260,7 @@
     "Type": "textbox",
     "Label": "Weight",
     "Description": "Weight for random selection",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": false,
     "Value": "1"
@@ -269,7 +270,7 @@
     "Type": "textbox",
     "Label": "NPC Left",
     "Description": "NPC ID on the left side",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": false,
     "Value": "0"
@@ -279,7 +280,7 @@
     "Type": "textbox",
     "Label": "NPC Right",
     "Description": "NPC ID on the right side",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": false,
     "Value": "0"
@@ -289,7 +290,7 @@
     "Type": "combo",
     "Label": "Speaker",
     "Description": "Which NPC is speaking",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": false,
     "Options": ["SpeakerPosition"],
@@ -300,7 +301,7 @@
     "Type": "textbox",
     "Label": "Background",
     "Description": "Background image ID",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": false,
     "Value": "0"
@@ -310,7 +311,7 @@
     "Type": "textbox",
     "Label": "Background Sound",
     "Description": "Background sound ID",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": false,
     "Value": "0"
@@ -320,7 +321,7 @@
     "Type": "textbox",
     "Label": "Sound Effect",
     "Description": "Sound effect ID",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": false,
     "Value": "0"
@@ -330,7 +331,7 @@
     "Type": "textbox",
     "Label": "Title",
     "Description": "Dialogue title",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": false,
     "Value": "0"
@@ -340,7 +341,7 @@
     "Type": "textbox",
     "Label": "Dialogue",
     "Description": "Dialogue text key (links to LocalText)",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": true
   },
@@ -349,7 +350,7 @@
     "Type": "textbox",
     "Label": "Open Function",
     "Description": "Function to execute when dialogue opens",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": false,
     "Value": "0"
@@ -359,7 +360,7 @@
     "Type": "textbox",
     "Label": "Function",
     "Description": "Function to execute",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": false,
     "Value": "0"
@@ -369,7 +370,8 @@
     "Type": "textbox",
     "Label": "Options",
     "Description": "Option IDs separated by | (e.g., 420041124|420041125)",
-    "VarType": "string",
+    "VarType": "Array",
+    "Separator": "|",
     "Enable": true,
     "Required": false
   },
@@ -378,7 +380,7 @@
     "Type": "textbox",
     "Label": "Next Dialogue",
     "Description": "Next dialogue ID to show",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": false,
     "Value": "0"
@@ -388,7 +390,7 @@
     "Type": "textbox",
     "Label": "Option ID",
     "Description": "Unique identifier for the option",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": true
   },
@@ -397,7 +399,7 @@
     "Type": "textbox",
     "Label": "Condition",
     "Description": "Condition for the option to appear",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": false,
     "Value": "0"
@@ -407,7 +409,7 @@
     "Type": "combo",
     "Label": "Hue",
     "Description": "Color hue for the option",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": false,
     "Options": ["OptionHue"],
@@ -418,7 +420,7 @@
     "Type": "textbox",
     "Label": "Options Hide",
     "Description": "Hide this option flag",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": false,
     "Value": "0"
@@ -428,7 +430,7 @@
     "Type": "textbox",
     "Label": "Text",
     "Description": "Option text key (links to LocalText)",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": true
   },
@@ -437,7 +439,7 @@
     "Type": "textbox",
     "Label": "Cost",
     "Description": "Cost to select this option",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": false,
     "Value": "0"
@@ -447,7 +449,7 @@
     "Type": "textbox",
     "Label": "Cost Hide",
     "Description": "Hide cost flag",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": false,
     "Value": "0"
@@ -457,7 +459,7 @@
     "Type": "textbox",
     "Label": "Function",
     "Description": "Function to execute when option is selected",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": false,
     "Value": "0"
@@ -467,7 +469,7 @@
     "Type": "textbox",
     "Label": "Click Tip",
     "Description": "Tip to show when option is clicked",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": false,
     "Value": "0"
@@ -477,7 +479,7 @@
     "Type": "textbox",
     "Label": "Next Dialogue",
     "Description": "Next dialogue ID after selecting this option",
-    "VarType": "string",
+    "VarType": "String",
     "Enable": true,
     "Required": false,
     "Value": "0"

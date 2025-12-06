@@ -414,7 +414,7 @@ namespace ModCreator.Windows
                     }
                     else
                     {
-                        var root = WindowData.SelectedModEvent.Conditions.FirstOrDefault(c => c.Name == "Root");
+                        var root = WindowData.SelectedModEvent.Conditions.FirstOrDefault(c => c.Name == Constants.EventActionRootElement.Name);
                         if (root != null)
                         {
                             root.Children.Add(newAction);

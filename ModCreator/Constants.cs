@@ -1,4 +1,5 @@
 using ModCreator.Helpers;
+using ModCreator.Models;
 using System;
 using System.IO;
 
@@ -38,6 +39,16 @@ namespace ModCreator
         /// Log directory (Logs in root)
         /// </summary>
         public static readonly string LogsDir = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs"));
+
+        public static readonly EventActionBase EventActionRootElement = new EventActionBase
+        {
+            Category = "Root",
+            Name = "Root",
+            DisplayName = "Root",
+            Code = "Root",
+            Description = "The root element of event-actions.",
+            IsCanAddChild = true,
+        };
 
         /// <summary>
         /// Default workplace directory name

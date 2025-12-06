@@ -135,7 +135,7 @@ namespace ModCreator.Helpers
                 [
                     new() {
                         Name = "MOD_VERSION",
-                        Type = "string",
+                        Type = "String",
                         Value = "1.0.0",
                         Description = "Mod version"
                     }

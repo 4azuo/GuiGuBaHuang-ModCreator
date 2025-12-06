@@ -93,24 +93,14 @@ namespace ModCreator.WindowData
                     Project?.ModEvents?.Add(SelectedModEvent);
                 }
 
-                if (SelectedModEvent.Conditions.Count == 0 || SelectedModEvent.Conditions[0].Name != "Root")
+                if (SelectedModEvent.Conditions.Count == 0 || SelectedModEvent.Conditions[0].Name != Constants.EventActionRootElement.Name)
                 {
-                    SelectedModEvent.Conditions.Insert(0, new EventActionBase
-                    {
-                        Name = "Root",
-                        DisplayName = "Root",
-                        Code = "Root"
-                    });
+                    SelectedModEvent.Conditions.Insert(0, Constants.EventActionRootElement);
                 }
 
-                if (SelectedModEvent.Actions.Count == 0 || SelectedModEvent.Actions[0].Name != "Root")
+                if (SelectedModEvent.Actions.Count == 0 || SelectedModEvent.Actions[0].Name != Constants.EventActionRootElement.Name)
                 {
-                    SelectedModEvent.Actions.Insert(0, new EventActionBase
-                    {
-                        Name = "Root",
-                        DisplayName = "Root",
-                        Code = "Root"
-                    });
+                    SelectedModEvent.Actions.Insert(0, Constants.EventActionRootElement);
                 }
             }
             else
@@ -305,7 +295,7 @@ namespace ModCreator.WindowData
             foreach (var action in actions)
             {
                 // Skip the Root placeholder - but process its children
-                if (action.Name == "Root")
+                if (action.Name == Constants.EventActionRootElement.Name)
                 {
                     if (action.Children != null && action.Children.Count > 0)
                     {

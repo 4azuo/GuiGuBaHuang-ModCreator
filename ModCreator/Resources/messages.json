@@ -204,8 +204,7 @@
       "Prefix": "Prefix",
       "SelectPattern": "Select Pattern:",
       "PatternDetails": "Pattern Details",
-      "Create": "Create",
-      "Update": "Update",
+      "Save": "Save",
       "Cancel": "Cancel",
       "AddRow": "➕",
       "RemoveRow": "➖"
@@ -218,6 +217,7 @@
       "LoadedProjects": "Loaded {0} projects",
       "ProjectSuccessMessage": "Project created successfully!\n\nPath: {0}",
       "UpdatedProject": "Updated project: {0}",
+      "PatternSaved": "Pattern '{0}' saved successfully!",
       "OpenedFolder": "Opened folder: {0}",
       "DeletedProject": "Deleted project: {0}",
       "ProjectDeleted": "Project deleted: {0}",

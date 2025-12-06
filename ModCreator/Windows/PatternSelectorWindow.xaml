@@ -138,8 +138,7 @@
             </GroupBox>
         </Grid>
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
-            <Button Content="{x:Static helpers:PatternSelectorWindowText.Create}" Click="Create_Click" Style="{StaticResource PrimaryButton}" Width="100" IsEnabled="{Binding HasSelectedPattern}"/>
-            <Button Content="{x:Static helpers:PatternSelectorWindowText.Update}" Click="Update_Click" Style="{StaticResource PrimaryButton}" Width="100" Margin="10,0,0,0" IsEnabled="{Binding HasExistingFiles}"/>
+            <Button Content="{x:Static helpers:PatternSelectorWindowText.Save}" Click="Save_Click" Style="{StaticResource PrimaryButton}" Width="100" IsEnabled="{Binding HasSelectedPattern}"/>
             <Button Content="{x:Static helpers:PatternSelectorWindowText.Cancel}" Click="Cancel_Click" Style="{StaticResource ActionButton}" Width="100" Margin="10,0,0,0"/>
         </StackPanel>
     </Grid>
