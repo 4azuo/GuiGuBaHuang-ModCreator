@@ -5,10 +5,10 @@ using System.Collections.Generic;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace ModCreatorChildEvent
+namespace #PROJECTID#.ModCreatorChild
 {
     public class ModCreatorChildVars
     {
-        #VARIABLES#
+#VARIABLES#
     }
 }

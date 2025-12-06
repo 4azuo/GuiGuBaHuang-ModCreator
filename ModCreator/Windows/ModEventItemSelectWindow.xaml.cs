@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace ModCreator.Windows
@@ -112,6 +113,20 @@ namespace ModCreator.Windows
         private void Clear_Click(object sender, RoutedEventArgs e)
         {
             WindowData.ClearSelection();
+        }
+
+        private void ModConfTree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (e.NewValue is ModConfTreeNode node)
+            {
+                WindowData.SelectedModConfNode = node;
+                
+                // If it's a value node, set OptionalValue
+                if (node.Type == ModConfNodeType.Value && !string.IsNullOrEmpty(node.Value))
+                {
+                    WindowData.OptionalValue = node.Value;
+                }
+            }
         }
     }
 }

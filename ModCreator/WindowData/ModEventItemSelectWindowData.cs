@@ -4,7 +4,6 @@ using ModCreator.Enums;
 using ModCreator.Helpers;
 using ModCreator.Models;
 using ModCreator.Windows;
-using ModLib.Mod;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -46,6 +45,8 @@ namespace ModCreator.WindowData
         public bool HasParameters => SelectedItem?.Parameters != null && SelectedItem.Parameters.Count > 0;
         public bool ShowOptionalValueSection { get; set; } = false;
         public ModEventSelectType SelectType { get; set; }
+        public ObservableCollection<ModConfTreeNode> ModConfTree { get; set; } = [];
+        public ModConfTreeNode SelectedModConfNode { get; set; }
 
         public void ClearSelection()
         {
@@ -76,6 +77,7 @@ namespace ModCreator.WindowData
                 LoadCategories();
                 LoadVariables();
                 LoadNonEvents();
+                LoadModConf();
                 SelectedCategory = "All";
                 UpdateFilteredItems();
 
@@ -253,6 +255,119 @@ namespace ModCreator.WindowData
 
             foreach (var item in query3)
                 FilteredNonEvents.Add(item);
+        }
+
+        private void LoadModConf()
+        {
+            ModConfTree.Clear();
+
+            var editor = Application.Current.Windows.OfType<CWindow<ProjectEditorWindowData>>().FirstOrDefault();
+            if (editor?.WindowData?.ConfItems == null) return;
+
+            foreach (var fileItem in editor.WindowData.ConfItems)
+            {
+                var node = BuildModConfTree(fileItem);
+                if (node != null && node.Children.Count > 0)
+                    ModConfTree.Add(node);
+            }
+        }
+
+        private ModConfTreeNode BuildModConfTree(FileItem fileItem)
+        {
+            var node = new ModConfTreeNode
+            {
+                DisplayName = fileItem.Name,
+                Type = fileItem.IsFolder ? ModConfNodeType.Folder : ModConfNodeType.File,
+                FilePath = fileItem.FullPath
+            };
+
+            if (fileItem.IsFolder)
+            {
+                foreach (var child in fileItem.Children)
+                {
+                    var childNode = BuildModConfTree(child);
+                    if (childNode != null && (childNode.Type == ModConfNodeType.Folder && childNode.Children.Count > 0 || childNode.Type != ModConfNodeType.Folder))
+                        node.Children.Add(childNode);
+                }
+            }
+            else
+            {
+                // Parse JSON file to extract ModEventParam elements
+                var confNodes = ParseModConfFile(fileItem.FullPath);
+                foreach (var confNode in confNodes)
+                    node.Children.Add(confNode);
+            }
+
+            return node;
+        }
+
+        private Dictionary<string, ModConfElement> LoadPatternInfoForFile(string fileName)
+        {
+            var result = new Dictionary<string, ModConfElement>();
+            var allElements = ModConfHelper.LoadElements();
+
+            // Filter elements by matching FileName
+            foreach (var element in allElements.Values)
+            {
+                if (element.FileName == fileName)
+                {
+                    var key = element.Name.Contains(".") 
+                        ? element.Name.Substring(element.Name.IndexOf('.') + 1) 
+                        : element.Name;
+                    result[key] = element;
+                }
+            }
+
+            return result;
+        }
+
+        private List<ModConfTreeNode> ParseModConfFile(string filePath)
+        {
+            var nodes = new List<ModConfTreeNode>();
+
+            var jsonContent = System.IO.File.ReadAllText(filePath);
+            var jsonArray = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(jsonContent);
+
+            if (jsonArray == null) return nodes;
+
+            var fileName = System.IO.Path.GetFileName(filePath);
+            var patternInfo = LoadPatternInfoForFile(fileName);
+
+            foreach (var jsonObj in jsonArray)
+            {
+                foreach (var kvp in jsonObj)
+                {
+                    // Check if this field should be included (ModEventParam = true)
+                    if (patternInfo != null && patternInfo.ContainsKey(kvp.Key))
+                    {
+                        var elementInfo = patternInfo[kvp.Key];
+                        if (elementInfo.ModEventParam)
+                        {
+                            var label = elementInfo.Label ?? kvp.Key;
+                            var labelNode = new ModConfTreeNode
+                            {
+                                DisplayName = elementInfo.Label ?? kvp.Key,
+                                Type = ModConfNodeType.Label,
+                                FieldName = label
+                            };
+
+                            var value = kvp.Value?.ToString() ?? "(empty)";
+                            var valueNode = new ModConfTreeNode
+                            {
+                                DisplayName = value,
+                                Type = ModConfNodeType.Value,
+                                Value = value,
+                                FieldName = kvp.Key,
+                            };
+
+                            labelNode.Children.Add(valueNode);
+                            nodes.Add(labelNode);
+                        }
+                    }
+                }
+            }
+
+            return nodes;
         }
     }
 }

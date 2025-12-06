@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using ModLib.Helper
 using ModLib.Attributes;
 
-namespace ModCreatorChildEvent
+namespace #PROJECTID#.ModCreatorChild
 {
     [Cache("#PROJECTID#.#CLASSNAME#", CacheType = CacheAttribute.CType.#CACHETYPE#, WorkOn = CacheAttribute.WType.#WORKON#, OrderIndex = #ORDERINDEX#)]
     public class #CLASSNAME# : ModEvent

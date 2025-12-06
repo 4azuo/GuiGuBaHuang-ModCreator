@@ -29,12 +29,39 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <GroupBox Grid.Row="0" Header="{x:Static helpers:ModEventItemSelectWindowText.SelectItem}" Margin="0,0,10,5">
                     <ListBox ItemsSource="{Binding FilteredItems}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" DisplayMemberPath="DisplayText" ScrollViewer.HorizontalScrollBarVisibility="Disabled" MouseDoubleClick="ListBox_MouseDoubleClick"/>
                 </GroupBox>
-                <GroupBox Grid.Row="1" Header="Variables" Margin="0,5,10,0" Visibility="{Binding HasReturn, Converter={StaticResource BoolToVisibilityConverter}}" Height="200">
+                <GroupBox Grid.Row="1" Header="Variables" Margin="0,5,10,5" Visibility="{Binding HasReturn, Converter={StaticResource BoolToVisibilityConverter}}" Height="200">
                     <ListBox ItemsSource="{Binding FilteredVariables}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedVariable}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" MouseDoubleClick="VariablesListBox_MouseDoubleClick"/>
+                </GroupBox>
+                <GroupBox Grid.Row="2" Header="ModConf Values" Margin="0,5,10,0" Visibility="{Binding HasReturn, Converter={StaticResource BoolToVisibilityConverter}}" Height="200">
+                    <TreeView ItemsSource="{Binding ModConfTree}" SelectedItemChanged="ModConfTree_SelectedItemChanged">
+                        <TreeView.ItemTemplate>
+                            <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                                <TextBlock Text="{Binding DisplayName}" FontFamily="Consolas" FontSize="11">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Type}" Value="Value">
+                                                    <Setter Property="Foreground" Value="#FF0066CC"/>
+                                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Type}" Value="Label">
+                                                    <Setter Property="Foreground" Value="#FF666666"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Type}" Value="File">
+                                                    <Setter Property="FontStyle" Value="Italic"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
                 </GroupBox>
             </Grid>
             <Grid Grid.Column="0" Visibility="{Binding IsNonEventMode, Converter={StaticResource BoolToVisibilityConverter}}">

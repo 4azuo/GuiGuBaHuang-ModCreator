@@ -1,6 +1,7 @@
 using ModCreator.Helpers;
 using ModCreator.Models;
 using ModCreator.WindowData;
+using ModCreator.Windows;
 using System;
 using System.ComponentModel;
 using System.Runtime.Versioning;
@@ -229,6 +230,103 @@ namespace ModCreator
         {
             var aboutWindow = new Windows.AboutWindow { Owner = this };
             aboutWindow.ShowDialog();
+        }
+
+        private void CheckDuplicateIds_Click(object sender, RoutedEventArgs e)
+        {
+            WindowData.StatusMessage = "Checking for duplicate IDs across all projects...";
+            
+            var duplicates = CheckForDuplicateIds();
+            
+            if (duplicates.Count == 0)
+            {
+                WindowData.StatusMessage = "No duplicate IDs found!";
+                NotificationWindow.ShowSuccess(this, "Check Complete", "No duplicate IDs found across all projects.");
+            }
+            else
+            {
+                WindowData.StatusMessage = $"Found {duplicates.Count} duplicate ID(s)!";
+                NotificationWindow.ShowDetails(this, "Duplicate IDs Found", 
+                    $"Found {duplicates.Count} duplicate ID(s) across projects:", 
+                    duplicates, 
+                    NotificationType.Warning);
+            }
+        }
+
+        private System.Collections.Generic.List<string> CheckForDuplicateIds()
+        {
+            var duplicates = new System.Collections.Generic.List<string>();
+            var idMap = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<(string ProjectName, string FileName, string Id, string Value)>>();
+
+            foreach (var project in WindowData.AllProjects)
+            {
+                if (project.State != Enums.ProjectState.Valid)
+                    continue;
+
+                var confPath = System.IO.Path.Combine(project.ProjectPath, "ModProject", "ModConf");
+                if (!System.IO.Directory.Exists(confPath))
+                    continue;
+
+                var confFiles = System.IO.Directory.GetFiles(confPath, "*.json");
+                foreach (var confFile in confFiles)
+                {
+                    try
+                    {
+                        var fileName = System.IO.Path.GetFileName(confFile);
+                        var jsonContent = System.IO.File.ReadAllText(confFile);
+                        var jsonArray = Newtonsoft.Json.JsonConvert.DeserializeObject<System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>>>(jsonContent);
+
+                        if (jsonArray != null)
+                        {
+                            foreach (var jsonObject in jsonArray)
+                            {
+                                if (jsonObject.ContainsKey("id"))
+                                {
+                                    var id = jsonObject["id"]?.ToString();
+                                    if (!string.IsNullOrWhiteSpace(id))
+                                    {
+                                        var key = $"{fileName}:{id}";
+                                        if (!idMap.ContainsKey(key))
+                                        {
+                                            idMap[key] = new System.Collections.Generic.List<(string, string, string, string)>();
+                                        }
+
+                                        var valuePreview = jsonObject.Count > 1 
+                                            ? string.Join(", ", System.Linq.Enumerable.Take(System.Linq.Enumerable.Select(jsonObject, kv => $"{kv.Key}={kv.Value}"), 3))
+                                            : "id=" + id;
+
+                                        idMap[key].Add((project.ProjectName, fileName, id, valuePreview));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch { }
+                }
+            }
+
+            foreach (var entry in idMap)
+            {
+                if (entry.Value.Count > 1)
+                {
+                    var parts = entry.Key.Split(':');
+                    var fileName = parts[0];
+                    var id = parts[1];
+
+                    foreach (var item in entry.Value)
+                    {
+                        duplicates.Add($"[{item.ProjectName}] {item.FileName} - ID: {id} ({item.Value})");
+                    }
+                    duplicates.Add("---");
+                }
+            }
+
+            if (duplicates.Count > 0 && duplicates[duplicates.Count - 1] == "---")
+            {
+                duplicates.RemoveAt(duplicates.Count - 1);
+            }
+
+            return duplicates;
         }
 
         #region Grid Action Handlers

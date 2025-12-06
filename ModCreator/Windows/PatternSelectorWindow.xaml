@@ -59,72 +59,141 @@
                                 <DataTemplate>
                                     <GroupBox Header="{Binding FileName}" Margin="0,0,0,10" BorderBrush="#FF2E5090" BorderThickness="2">
                                         <Grid>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="*"/>
-                                            </Grid.RowDefinitions>
-                                            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            
+                                            <!-- Frozen columns area (left side) -->
+                                            <StackPanel Grid.Column="0">
+                                                <!-- Frozen header -->
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    
+                                                    <!-- Add Row Button -->
+                                                    <Button Grid.Column="0" Content="{x:Static helpers:PatternSelectorWindowText.AddRow}" Click="AddRow_Click" Tag="{Binding}" Margin="0,0,5,0" Padding="10,5" Background="#FF2E5090" Foreground="White" BorderThickness="0" Cursor="Hand"/>
+                                                    
+                                                    <!-- Frozen columns header -->
+                                                    <ItemsControl Grid.Column="1" ItemsSource="{Binding FrozenDisplayElements}">
+                                                        <ItemsControl.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <StackPanel Orientation="Horizontal"/>
+                                                            </ItemsPanelTemplate>
+                                                        </ItemsControl.ItemsPanel>
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Border BorderBrush="#FFCCCCCC" BorderThickness="0,0,1,1" Padding="5" Width="150" Background="#FFE8EAF6">
+                                                                    <TextBlock Text="{Binding Label}" TextAlignment="Center" FontWeight="SemiBold"/>
+                                                                </Border>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </Grid>
+                                                
+                                                <!-- Frozen rows data -->
+                                                <ItemsControl ItemsSource="{Binding Rows}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto"/>
+                                                                    <ColumnDefinition Width="Auto"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                
+                                                                <!-- Remove Row Button -->
+                                                                <Button Grid.Column="0" Content="{x:Static helpers:PatternSelectorWindowText.RemoveRow}" Click="RemoveRow_Click" Tag="{Binding}" Margin="0,0,5,0" Padding="10,5" Background="#FFCC0000" Foreground="White" BorderThickness="0" Cursor="Hand"/>
+                                                                
+                                                                <!-- Frozen columns data -->
+                                                                <ItemsControl Grid.Column="1" ItemsSource="{Binding FrozenBindings}">
+                                                                    <ItemsControl.ItemsPanel>
+                                                                        <ItemsPanelTemplate>
+                                                                            <StackPanel Orientation="Horizontal"/>
+                                                                        </ItemsPanelTemplate>
+                                                                    </ItemsControl.ItemsPanel>
+                                                                    <ItemsControl.ItemTemplate>
+                                                                        <DataTemplate>
+                                                                            <Border BorderBrush="#FFCCCCCC" BorderThickness="0,0,1,1" Padding="5" Width="150">
+                                                                                <Grid>
+                                                                                    <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Element.Type, Converter={StaticResource TextBoxVisibilityConverter}}" IsReadOnly="{Binding Element.IsReadOnly}">
+                                                                                        <TextBox.Style>
+                                                                                            <Style TargetType="TextBox">
+                                                                                                <Style.Triggers>
+                                                                                                    <Trigger Property="IsReadOnly" Value="True">
+                                                                                                        <Setter Property="Background" Value="#FFF0F0F0"/>
+                                                                                                        <Setter Property="Foreground" Value="#FF666666"/>
+                                                                                                    </Trigger>
+                                                                                                </Style.Triggers>
+                                                                                            </Style>
+                                                                                        </TextBox.Style>
+                                                                                    </TextBox>
+                                                                                    <ComboBox ItemsSource="{Binding Element.Options}" SelectedValue="{Binding Value, Mode=TwoWay}" SelectedValuePath="Value" DisplayMemberPath="DisplayName" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Element.Type, Converter={StaticResource ComboBoxVisibilityConverter}}" DropDownOpened="ComboBox_DropDownOpened" Tag="{Binding}"/>
+                                                                                    <controls:MultiSelectComboBox ItemsSource="{Binding Element.Options}" SelectedValue="{Binding Value, Mode=TwoWay}" Separator="{Binding Element.Separator}" Visibility="{Binding Element.Type, Converter={StaticResource MultiComboBoxVisibilityConverter}}" Tag="{Binding}" DropDownOpened="MultiSelectComboBox_DropDownOpened"/>
+                                                                                </Grid>
+                                                                            </Border>
+                                                                        </DataTemplate>
+                                                                    </ItemsControl.ItemTemplate>
+                                                                </ItemsControl>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                            
+                                            <!-- Scrollable columns area (right side) -->
+                                            <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
                                                 <StackPanel>
-                                                    <Grid>
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="Auto"/>
-                                                            <ColumnDefinition Width="*"/>
-                                                        </Grid.ColumnDefinitions>
-                                                        <Button Grid.Column="0" Content="{x:Static helpers:PatternSelectorWindowText.AddRow}" Click="AddRow_Click" Tag="{Binding}" Margin="0,0,5,0" Padding="10,5" Background="#FF2E5090" Foreground="White" BorderThickness="0" Cursor="Hand"/>
-                                                        <ItemsControl Grid.Column="1" ItemsSource="{Binding DisplayElements}">
-                                                            <ItemsControl.ItemsPanel>
-                                                                <ItemsPanelTemplate>
-                                                                    <StackPanel Orientation="Horizontal"/>
-                                                                </ItemsPanelTemplate>
-                                                            </ItemsControl.ItemsPanel>
-                                                            <ItemsControl.ItemTemplate>
-                                                                <DataTemplate>
-                                                                    <Border BorderBrush="#FFCCCCCC" BorderThickness="0,0,1,1" Padding="5" MinWidth="150" MaxWidth="150" Background="#FFE8EAF6">
-                                                                        <TextBlock Text="{Binding Label}" TextAlignment="Center" FontWeight="SemiBold"/>
-                                                                    </Border>
-                                                                </DataTemplate>
-                                                            </ItemsControl.ItemTemplate>
-                                                        </ItemsControl>
-                                                    </Grid>
+                                                    <!-- Scrollable header -->
+                                                    <ItemsControl ItemsSource="{Binding ScrollableDisplayElements}">
+                                                        <ItemsControl.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <StackPanel Orientation="Horizontal"/>
+                                                            </ItemsPanelTemplate>
+                                                        </ItemsControl.ItemsPanel>
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Border BorderBrush="#FFCCCCCC" BorderThickness="0,0,1,1" Padding="5" MinWidth="150" MaxWidth="150" Background="#FFE8EAF6">
+                                                                    <TextBlock Text="{Binding Label}" TextAlignment="Center" FontWeight="SemiBold"/>
+                                                                </Border>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                    
+                                                    <!-- Scrollable rows data -->
                                                     <ItemsControl ItemsSource="{Binding Rows}">
                                                         <ItemsControl.ItemTemplate>
                                                             <DataTemplate>
-                                                                <Grid>
-                                                                    <Grid.ColumnDefinitions>
-                                                                        <ColumnDefinition Width="Auto"/>
-                                                                        <ColumnDefinition Width="*"/>
-                                                                    </Grid.ColumnDefinitions>
-                                                                    <Button Grid.Column="0" Content="{x:Static helpers:PatternSelectorWindowText.RemoveRow}" Click="RemoveRow_Click" Tag="{Binding}" Margin="0,0,5,0" Padding="10,5" Background="#FFCC0000" Foreground="White" BorderThickness="0" Cursor="Hand"/>
-                                                                    <ItemsControl Grid.Column="1" ItemsSource="{Binding Bindings}">
-                                                                        <ItemsControl.ItemsPanel>
-                                                                            <ItemsPanelTemplate>
-                                                                                <StackPanel Orientation="Horizontal"/>
-                                                                            </ItemsPanelTemplate>
-                                                                        </ItemsControl.ItemsPanel>
-                                                                        <ItemsControl.ItemTemplate>
-                                                                            <DataTemplate>
-                                                                                <Border BorderBrush="#FFCCCCCC" BorderThickness="0,0,1,1" Padding="5" MinWidth="150" MaxWidth="150">
-                                                                                    <Grid>
-                                                                                        <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Element.Type, Converter={StaticResource TextBoxVisibilityConverter}}" IsReadOnly="{Binding Element.IsReadOnly}">
-                                                                                            <TextBox.Style>
-                                                                                                <Style TargetType="TextBox">
-                                                                                                    <Style.Triggers>
-                                                                                                        <Trigger Property="IsReadOnly" Value="True">
-                                                                                                            <Setter Property="Background" Value="#FFF0F0F0"/>
-                                                                                                            <Setter Property="Foreground" Value="#FF666666"/>
-                                                                                                        </Trigger>
-                                                                                                    </Style.Triggers>
-                                                                                                </Style>
-                                                                                            </TextBox.Style>
-                                                                                        </TextBox>
-                                                                                        <ComboBox ItemsSource="{Binding Element.Options}" SelectedValue="{Binding Value, Mode=TwoWay}" SelectedValuePath="Value" DisplayMemberPath="DisplayName" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Element.Type, Converter={StaticResource ComboBoxVisibilityConverter}}" DropDownOpened="ComboBox_DropDownOpened" Tag="{Binding}"/>
-                                                                                        <controls:MultiSelectComboBox ItemsSource="{Binding Element.Options}" SelectedValue="{Binding Value, Mode=TwoWay}" Separator="{Binding Element.Separator}" Visibility="{Binding Element.Type, Converter={StaticResource MultiComboBoxVisibilityConverter}}" Tag="{Binding}" DropDownOpened="MultiSelectComboBox_DropDownOpened"/>
-                                                                                    </Grid>
-                                                                                </Border>
-                                                                            </DataTemplate>
-                                                                        </ItemsControl.ItemTemplate>
-                                                                    </ItemsControl>
-                                                                </Grid>
+                                                                <ItemsControl ItemsSource="{Binding ScrollableBindings}">
+                                                                    <ItemsControl.ItemsPanel>
+                                                                        <ItemsPanelTemplate>
+                                                                            <StackPanel Orientation="Horizontal"/>
+                                                                        </ItemsPanelTemplate>
+                                                                    </ItemsControl.ItemsPanel>
+                                                                    <ItemsControl.ItemTemplate>
+                                                                        <DataTemplate>
+                                                                            <Border BorderBrush="#FFCCCCCC" BorderThickness="0,0,1,1" Padding="5" MinWidth="150" MaxWidth="150">
+                                                                                <Grid>
+                                                                                    <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Element.Type, Converter={StaticResource TextBoxVisibilityConverter}}" IsReadOnly="{Binding Element.IsReadOnly}">
+                                                                                        <TextBox.Style>
+                                                                                            <Style TargetType="TextBox">
+                                                                                                <Style.Triggers>
+                                                                                                    <Trigger Property="IsReadOnly" Value="True">
+                                                                                                        <Setter Property="Background" Value="#FFF0F0F0"/>
+                                                                                                        <Setter Property="Foreground" Value="#FF666666"/>
+                                                                                                    </Trigger>
+                                                                                                </Style.Triggers>
+                                                                                            </Style>
+                                                                                        </TextBox.Style>
+                                                                                    </TextBox>
+                                                                                    <ComboBox ItemsSource="{Binding Element.Options}" SelectedValue="{Binding Value, Mode=TwoWay}" SelectedValuePath="Value" DisplayMemberPath="DisplayName" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Element.Type, Converter={StaticResource ComboBoxVisibilityConverter}}" DropDownOpened="ComboBox_DropDownOpened" Tag="{Binding}"/>
+                                                                                    <controls:MultiSelectComboBox ItemsSource="{Binding Element.Options}" SelectedValue="{Binding Value, Mode=TwoWay}" Separator="{Binding Element.Separator}" Visibility="{Binding Element.Type, Converter={StaticResource MultiComboBoxVisibilityConverter}}" Tag="{Binding}" DropDownOpened="MultiSelectComboBox_DropDownOpened"/>
+                                                                                </Grid>
+                                                                            </Border>
+                                                                        </DataTemplate>
+                                                                    </ItemsControl.ItemTemplate>
+                                                                </ItemsControl>
                                                             </DataTemplate>
                                                         </ItemsControl.ItemTemplate>
                                                     </ItemsControl>

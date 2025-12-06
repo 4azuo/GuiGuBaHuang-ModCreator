@@ -1,14 +1,18 @@
 [
   {
+    "FileName": "RoleCreateFeature.json",
     "Name": "RoleCreateFeature.id",
     "Type": "textbox",
     "Label": "Feature ID",
     "Description": "Unique identifier for the feature",
     "VarType": "Int32",
     "Enable": true,
-    "Required": true
+    "Required": true,
+    "Unique": true,
+    "ModEventParam": true
   },
   {
+    "FileName": "RoleCreateFeature.json",
     "Name": "RoleCreateFeature.type",
     "Type": "combo",
     "Label": "Feature Type",
@@ -20,6 +24,7 @@
     "Value": "1"
   },
   {
+    "FileName": "RoleCreateFeature.json",
     "Name": "RoleCreateFeature.group",
     "Type": "textbox",
     "Label": "Group",
@@ -29,6 +34,7 @@
     "Required": false
   },
   {
+    "FileName": "RoleCreateFeature.json",
     "Name": "RoleCreateFeature.level",
     "Type": "combo",
     "Label": "Level",
@@ -40,6 +46,7 @@
     "Value": "1"
   },
   {
+    "FileName": "RoleCreateFeature.json",
     "Name": "RoleCreateFeature.duration",
     "Type": "textbox",
     "Label": "Duration",
@@ -49,6 +56,7 @@
     "Required": false
   },
   {
+    "FileName": "RoleCreateFeature.json",
     "Name": "RoleCreateFeature.conceal",
     "Type": "combo",
     "Label": "Conceal",
@@ -60,6 +68,7 @@
     "Value": "1"
   },
   {
+    "FileName": "RoleCreateFeature.json",
     "Name": "RoleCreateFeature.refreshType",
     "Type": "combo",
     "Label": "Refresh Type",
@@ -70,6 +79,7 @@
     "Options": ["RefreshTypes"]
   },
   {
+    "FileName": "RoleCreateFeature.json",
     "Name": "RoleCreateFeature.name",
     "Type": "textbox",
     "Label": "Name",
@@ -79,6 +89,7 @@
     "Required": true
   },
   {
+    "FileName": "RoleCreateFeature.json",
     "Name": "RoleCreateFeature.tips",
     "Type": "textbox",
     "Label": "Tips",
@@ -88,6 +99,7 @@
     "Required": false
   },
   {
+    "FileName": "RoleCreateFeature.json",
     "Name": "RoleCreateFeature.effect",
     "Type": "textbox",
     "Label": "Effects",
@@ -98,6 +110,7 @@
     "Required": false
   },
   {
+    "FileName": "RoleCreateFeature.json",
     "Name": "RoleCreateFeature.iconAndDesc",
     "Type": "textbox",
     "Label": "Icon and Description",
@@ -107,6 +120,7 @@
     "Required": false
   },
   {
+    "FileName": "RoleCreateFeature.json",
     "Name": "RoleCreateFeature.lockLuck",
     "Type": "textbox",
     "Label": "Lock Luck",
@@ -116,6 +130,7 @@
     "Required": false
   },
   {
+    "FileName": "RoleCreateFeature.json",
     "Name": "RoleCreateFeature.introduceText",
     "Type": "textbox",
     "Label": "Introduce Text",
@@ -125,6 +140,7 @@
     "Required": false
   },
   {
+    "FileName": "RoleCreateFeature.json",
     "Name": "RoleCreateFeature.weight",
     "Type": "textbox",
     "Label": "Weight",
@@ -134,24 +150,29 @@
     "Required": false
   },
   {
+    "FileName": "LocalText.json",
     "Name": "LocalText.id",
     "Type": "textbox",
     "Label": "Local text ID",
     "Description": "Unique identifier for the localized text",
     "VarType": "Int32",
     "Enable": true,
-    "Required": true
+    "Required": true,
+    "Unique": true
   },
   {
+    "FileName": "LocalText.json",
     "Name": "LocalText.key",
     "Type": "textbox",
     "Label": "Local text key",
     "Description": "Key for mapping localized text",
     "VarType": "String",
     "Enable": true,
-    "Required": true
+    "Required": true,
+    "ModEventParam": true
   },
   {
+    "FileName": "LocalText.json",
     "Name": "LocalText.en",
     "Type": "textbox",
     "Label": "Local text",
@@ -161,15 +182,19 @@
     "Required": true
   },
   {
+    "FileName": "RoleEffect.json",
     "Name": "RoleEffect.id",
     "Type": "textbox",
     "Label": "Effect ID",
     "Description": "Unique identifier for the role effect",
     "VarType": "String",
     "Enable": true,
-    "Required": true
+    "Required": true,
+    "Unique": true,
+    "ModEventParam": true
   },
   {
+    "FileName": "RoleEffect.json",
     "Name": "RoleEffect.effectType",
     "Type": "combo",
     "Label": "Effect Type",
@@ -181,6 +206,7 @@
     "Value": "1"
   },
   {
+    "FileName": "RoleEffect.json",
     "Name": "RoleEffect.value",
     "Type": "composite",
     "Label": "Value",
@@ -196,6 +222,7 @@
     ]
   },
   {
+    "FileName": "RoleEffect.json",
     "Name": "RoleEffect.value.property",
     "Type": "combo",
     "Label": "Property",
@@ -206,6 +233,7 @@
     "Options": ["EffectProperties"]
   },
   {
+    "FileName": "RoleEffect.json",
     "Name": "RoleEffect.value.effectType",
     "Type": "combo",
     "Label": "Effect Type",
@@ -217,6 +245,7 @@
     "Value": "1"
   },
   {
+    "FileName": "RoleEffect.json",
     "Name": "RoleEffect.value.value",
     "Type": "textbox",
     "Label": "Value",
@@ -226,15 +255,19 @@
     "Required": true
   },
   {
+    "FileName": "DramaDialogue.json",
     "Name": "DramaDialogue.id",
     "Type": "textbox",
     "Label": "Dialogue ID",
     "Description": "Unique identifier for the dialogue",
     "VarType": "String",
     "Enable": true,
-    "Required": true
+    "Required": true,
+    "Unique": true,
+    "ModEventParam": true
   },
   {
+    "FileName": "DramaDialogue.json",
     "Name": "DramaDialogue.uiType",
     "Type": "combo",
     "Label": "UI Type",
@@ -246,6 +279,7 @@
     "Value": "1"
   },
   {
+    "FileName": "DramaDialogue.json",
     "Name": "DramaDialogue.condition",
     "Type": "textbox",
     "Label": "Condition",
@@ -256,6 +290,7 @@
     "Value": "0"
   },
   {
+    "FileName": "DramaDialogue.json",
     "Name": "DramaDialogue.weight",
     "Type": "textbox",
     "Label": "Weight",
@@ -266,6 +301,7 @@
     "Value": "1"
   },
   {
+    "FileName": "DramaDialogue.json",
     "Name": "DramaDialogue.npcLeft",
     "Type": "textbox",
     "Label": "NPC Left",
@@ -276,6 +312,7 @@
     "Value": "0"
   },
   {
+    "FileName": "DramaDialogue.json",
     "Name": "DramaDialogue.npcRight",
     "Type": "textbox",
     "Label": "NPC Right",
@@ -286,6 +323,7 @@
     "Value": "0"
   },
   {
+    "FileName": "DramaDialogue.json",
     "Name": "DramaDialogue.speaker",
     "Type": "combo",
     "Label": "Speaker",
@@ -297,6 +335,7 @@
     "Value": "0"
   },
   {
+    "FileName": "DramaDialogue.json",
     "Name": "DramaDialogue.backgroud",
     "Type": "textbox",
     "Label": "Background",
@@ -307,6 +346,7 @@
     "Value": "0"
   },
   {
+    "FileName": "DramaDialogue.json",
     "Name": "DramaDialogue.soundsBg",
     "Type": "textbox",
     "Label": "Background Sound",
@@ -317,6 +357,7 @@
     "Value": "0"
   },
   {
+    "FileName": "DramaDialogue.json",
     "Name": "DramaDialogue.soundsEffect",
     "Type": "textbox",
     "Label": "Sound Effect",
@@ -327,6 +368,7 @@
     "Value": "0"
   },
   {
+    "FileName": "DramaDialogue.json",
     "Name": "DramaDialogue.title",
     "Type": "textbox",
     "Label": "Title",
@@ -337,6 +379,7 @@
     "Value": "0"
   },
   {
+    "FileName": "DramaDialogue.json",
     "Name": "DramaDialogue.dialogue",
     "Type": "textbox",
     "Label": "Dialogue",
@@ -346,6 +389,7 @@
     "Required": true
   },
   {
+    "FileName": "DramaDialogue.json",
     "Name": "DramaDialogue.openFunction",
     "Type": "textbox",
     "Label": "Open Function",
@@ -356,6 +400,7 @@
     "Value": "0"
   },
   {
+    "FileName": "DramaDialogue.json",
     "Name": "DramaDialogue.function",
     "Type": "textbox",
     "Label": "Function",
@@ -366,6 +411,7 @@
     "Value": "0"
   },
   {
+    "FileName": "DramaDialogue.json",
     "Name": "DramaDialogue.options",
     "Type": "textbox",
     "Label": "Options",
@@ -376,6 +422,7 @@
     "Required": false
   },
   {
+    "FileName": "DramaDialogue.json",
     "Name": "DramaDialogue.nextDialogue",
     "Type": "textbox",
     "Label": "Next Dialogue",
@@ -386,15 +433,19 @@
     "Value": "0"
   },
   {
+    "FileName": "DramaOptions.json",
     "Name": "DramaOptions.id",
     "Type": "textbox",
     "Label": "Option ID",
     "Description": "Unique identifier for the option",
     "VarType": "String",
     "Enable": true,
-    "Required": true
+    "Required": true,
+    "Unique": true,
+    "ModEventParam": true
   },
   {
+    "FileName": "DramaOptions.json",
     "Name": "DramaOptions.condition",
     "Type": "textbox",
     "Label": "Condition",
@@ -405,6 +456,7 @@
     "Value": "0"
   },
   {
+    "FileName": "DramaOptions.json",
     "Name": "DramaOptions.hue",
     "Type": "combo",
     "Label": "Hue",
@@ -416,6 +468,7 @@
     "Value": "0"
   },
   {
+    "FileName": "DramaOptions.json",
     "Name": "DramaOptions.optionsHide",
     "Type": "textbox",
     "Label": "Options Hide",
@@ -426,6 +479,7 @@
     "Value": "0"
   },
   {
+    "FileName": "DramaOptions.json",
     "Name": "DramaOptions.text",
     "Type": "textbox",
     "Label": "Text",
@@ -435,6 +489,7 @@
     "Required": true
   },
   {
+    "FileName": "DramaOptions.json",
     "Name": "DramaOptions.cost",
     "Type": "textbox",
     "Label": "Cost",
@@ -445,6 +500,7 @@
     "Value": "0"
   },
   {
+    "FileName": "DramaOptions.json",
     "Name": "DramaOptions.costHide",
     "Type": "textbox",
     "Label": "Cost Hide",
@@ -455,6 +511,7 @@
     "Value": "0"
   },
   {
+    "FileName": "DramaOptions.json",
     "Name": "DramaOptions.function",
     "Type": "textbox",
     "Label": "Function",
@@ -465,6 +522,7 @@
     "Value": "0"
   },
   {
+    "FileName": "DramaOptions.json",
     "Name": "DramaOptions.clickTip",
     "Type": "textbox",
     "Label": "Click Tip",
@@ -475,6 +533,7 @@
     "Value": "0"
   },
   {
+    "FileName": "DramaOptions.json",
     "Name": "DramaOptions.nextDialogue",
     "Type": "textbox",
     "Label": "Next Dialogue",

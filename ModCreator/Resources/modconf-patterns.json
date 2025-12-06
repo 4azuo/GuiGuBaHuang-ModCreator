@@ -5,6 +5,7 @@
     "Files": [
       {
         "FileName": "RoleEffect.json",
+        "FrozenColumns": 1,
         "Elements": [
           "RoleEffect.id",
           "RoleEffect.effectType",
@@ -19,6 +20,7 @@
     "Files": [
       {
         "FileName": "RoleCreateFeature.json",
+        "FrozenColumns": 1,
         "Elements": [
           "RoleCreateFeature.id",
           "RoleCreateFeature.type",
@@ -38,6 +40,7 @@
       },
       {
         "FileName": "LocalText.json",
+        "FrozenColumns": 1,
         "Elements": [
           "LocalText.id",
           "LocalText.key:localtext{LocalText.id}",
@@ -46,6 +49,7 @@
       },
       {
         "FileName": "RoleEffect.json",
+        "FrozenColumns": 1,
         "Elements": [
           "RoleEffect.id",
           "RoleEffect.effectType",
@@ -60,6 +64,7 @@
     "Files": [
       {
         "FileName": "RoleEffect.json",
+        "FrozenColumns": 1,
         "Elements": [
           "RoleEffect.id",
           "RoleEffect.effectType",
@@ -74,6 +79,7 @@
     "Files": [
       {
         "FileName": "DramaDialogue.json",
+        "FrozenColumns": 1,
         "Elements": [
           "DramaDialogue.id",
           "DramaDialogue.uiType",
@@ -95,6 +101,7 @@
       },
       {
         "FileName": "DramaOptions.json",
+        "FrozenColumns": 1,
         "Elements": [
           "DramaOptions.id",
           "DramaOptions.condition",
@@ -110,9 +117,10 @@
       },
       {
         "FileName": "LocalText.json",
+        "FrozenColumns": 1,
         "Elements": [
           "LocalText.id",
-          "LocalText.key:{LocalText.id}dramaOpt",
+          "LocalText.key:dramaText{LocalText.id}",
           "LocalText.en"
         ]
       }

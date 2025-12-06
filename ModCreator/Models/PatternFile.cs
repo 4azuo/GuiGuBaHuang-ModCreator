@@ -7,5 +7,6 @@ namespace ModCreator.Models
     {
         public string FileName { get; set; }
         public List<string> Elements { get; set; } = new List<string>();
+        public int FrozenColumns { get; set; } = 2;
     }
 }

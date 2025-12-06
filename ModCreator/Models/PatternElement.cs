@@ -1,4 +1,3 @@
-using ModCreator.Attributes;
 using ModCreator.Commons;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,6 +13,8 @@ namespace ModCreator.Models
         public string VarType { get; set; }
         public bool Enable { get; set; } = true;
         public bool Required { get; set; } = false;
+        public bool Unique { get; set; } = false;
+        public bool ModEventParam { get; set; } = false;
         public ObservableCollection<ModConfValue> Options { get; set; } = new ObservableCollection<ModConfValue>();
         public string Value { get; set; }
         public string Separator { get; set; }

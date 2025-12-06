@@ -11,9 +11,6 @@ namespace ModCreator.WindowData
 {
     public class PatternSelectorWindowData : CWindowData
     {
-        private List<RegularPattern> _allPatterns;
-        private Dictionary<string, ModConfElement> _allElements;
-        private Dictionary<string, List<ModConfValue>> _allValues;
         private string _projectPath;
 
         [NotifyMethod(nameof(FilterPatterns))]
@@ -22,7 +19,7 @@ namespace ModCreator.WindowData
         [NotifyMethod(nameof(LoadExistingFiles))]
         public string Prefix { get; set; }
 
-        public ObservableCollection<RegularPattern> FilteredPatterns { get; set; }
+        public ObservableCollection<RegularPattern> FilteredPatterns { get; set; } = [];
 
         private RegularPattern _selectedPattern;
         public RegularPattern SelectedPattern
@@ -35,7 +32,7 @@ namespace ModCreator.WindowData
             }
         }
 
-        public ObservableCollection<PatternFileDisplay> DisplayFiles { get; set; }
+        public ObservableCollection<PatternFileDisplay> DisplayFiles { get; set; } = [];
 
         public bool HasSelectedPattern => SelectedPattern != null;
 
@@ -65,12 +62,7 @@ namespace ModCreator.WindowData
 
         public PatternSelectorWindowData()
         {
-            _allPatterns = new List<RegularPattern>();
-            _allElements = new Dictionary<string, ModConfElement>();
-            _allValues = new Dictionary<string, List<ModConfValue>>();
-            FilteredPatterns = new ObservableCollection<RegularPattern>();
-            DisplayFiles = new ObservableCollection<PatternFileDisplay>();
-            LoadPatterns();
+            FilterPatterns(this, null, null, null);
         }
 
         private string GetPrefixedFileName(string fileName)
@@ -91,7 +83,11 @@ namespace ModCreator.WindowData
 
             foreach (var file in SelectedPattern.Files)
             {
-                var displayFile = new PatternFileDisplay { FileName = file.FileName };
+                var displayFile = new PatternFileDisplay 
+                { 
+                    FileName = file.FileName,
+                    FrozenColumns = file.FrozenColumns
+                };
 
                 foreach (var elementName in file.Elements)
                 {
@@ -196,30 +192,12 @@ namespace ModCreator.WindowData
                             }
                         }
                             
-                        file.Rows.Add(new RowDisplay(row, file.Elements, file.DisplayElements));
+                        file.Rows.Add(new RowDisplay(row, file.Elements, file.DisplayElements, file.FrozenColumns));
                     }
                 }
             }
 
             Notify(nameof(HasExistingFiles));
-        }
-
-        public void LoadPatterns()
-        {
-            _allPatterns.Clear();
-            _allElements.Clear();
-            _allValues.Clear();
-
-            _allPatterns = ResourceHelper.ReadEmbeddedResource<List<RegularPattern>>("ModCreator.Resources.modconf-patterns.json");
-            FilterPatterns(this, null, null, null);
-
-            var elements = ResourceHelper.ReadEmbeddedResource<List<ModConfElement>>("ModCreator.Resources.modconfs.json");
-            foreach (var element in elements)
-                _allElements[element.Name] = element;
-
-            var valueGroups = ResourceHelper.ReadEmbeddedResource<List<ModConfValueGroup>>("ModCreator.Resources.modconf-values.json");
-            foreach (var group in valueGroups)
-                _allValues[group.Name] = group.Values;
         }
 
         public PatternElement ResolveElement(string elementName)
@@ -234,7 +212,8 @@ namespace ModCreator.WindowData
                 pattern = parts[1];
             }
 
-            if (!_allElements.TryGetValue(actualElementName, out var element))
+            var element = ModConfHelper.GetElement(actualElementName);
+            if (element == null)
                 return null;
 
             var patternElement = new PatternElement
@@ -246,6 +225,7 @@ namespace ModCreator.WindowData
                 VarType = element.VarType,
                 Enable = element.Enable,
                 Required = element.Required,
+                Unique = element.Unique,
                 Value = element.Value,
                 Separator = element.Separator
             };
@@ -264,11 +244,9 @@ namespace ModCreator.WindowData
             {
                 foreach (var optionRef in element.Options)
                 {
-                    if (_allValues.TryGetValue(optionRef, out var values))
-                    {
-                        foreach (var v in values)
-                            patternElement.Options.Add(v);
-                    }
+                    var values = ModConfHelper.GetValues(optionRef);
+                    foreach (var v in values)
+                        patternElement.Options.Add(v);
                 }
             }
 
@@ -329,12 +307,9 @@ namespace ModCreator.WindowData
         public void FilterPatterns(object obj, System.Reflection.PropertyInfo prop, object oldValue, object newValue)
         {
             FilteredPatterns.Clear();
-            var filtered = string.IsNullOrWhiteSpace(SearchText)
-                ? _allPatterns
-                : _allPatterns.Where(p => p.Name.Contains(SearchText, System.StringComparison.OrdinalIgnoreCase) 
-                    || p.Description.Contains(SearchText, System.StringComparison.OrdinalIgnoreCase));
+            var filtered = ModConfHelper.GetFilteredPatterns(SearchText);
 
-            foreach (var pattern in filtered.OrderBy(p => p.Name))
+            foreach (var pattern in filtered)
                 FilteredPatterns.Add(pattern);
         }
     }

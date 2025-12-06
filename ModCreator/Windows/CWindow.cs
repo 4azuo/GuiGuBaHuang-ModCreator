@@ -52,6 +52,13 @@ namespace ModCreator.Windows
             WindowData.NotifyAll();
         }
 
+        public void ForceInitData(T data)
+        {
+            WindowData = data;
+            WindowData.InitWindow(this, new CancelEventArgs(false));
+            DataContext = WindowData;
+        }
+
         public CWindow()
         {
             this.GetType().GetProperty("LastInstance", BindingFlags.Public | BindingFlags.Static)?.SetValue(this, this);

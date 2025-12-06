@@ -44,7 +44,7 @@ namespace ModCreator.Windows
 
             if (!ValidateData(out var validationErrors))
             {
-                MessageBox.Show(string.Join(Environment.NewLine, validationErrors), MessageHelper.Get("Messages.Error.Title"), MessageBoxButton.OK, MessageBoxImage.Error);
+                NotificationWindow.ShowDetails(this, MessageHelper.Get("Messages.Error.Title"), "Validation errors found:", validationErrors, NotificationType.Error);
                 return;
             }
 
@@ -62,6 +62,34 @@ namespace ModCreator.Windows
             validationErrors = new List<string>();
             foreach (var file in WindowData.DisplayFiles)
             {
+                // Check unique values
+                var uniqueElements = file.Elements.Where(e => e.Unique).ToList();
+                foreach (var uniqueElement in uniqueElements)
+                {
+                    var values = new Dictionary<string, int>();
+                    var rowIndex = 0;
+                    foreach (var row in file.Rows)
+                    {
+                        rowIndex++;
+                        if (row.RowData.ContainsKey(uniqueElement.Name))
+                        {
+                            var value = row.RowData[uniqueElement.Name];
+                            if (!string.IsNullOrWhiteSpace(value))
+                            {
+                                if (values.ContainsKey(value))
+                                {
+                                    validationErrors.Add($"{file.FileName} - Row {rowIndex}: {uniqueElement.Label} '{value}' is duplicated (first appeared in row {values[value]})");
+                                }
+                                else
+                                {
+                                    values[value] = rowIndex;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                // Check required and validation
                 foreach (var row in file.Rows)
                 {
                     foreach (var element in file.Elements)

@@ -8,13 +8,26 @@
     "Return": "Object",
     "Parameters": [
       {
-        "Type": "String",
         "Name": "customCode"
       }
     ]
   },
   {
-    "Category": "Basic",
+    "Category": "Custom",
+    "Name": "CallNonEvent",
+    "DisplayName": "Call NonEvent {0}",
+    "Description": "Call NonEvent method",
+    "Code": "{0}.Instance.Run()",
+    "Parameters": [
+      {
+        "Type": "NonEvent",
+        "Name": "NonEvent"
+      }
+    ],
+    "Return": "Void"
+  },
+  {
+    "Category": "Constant",
     "Name": "True",
     "DisplayName": "Always True",
     "Description": "Condition that always returns true",
@@ -22,12 +35,108 @@
     "Return": "Boolean"
   },
   {
-    "Category": "Basic",
+    "Category": "Constant",
     "Name": "False",
     "DisplayName": "Always False",
     "Description": "Condition that always returns false",
     "Code": "false",
     "Return": "Boolean"
+  },
+  {
+    "Category": "Constant",
+    "Name": "Int32Max",
+    "DisplayName": "int.MaxValue",
+    "Description": "Maximum Int32 value (2147483647)",
+    "Code": "int.MaxValue",
+    "Return": "Int32"
+  },
+  {
+    "Category": "Constant",
+    "Name": "Int32Min",
+    "DisplayName": "int.MinValue",
+    "Description": "Minimum Int32 value (-2147483648)",
+    "Code": "int.MinValue",
+    "Return": "Int32"
+  },
+  {
+    "Category": "Constant",
+    "Name": "Int64Max",
+    "DisplayName": "long.MaxValue",
+    "Description": "Maximum Int64 value",
+    "Code": "long.MaxValue",
+    "Return": "Int64"
+  },
+  {
+    "Category": "Constant",
+    "Name": "Int64Min",
+    "DisplayName": "long.MinValue",
+    "Description": "Minimum Int64 value",
+    "Code": "long.MinValue",
+    "Return": "Int64"
+  },
+  {
+    "Category": "Constant",
+    "Name": "FloatMax",
+    "DisplayName": "float.MaxValue",
+    "Description": "Maximum float value",
+    "Code": "float.MaxValue",
+    "Return": "Single"
+  },
+  {
+    "Category": "Constant",
+    "Name": "FloatMin",
+    "DisplayName": "float.MinValue",
+    "Description": "Minimum float value",
+    "Code": "float.MinValue",
+    "Return": "Single"
+  },
+  {
+    "Category": "Constant",
+    "Name": "FloatNaN",
+    "DisplayName": "float.NaN",
+    "Description": "Not a Number float constant",
+    "Code": "float.NaN",
+    "Return": "Single"
+  },
+  {
+    "Category": "Constant",
+    "Name": "DoubleMax",
+    "DisplayName": "double.MaxValue",
+    "Description": "Maximum double value",
+    "Code": "double.MaxValue",
+    "Return": "Double"
+  },
+  {
+    "Category": "Constant",
+    "Name": "DoubleMin",
+    "DisplayName": "double.MinValue",
+    "Description": "Minimum double value",
+    "Code": "double.MinValue",
+    "Return": "Double"
+  },
+  {
+    "Category": "Constant",
+    "Name": "DoubleNaN",
+    "DisplayName": "double.NaN",
+    "Description": "Not a Number double constant",
+    "Code": "double.NaN",
+    "Return": "Double"
+  },
+  {
+    "Category": "Constant",
+    "Name": "StringEmpty",
+    "DisplayName": "string.Empty",
+    "Description": "String.Empty constant",
+    "Code": "string.Empty",
+    "Return": "String"
+  },
+  {
+    "Category": "Constant",
+    "Name": "Null",
+    "DisplayName": "null",
+    "Description": "Null constant",
+    "Code": "null",
+    "Return": "Object"
   },
   {
     "Category": "Comparison",
@@ -139,6 +248,52 @@
   },
   {
     "Category": "Logic",
+    "Name": "IsNull",
+    "DisplayName": "{0} is null",
+    "Description": "Check if value is null",
+    "Code": "{0} == null",
+    "Parameters": [
+      {
+        "Type": "Object",
+        "Name": "value"
+      }
+    ],
+    "Return": "Boolean"
+  },
+  {
+    "Category": "Logic",
+    "Name": "IsNotNull",
+    "DisplayName": "{0} is not null",
+    "Description": "Check if value is not null",
+    "Code": "{0} != null",
+    "Parameters": [
+      {
+        "Type": "Object",
+        "Name": "value"
+      }
+    ],
+    "Return": "Boolean"
+  },
+  {
+    "Category": "Logic",
+    "Name": "NullCoalescing",
+    "DisplayName": "Return {1} if {0} is null",
+    "Description": "Null coalescing operator",
+    "Code": "{0} ?? {1}",
+    "Parameters": [
+      {
+        "Type": "Object",
+        "Name": "value"
+      },
+      {
+        "Type": "Object",
+        "Name": "defaultValue"
+      }
+    ],
+    "Return": "Object"
+  },
+  {
+    "Category": "Logic",
     "Name": "LogicalAND",
     "DisplayName": "{0} and {1}",
     "Description": "Logical AND operator",
@@ -190,7 +345,7 @@
   {
     "Category": "Variable",
     "Name": "GetVariable",
-    "DisplayName": "Get variable {0}",
+    "DisplayName": "Get {0}",
     "Description": "Get variable value",
     "Code": "{0}",
     "Parameters": [
@@ -219,7 +374,6 @@
     ],
     "Return": "Void"
   },
-
   {
     "Category": "Math",
     "Name": "Add",
@@ -337,6 +491,184 @@
       }
     ],
     "Return": "Object"
+  },
+  {
+    "Category": "Math",
+    "Name": "Min",
+    "DisplayName": "Math.Min({0}, {1})",
+    "Description": "Returns the smaller of two numbers",
+    "Code": "Math.Min({0}, {1})",
+    "Parameters": [
+      {
+        "Type": "Object",
+        "Name": "val1"
+      },
+      {
+        "Type": "Object",
+        "Name": "val2"
+      }
+    ],
+    "Return": "Object"
+  },
+  {
+    "Category": "Math",
+    "Name": "Max",
+    "DisplayName": "Math.Max({0}, {1})",
+    "Description": "Returns the larger of two numbers",
+    "Code": "Math.Max({0}, {1})",
+    "Parameters": [
+      {
+        "Type": "Object",
+        "Name": "val1"
+      },
+      {
+        "Type": "Object",
+        "Name": "val2"
+      }
+    ],
+    "Return": "Object"
+  },
+  {
+    "Category": "Math",
+    "Name": "Abs",
+    "DisplayName": "Math.Abs({0})",
+    "Description": "Returns the absolute value",
+    "Code": "Math.Abs({0})",
+    "Parameters": [
+      {
+        "Type": "Object",
+        "Name": "value"
+      }
+    ],
+    "Return": "Object"
+  },
+  {
+    "Category": "Math",
+    "Name": "Round",
+    "DisplayName": "Math.Round({0})",
+    "Description": "Rounds to nearest integer",
+    "Code": "Math.Round({0})",
+    "Parameters": [
+      {
+        "Type": "Object",
+        "Name": "value"
+      }
+    ],
+    "Return": "Double"
+  },
+  {
+    "Category": "Math",
+    "Name": "RoundDigits",
+    "DisplayName": "Math.Round({0}, {1})",
+    "Description": "Rounds to specified number of decimal places",
+    "Code": "Math.Round({0}, {1})",
+    "Parameters": [
+      {
+        "Type": "Object",
+        "Name": "value"
+      },
+      {
+        "Type": "Int32",
+        "Name": "digits"
+      }
+    ],
+    "Return": "Double"
+  },
+  {
+    "Category": "Math",
+    "Name": "Floor",
+    "DisplayName": "Math.Floor({0})",
+    "Description": "Rounds down to nearest integer",
+    "Code": "Math.Floor({0})",
+    "Parameters": [
+      {
+        "Type": "Object",
+        "Name": "value"
+      }
+    ],
+    "Return": "Double"
+  },
+  {
+    "Category": "Math",
+    "Name": "Ceiling",
+    "DisplayName": "Math.Ceiling({0})",
+    "Description": "Rounds up to nearest integer",
+    "Code": "Math.Ceiling({0})",
+    "Parameters": [
+      {
+        "Type": "Object",
+        "Name": "value"
+      }
+    ],
+    "Return": "Double"
+  },
+  {
+    "Category": "Math",
+    "Name": "Pow",
+    "DisplayName": "Math.Pow({0}, {1})",
+    "Description": "Returns a number raised to the specified power",
+    "Code": "Math.Pow({0}, {1})",
+    "Parameters": [
+      {
+        "Type": "Object",
+        "Name": "base"
+      },
+      {
+        "Type": "Object",
+        "Name": "exponent"
+      }
+    ],
+    "Return": "Double"
+  },
+  {
+    "Category": "Math",
+    "Name": "Sqrt",
+    "DisplayName": "Math.Sqrt({0})",
+    "Description": "Returns the square root",
+    "Code": "Math.Sqrt({0})",
+    "Parameters": [
+      {
+        "Type": "Object",
+        "Name": "value"
+      }
+    ],
+    "Return": "Double"
+  },
+  {
+    "Category": "Math",
+    "Name": "Clamp",
+    "DisplayName": "Math.Clamp({0}, {1}, {2})",
+    "Description": "Clamps value between min and max",
+    "Code": "Math.Clamp({0}, {1}, {2})",
+    "Parameters": [
+      {
+        "Type": "Object",
+        "Name": "value"
+      },
+      {
+        "Type": "Object",
+        "Name": "min"
+      },
+      {
+        "Type": "Object",
+        "Name": "max"
+      }
+    ],
+    "Return": "Object"
+  },
+  {
+    "Category": "Math",
+    "Name": "Sign",
+    "DisplayName": "Math.Sign({0})",
+    "Description": "Returns -1, 0, or 1 indicating the sign",
+    "Code": "Math.Sign({0})",
+    "Parameters": [
+      {
+        "Type": "Object",
+        "Name": "value"
+      }
+    ],
+    "Return": "Int32"
   },
   {
     "Category": "Control Flow",
@@ -511,23 +843,9 @@
     "IsHidden": true
   },
   {
-    "Category": "Method Call",
-    "Name": "CallNonEvent",
-    "DisplayName": "Call NonEvent {0}",
-    "Description": "Call NonEvent method",
-    "Code": "{0}.Instance.Run()",
-    "Parameters": [
-      {
-        "Type": "NonEvent",
-        "Name": "NonEvent"
-      }
-    ],
-    "Return": "Void"
-  },
-  {
     "Category": "Data",
     "Name": "ArrayLength",
-    "DisplayName": "{0}.Length",
+    "DisplayName": "Get length of {0}",
     "Description": "Get array length",
     "Code": "{0}.Length",
     "Parameters": [
@@ -540,36 +858,26 @@
   },
   {
     "Category": "Data",
-    "Name": "ListCount",
-    "DisplayName": "{0}.Count",
-    "Description": "Get list count",
-    "Code": "{0}.Count",
+    "Name": "GetArrayElement",
+    "DisplayName": "Get element at index {1} from {0}",
+    "Description": "Get element from array",
+    "Code": "{0}[{1}]",
     "Parameters": [
       {
-        "Type": "List",
-        "Name": "list"
-      }
-    ],
-    "Return": "Int32"
-  },
-  {
-    "Category": "Data",
-    "Name": "DictionaryCount",
-    "DisplayName": "{0}.Count",
-    "Description": "Get dictionary count",
-    "Code": "{0}.Count",
-    "Parameters": [
+        "Type": "Array",
+        "Name": "array"
+      },
       {
-        "Type": "Dictionary",
-        "Name": "dictionary"
+        "Type": "Int32",
+        "Name": "index"
       }
     ],
-    "Return": "Int32"
+    "Return": "Object"
   },
   {
     "Category": "String",
     "Name": "GetChar",
-    "DisplayName": "{0}[{1}]",
+    "DisplayName": "Get character at index {1} from {0}",
     "Description": "Get character from string",
     "Code": "{0}[{1}]",
     "Parameters": [
@@ -605,7 +913,7 @@
   {
     "Category": "String",
     "Name": "StringLength",
-    "DisplayName": "{0}.Length",
+    "DisplayName": "Get length of {0}",
     "Description": "Get string length",
     "Code": "{0}.Length",
     "Parameters": [
@@ -619,7 +927,7 @@
   {
     "Category": "Type Conversion",
     "Name": "ToInt",
-    "DisplayName": "(int){0}",
+    "DisplayName": "Convert {0} to Int32",
     "Description": "Convert to Int32",
     "Code": "(int){0}",
     "Parameters": [
@@ -633,7 +941,7 @@
   {
     "Category": "Type Conversion",
     "Name": "ToLong",
-    "DisplayName": "(long){0}",
+    "DisplayName": "Convert {0} to Int64",
     "Description": "Convert to Int64",
     "Code": "(long){0}",
     "Parameters": [
@@ -647,7 +955,7 @@
   {
     "Category": "Type Conversion",
     "Name": "ToFloat",
-    "DisplayName": "(float){0}",
+    "DisplayName": "Convert {0} to Single",
     "Description": "Convert to float",
     "Code": "(float){0}",
     "Parameters": [
@@ -661,7 +969,7 @@
   {
     "Category": "Type Conversion",
     "Name": "ToDouble",
-    "DisplayName": "(double){0}",
+    "DisplayName": "Convert {0} to Double",
     "Description": "Convert to double",
     "Code": "(double){0}",
     "Parameters": [
@@ -675,7 +983,7 @@
   {
     "Category": "Type Conversion",
     "Name": "ToString",
-    "DisplayName": "(string){0}",
+    "DisplayName": "Convert {0} to String",
     "Description": "Convert to string",
     "Code": "(string){0}",
     "Parameters": [
@@ -689,7 +997,7 @@
   {
     "Category": "Type Conversion",
     "Name": "ToBool",
-    "DisplayName": "(bool){0}",
+    "DisplayName": "Convert {0} to Boolean",
     "Description": "Convert to bool",
     "Code": "(bool){0}",
     "Parameters": [
@@ -699,51 +1007,5 @@
       }
     ],
     "Return": "Boolean"
-  },
-  {
-    "Category": "Null Check",
-    "Name": "IsNull",
-    "DisplayName": "{0} == null",
-    "Description": "Check if value is null",
-    "Code": "{0} == null",
-    "Parameters": [
-      {
-        "Type": "Object",
-        "Name": "value"
-      }
-    ],
-    "Return": "Boolean"
-  },
-  {
-    "Category": "Null Check",
-    "Name": "IsNotNull",
-    "DisplayName": "{0} != null",
-    "Description": "Check if value is not null",
-    "Code": "{0} != null",
-    "Parameters": [
-      {
-        "Type": "Object",
-        "Name": "value"
-      }
-    ],
-    "Return": "Boolean"
-  },
-  {
-    "Category": "Null Check",
-    "Name": "NullCoalescing",
-    "DisplayName": "{0} ?? {1}",
-    "Description": "Null coalescing operator",
-    "Code": "{0} ?? {1}",
-    "Parameters": [
-      {
-        "Type": "Object",
-        "Name": "value"
-      },
-      {
-        "Type": "Object",
-        "Name": "defaultValue"
-      }
-    ],
-    "Return": "Object"
   }
 ]

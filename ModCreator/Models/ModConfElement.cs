@@ -5,6 +5,7 @@ namespace ModCreator.Models
 {
     public class ModConfElement : AutoNotifiableObject
     {
+        public string FileName { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
         public string Label { get; set; }
@@ -12,6 +13,8 @@ namespace ModCreator.Models
         public string VarType { get; set; }
         public bool Enable { get; set; } = true;
         public bool Required { get; set; } = false;
+        public bool Unique { get; set; } = false;
+        public bool ModEventParam { get; set; } = false;
         public List<string> Options { get; set; } = new List<string>();
         public string Value { get; set; }
         public string Separator { get; set; }
