@@ -36,6 +36,7 @@
                     </TextBlock>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Content="{x:Static helper:ProjectEditorWindowText.Donate}" Click="Donate_Click" Style="{StaticResource HeaderButton}" Width="70" Margin="10,0,0,0" Background="#FFFF9800" Foreground="White"/>
                     <Button Content="{x:Static helper:ProjectEditorWindowText.Help}" Click="Help_Click" Style="{StaticResource HeaderButton}" Width="70" Margin="10,0,0,0"/>
                     <Button Content="{x:Static helper:ProjectEditorWindowText.Save}" Click="Save_Click" Style="{StaticResource PrimaryButton}" Width="100" Margin="10,0,0,0"/>
                     <Button Content="{x:Static helper:ProjectEditorWindowText.Cancel}" Click="Close_Click" Style="{StaticResource ActionButton}" Width="100" Margin="10,0,0,0"/>

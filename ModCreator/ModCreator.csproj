@@ -59,6 +59,7 @@
     <None Remove="Resources\modevent-actions.json" />
     <None Remove="Resources\modevent-cachetype.json" />
     <None Remove="Resources\modevent-workon.json" />
+    <None Remove="Resources\ModLib.xml" />
     <None Remove="Resources\var-types.json" />
     <None Remove="Resources\project-replacements.json" />
     <None Remove="Resources\image-extensions.json" />
@@ -83,6 +84,7 @@
     <EmbeddedResource Include="Resources\modevent-actions.json" />
     <EmbeddedResource Include="Resources\modevent-cachetype.json" />
     <EmbeddedResource Include="Resources\modevent-workon.json" />
+    <EmbeddedResource Include="Resources\ModLib.xml" />
     <EmbeddedResource Include="Resources\var-types.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>

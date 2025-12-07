@@ -148,6 +148,12 @@ namespace ModCreator.Windows
             helpWindow.ShowDialog();
         }
 
+        private void Donate_Click(object sender, RoutedEventArgs e)
+        {
+            var donateWindow = new Windows.DonateWindow { Owner = this };
+            donateWindow.ShowDialog();
+        }
+
         private void Close_Click(object sender, RoutedEventArgs e)
         {
             if (WindowData.HasUnsavedChanges())

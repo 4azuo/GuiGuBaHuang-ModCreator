@@ -232,6 +232,12 @@ namespace ModCreator
             aboutWindow.ShowDialog();
         }
 
+        private void Donate_Click(object sender, RoutedEventArgs e)
+        {
+            var donateWindow = new Windows.DonateWindow { Owner = this };
+            donateWindow.ShowDialog();
+        }
+
         private void CheckDuplicateIds_Click(object sender, RoutedEventArgs e)
         {
             WindowData.StatusMessage = "Checking for duplicate IDs across all projects...";

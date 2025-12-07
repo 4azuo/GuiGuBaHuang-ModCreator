@@ -219,10 +219,14 @@ namespace ModCreator.Commons
 
         private void AutoUpdate(object sender, EventArgs e)
         {
-            if (IsPaused) return;
+            if (IsPaused)
+                return;
 
             PropertyInfo[] properties;
             if (!ListNotifyProperties.TryGetValue(GetType(), out properties))
+                return;
+
+            if (properties.Length == 0)
                 return;
 
             for (int i = 0; i < AUTO_RENOTIFY_MAX; i++)

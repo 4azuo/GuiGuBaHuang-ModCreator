@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:ModCreator.Windows"
         xmlns:localData="clr-namespace:ModCreator.WindowData" xmlns:helpers="clr-namespace:ModCreator.Helpers"
         xmlns:controls="clr-namespace:ModCreator.Controls" mc:Ignorable="d"
-        Title="{Binding WindowTitle}" Height="900" Width="1200" WindowStartupLocation="CenterOwner"
+        Title="{Binding WindowTitle}" Height="1000" Width="1500" WindowStartupLocation="CenterOwner"
         Icon="/Resources/app-icon.png" FontFamily="Segoe UI">
     <Grid>
         <Grid.RowDefinitions>

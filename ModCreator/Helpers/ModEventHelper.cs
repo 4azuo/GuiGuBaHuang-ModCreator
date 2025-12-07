@@ -112,33 +112,40 @@ namespace ModCreator.Helpers
                 return _cachedEvents.Clone();
 
             var items = LoadMethodsFromAssembly(
-                typeFilter: t => t.FullName == "ModLib.Mod.ModEvent",
-                methodFilter: m => m.IsVirtual && !m.IsSpecialName,
+                typeFilter: t => t.FullName == "ModLib.Mod.ModEvent" && !t.IsGenericType,
+                methodFilter: m => m.IsVirtual && !m.IsSpecialName && !m.IsConstructor && !m.IsGenericMethod && !m.ContainsGenericParameters && !m.GetParameters().Any(x => x.IsOut),
                 categoryAttribute: "ModLib.Attributes.EventCatAttribute",
                 ignoreAttribute: "ModLib.Attributes.EventCatIgnAttribute",
                 bindingFlags: BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly,
-                itemFactory: (typeName, method, category, code, parameters) => new Models.EventActionBase
+                itemFactory: (typeName, method, category, code, parameters) =>
                 {
-                    Category = category,
-                    Name = method.Name,
-                    DisplayName = method.Name,
-                    Description = $"ModEvent method: {method.Name}",
-                    Code = code,
-                    Parameters = parameters.Select(p => new Models.ParameterInfo
+                    // Get description from XML documentation
+                    var description = XMLDocHelper.GetMethodDocumentation("ModLib.Mod.ModEvent", method.Name) 
+                                    ?? $"ModEvent method: {method.Name}";
+                    
+                    return new Models.EventActionBase
                     {
-                        Type = FormatTypeName(p.ParameterType),
-                        Name = p.Name,
-                        IsOptional = p.IsOptional,
-                        DefaultValue = p.HasDefaultValue ? (p.RawDefaultValue?.ToString() ?? "null") : string.Empty
-                    }).ToList(),
-                    ParameterValues = parameters
-                            .Select((p, i) => new { Index = i, IsOptional = p.IsOptional && p.HasDefaultValue, Value = p.RawDefaultValue?.ToString() }).Where(x => x.IsOptional && !string.IsNullOrEmpty(x.Value))
-                            .ToDictionary(x => x.Index, x => new ModEventItemSelectValue { SelectType = Enums.ModEventSelectType.OptionalValue, OptionalValue = x.Value }),
-                    Return = FormatTypeName(method.ReturnType),
-                    HasBody = false,
-                    IsHidden = false,
-                    IsCanAddChild = false,
-                    SubItems = []
+                        Category = category,
+                        Name = method.Name,
+                        DisplayName = method.Name,
+                        Description = description,
+                        Code = code,
+                        Parameters = parameters.Select(p => new Models.ParameterInfo
+                        {
+                            Type = FormatTypeName(p.ParameterType),
+                            Name = p.Name,
+                            IsOptional = p.IsOptional,
+                            DefaultValue = p.HasDefaultValue ? (p.RawDefaultValue?.ToString() ?? "null") : string.Empty,
+                            IsOut = p.IsOut
+                        }).ToList(),
+                        ParameterValues = parameters
+                            .Select((p, i) => new { Index = i, p.IsOptional, Value = p.HasDefaultValue ? (p.RawDefaultValue?.ToString() ?? "null") : string.Empty }).Where(x => x.IsOptional)
+                            .ToDictionary(x => x.Index, x => new ModEventItemSelectValue { SelectType = Enums.ModEventSelectType.OptionalValue, OptionalValue = x.Value == string.Empty ? "\"\"" : x.Value }),
+                        Return = FormatTypeName(method.ReturnType),
+                        IsHidden = false,
+                        IsCanAddChild = false,
+                        SubItems = []
+                    };
                 });
 
             _cachedEvents = items;
@@ -153,10 +160,13 @@ namespace ModCreator.Helpers
             if (!forceReload && _cachedActions != null)
                 return _cachedActions.Clone();
 
-            var items = LoadMethodsFromAssembly(
-                typeFilter: t => t.Namespace != null && t.Namespace.StartsWith("ModLib.Helper"),
-                methodFilter: m => !m.IsSpecialName,
-                categoryAttribute: null,
+            var items = new List<Models.EventActionBase>();
+
+            items.AddRange(ResourceHelper.ReadEmbeddedResource<List<EventActionBase>>("ModCreator.Resources.modevent-actions.json"));
+            items.AddRange(LoadMethodsFromAssembly(
+                typeFilter: t => t.Namespace != null && t.Namespace.StartsWith("ModLib.Helper") && !t.IsGenericType,
+                methodFilter: m => !m.IsSpecialName && !m.IsConstructor && !m.IsGenericMethod && !m.ContainsGenericParameters && !m.GetParameters().Any(x => x.IsOut),
+                categoryAttribute: "ModLib.Attributes.ActionCatAttribute",
                 ignoreAttribute: "ModLib.Attributes.ActionCatIgnAttribute",
                 bindingFlags: BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly,
                 itemFactory: (typeName, method, category, code, parameters) =>
@@ -173,31 +183,38 @@ namespace ModCreator.Helpers
                     var methodCode = parameters.Length > 0
                         ? $"{typeName}.{method.Name}({paramPlaceholders})"
                         : $"{typeName}.{method.Name}()";
+                    
+                    // Get full type name for XML documentation lookup
+                    var fullTypeName = $"ModLib.Helper.{typeName}";
+                    
+                    // Get description from XML documentation
+                    var description = XMLDocHelper.GetMethodDocumentation(fullTypeName, method.Name)
+                                    ?? $"Helper method from {typeName}";
 
                     return new Models.EventActionBase
                     {
-                        Category = typeName,
+                        Category = category,
                         Name = $"{typeName}.{method.Name}",
                         DisplayName = displayName,
-                        Description = $"Helper method from {typeName}",
+                        Description = description,
                         Code = methodCode,
                         Parameters = parameters.Select(p => new Models.ParameterInfo
                         {
                             Type = FormatTypeName(p.ParameterType),
                             Name = p.Name,
                             IsOptional = p.IsOptional,
-                            DefaultValue = p.HasDefaultValue ? (p.RawDefaultValue?.ToString() ?? "null") : string.Empty
+                            DefaultValue = p.HasDefaultValue ? (p.RawDefaultValue?.ToString() ?? "null") : string.Empty,
+                            IsOut = p.IsOut
                         }).ToList(),
                         ParameterValues = parameters
-                            .Select((p, i) => new { Index = i, IsOptional = p.IsOptional && p.HasDefaultValue, Value = p.RawDefaultValue?.ToString() }).Where(x => x.IsOptional && !string.IsNullOrEmpty(x.Value))
-                            .ToDictionary(x => x.Index, x => new ModEventItemSelectValue { SelectType = Enums.ModEventSelectType.OptionalValue, OptionalValue = x.Value }),
+                            .Select((p, i) => new { Index = i, p.IsOptional, Value = p.HasDefaultValue ? (p.RawDefaultValue?.ToString() ?? "null") : string.Empty }).Where(x => x.IsOptional)
+                            .ToDictionary(x => x.Index, x => new ModEventItemSelectValue { SelectType = Enums.ModEventSelectType.OptionalValue, OptionalValue = x.Value == string.Empty ? "\"\"" : x.Value }),
                         Return = FormatTypeName(method.ReturnType),
-                        HasBody = false,
                         IsHidden = false,
                         IsCanAddChild = false,
                         SubItems = []
                     };
-                });
+                }));
 
             _cachedActions = items;
             return items;
@@ -227,6 +244,8 @@ namespace ModCreator.Helpers
                     if (!string.IsNullOrEmpty(ignoreAttribute) && HasAttribute(type, ignoreAttribute))
                         continue;
 
+                    var categoryClass = GetAttributeValue(type, categoryAttribute)?.ToString();
+
                     var methods = type.GetMethods(bindingFlags)
                         .Where(methodFilter)
                         .ToList();
@@ -245,9 +264,7 @@ namespace ModCreator.Helpers
                         var code = $"{FormatTypeName(method.ReturnType)} {method.Name}({string.Join(", ", parameters.Select(p => $"{FormatTypeName(p.ParameterType)} {p.Name}"))})";
 
                         // Get category from attribute or use default
-                        var category = string.IsNullOrEmpty(categoryAttribute)
-                            ? "Others"
-                            : GetAttributeValue(method, categoryAttribute)?.ToString() ?? "Others";
+                        var category = GetAttributeValue(method, categoryAttribute)?.ToString() ?? categoryClass ?? "Others";
 
                         items.Add(itemFactory(type.Name, method, category, code, parameters));
                     }

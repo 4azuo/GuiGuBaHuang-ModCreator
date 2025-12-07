@@ -6,6 +6,7 @@
       "AppSubtitle": "Manage your GuiGuBaHuang mods with ease",
       "Help": "Help",
       "About": "About",
+      "Donate": "Donate",
       "Workplace": "Workplace",
       "Browse": "Browse",
       "ProjectList": "Project List",
@@ -92,6 +93,7 @@
       "ProjectIdLabel": "Project ID:",
       "Translate": "Translate",
       "Help": "Help",
+      "Donate": "Donate",
       "Save": "Save",
       "Cancel": "Cancel",
       "TabProjectInfo": "Project Info",
@@ -208,6 +210,18 @@
       "Cancel": "Cancel",
       "AddRow": "➕",
       "RemoveRow": "➖"
+    },
+    "DonateWindow": {
+      "Title": "Support ModCreator",
+      "Subtitle": "Help us continue developing this tool",
+      "Message": "If you find ModCreator helpful, please consider supporting the development! Your donation helps maintain and improve this tool.",
+      "ScanQR": "Scan the QR code above to donate via PayPal",
+      "StripeInfo": "Stripe Payment Details:",
+      "ButtonId": "Button ID:",
+      "PublishableKey": "Publishable Key:",
+      "KofiMessage": "Support me on Ko-fi",
+      "ThankYou": "Thank you for your support! ❤️",
+      "Close": "Close"
     }
   },
   "Messages": {

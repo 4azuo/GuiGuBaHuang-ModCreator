@@ -692,7 +692,6 @@
     "Description": "Then block of If-Else",
     "Code": "",
     "Return": "Void",
-    "HasBody": true,
     "IsCanAddChild": true,
     "IsHidden": true
   },
@@ -701,9 +700,8 @@
     "Name": "IfElse_Else",
     "DisplayName": "Else",
     "Description": "Else block of If-Else",
-    "Code": "",
+    "Code": "else",
     "Return": "Void",
-    "HasBody": true,
     "IsCanAddChild": true,
     "IsHidden": true
   },
@@ -744,8 +742,7 @@
       }
     ],
     "Return": "Void",
-    "IsCanAddChild": true,
-    "HasBody": true
+    "IsCanAddChild": true
   },
   {
     "Category": "Loop",
@@ -764,8 +761,7 @@
       }
     ],
     "Return": "Void",
-    "IsCanAddChild": true,
-    "HasBody": true
+    "IsCanAddChild": true
   },
   {
     "Category": "Exception",
@@ -782,9 +778,8 @@
     "Name": "TryCatch_Try",
     "DisplayName": "Try",
     "Description": "Try block",
-    "Code": "",
+    "Code": "try",
     "Return": "Void",
-    "HasBody": true,
     "IsCanAddChild": true,
     "IsHidden": true
   },
@@ -793,9 +788,8 @@
     "Name": "TryCatch_Catch",
     "DisplayName": "Catch",
     "Description": "Catch block",
-    "Code": "",
+    "Code": "catch",
     "Return": "Void",
-    "HasBody": true,
     "IsCanAddChild": true,
     "IsHidden": true
   },
@@ -814,9 +808,8 @@
     "Name": "TryCatchFinally_Try",
     "DisplayName": "Try",
     "Description": "Try block",
-    "Code": "",
+    "Code": "try",
     "Return": "Void",
-    "HasBody": true,
     "IsCanAddChild": true,
     "IsHidden": true
   },
@@ -825,9 +818,8 @@
     "Name": "TryCatchFinally_Catch",
     "DisplayName": "Catch",
     "Description": "Catch block",
-    "Code": "",
+    "Code": "catch",
     "Return": "Void",
-    "HasBody": true,
     "IsCanAddChild": true,
     "IsHidden": true
   },
@@ -836,9 +828,8 @@
     "Name": "TryCatchFinally_Finally",
     "DisplayName": "Finally",
     "Description": "Finally block",
-    "Code": "",
+    "Code": "finally",
     "Return": "Void",
-    "HasBody": true,
     "IsCanAddChild": true,
     "IsHidden": true
   },
@@ -879,7 +870,7 @@
     "Name": "GetChar",
     "DisplayName": "Get character at index {1} from {0}",
     "Description": "Get character from string",
-    "Code": "{0}[{1}]",
+    "Code": "(string)({0}[{1}])",
     "Parameters": [
       {
         "Type": "String",
@@ -890,7 +881,7 @@
         "Name": "index"
       }
     ],
-    "Return": "Char"
+    "Return": "String"
   },
   {
     "Category": "String",
@@ -925,7 +916,309 @@
     "Return": "Int32"
   },
   {
-    "Category": "Type Conversion",
+    "Category": "String",
+    "Name": "Substring",
+    "DisplayName": "{0}.Substring({1})",
+    "Description": "Get substring starting from index",
+    "Code": "{0}.Substring({1})",
+    "Parameters": [
+      {
+        "Type": "String",
+        "Name": "text"
+      },
+      {
+        "Type": "Int32",
+        "Name": "startIndex"
+      }
+    ],
+    "Return": "String"
+  },
+  {
+    "Category": "String",
+    "Name": "SubstringLength",
+    "DisplayName": "{0}.Substring({1}, {2})",
+    "Description": "Get substring with specified length",
+    "Code": "{0}.Substring({1}, {2})",
+    "Parameters": [
+      {
+        "Type": "String",
+        "Name": "text"
+      },
+      {
+        "Type": "Int32",
+        "Name": "startIndex"
+      },
+      {
+        "Type": "Int32",
+        "Name": "length"
+      }
+    ],
+    "Return": "String"
+  },
+  {
+    "Category": "String",
+    "Name": "Insert",
+    "DisplayName": "{0}.Insert({1}, {2})",
+    "Description": "Insert string at specified index",
+    "Code": "{0}.Insert({1}, {2})",
+    "Parameters": [
+      {
+        "Type": "String",
+        "Name": "text"
+      },
+      {
+        "Type": "Int32",
+        "Name": "startIndex"
+      },
+      {
+        "Type": "String",
+        "Name": "value"
+      }
+    ],
+    "Return": "String"
+  },
+  {
+    "Category": "String",
+    "Name": "Remove",
+    "DisplayName": "{0}.Remove({1})",
+    "Description": "Remove all characters from specified index",
+    "Code": "{0}.Remove({1})",
+    "Parameters": [
+      {
+        "Type": "String",
+        "Name": "text"
+      },
+      {
+        "Type": "Int32",
+        "Name": "startIndex"
+      }
+    ],
+    "Return": "String"
+  },
+  {
+    "Category": "String",
+    "Name": "RemoveLength",
+    "DisplayName": "{0}.Remove({1}, {2})",
+    "Description": "Remove specified number of characters",
+    "Code": "{0}.Remove({1}, {2})",
+    "Parameters": [
+      {
+        "Type": "String",
+        "Name": "text"
+      },
+      {
+        "Type": "Int32",
+        "Name": "startIndex"
+      },
+      {
+        "Type": "Int32",
+        "Name": "count"
+      }
+    ],
+    "Return": "String"
+  },
+  {
+    "Category": "String",
+    "Name": "Replace",
+    "DisplayName": "{0}.Replace({1}, {2})",
+    "Description": "Replace all occurrences of a string",
+    "Code": "{0}.Replace({1}, {2})",
+    "Parameters": [
+      {
+        "Type": "String",
+        "Name": "text"
+      },
+      {
+        "Type": "String",
+        "Name": "oldValue"
+      },
+      {
+        "Type": "String",
+        "Name": "newValue"
+      }
+    ],
+    "Return": "String"
+  },
+  {
+    "Category": "String",
+    "Name": "Trim",
+    "DisplayName": "{0}.Trim()",
+    "Description": "Remove whitespace from both ends",
+    "Code": "{0}.Trim()",
+    "Parameters": [
+      {
+        "Type": "String",
+        "Name": "text"
+      }
+    ],
+    "Return": "String"
+  },
+  {
+    "Category": "String",
+    "Name": "TrimStart",
+    "DisplayName": "{0}.TrimStart()",
+    "Description": "Remove whitespace from the start",
+    "Code": "{0}.TrimStart()",
+    "Parameters": [
+      {
+        "Type": "String",
+        "Name": "text"
+      }
+    ],
+    "Return": "String"
+  },
+  {
+    "Category": "String",
+    "Name": "TrimEnd",
+    "DisplayName": "{0}.TrimEnd()",
+    "Description": "Remove whitespace from the end",
+    "Code": "{0}.TrimEnd()",
+    "Parameters": [
+      {
+        "Type": "String",
+        "Name": "text"
+      }
+    ],
+    "Return": "String"
+  },
+  {
+    "Category": "String",
+    "Name": "ToUpper",
+    "DisplayName": "{0}.ToUpper()",
+    "Description": "Convert to uppercase",
+    "Code": "{0}.ToUpper()",
+    "Parameters": [
+      {
+        "Type": "String",
+        "Name": "text"
+      }
+    ],
+    "Return": "String"
+  },
+  {
+    "Category": "String",
+    "Name": "ToLower",
+    "DisplayName": "{0}.ToLower()",
+    "Description": "Convert to lowercase",
+    "Code": "{0}.ToLower()",
+    "Parameters": [
+      {
+        "Type": "String",
+        "Name": "text"
+      }
+    ],
+    "Return": "String"
+  },
+  {
+    "Category": "String",
+    "Name": "IndexOf",
+    "DisplayName": "{0}.IndexOf({1})",
+    "Description": "Find first index of substring",
+    "Code": "{0}.IndexOf({1})",
+    "Parameters": [
+      {
+        "Type": "String",
+        "Name": "text"
+      },
+      {
+        "Type": "String",
+        "Name": "value"
+      }
+    ],
+    "Return": "Int32"
+  },
+  {
+    "Category": "String",
+    "Name": "LastIndexOf",
+    "DisplayName": "{0}.LastIndexOf({1})",
+    "Description": "Find last index of substring",
+    "Code": "{0}.LastIndexOf({1})",
+    "Parameters": [
+      {
+        "Type": "String",
+        "Name": "text"
+      },
+      {
+        "Type": "String",
+        "Name": "value"
+      }
+    ],
+    "Return": "Int32"
+  },
+  {
+    "Category": "String",
+    "Name": "StartsWith",
+    "DisplayName": "{0}.StartsWith({1})",
+    "Description": "Check if string starts with value",
+    "Code": "{0}.StartsWith({1})",
+    "Parameters": [
+      {
+        "Type": "String",
+        "Name": "text"
+      },
+      {
+        "Type": "String",
+        "Name": "value"
+      }
+    ],
+    "Return": "Boolean"
+  },
+  {
+    "Category": "String",
+    "Name": "EndsWith",
+    "DisplayName": "{0}.EndsWith({1})",
+    "Description": "Check if string ends with value",
+    "Code": "{0}.EndsWith({1})",
+    "Parameters": [
+      {
+        "Type": "String",
+        "Name": "text"
+      },
+      {
+        "Type": "String",
+        "Name": "value"
+      }
+    ],
+    "Return": "Boolean"
+  },
+  {
+    "Category": "String",
+    "Name": "Contains",
+    "DisplayName": "{0}.Contains({1})",
+    "Description": "Check if string contains value",
+    "Code": "{0}.Contains({1})",
+    "Parameters": [
+      {
+        "Type": "String",
+        "Name": "text"
+      },
+      {
+        "Type": "String",
+        "Name": "value"
+      }
+    ],
+    "Return": "Boolean"
+  },
+  {
+    "Category": "String",
+    "Name": "Split",
+    "DisplayName": "{0}.Split({1})",
+    "Description": "Split string into array",
+    "Code": "{0}.Split({1})",
+    "Parameters": [
+      {
+        "Type": "String",
+        "Name": "text"
+      },
+      {
+        "Type": "String",
+        "Name": "separator"
+      }
+    ],
+    "Return": "Array"
+  },
+  {
+    "Category": "Conversion",
     "Name": "ToInt",
     "DisplayName": "Convert {0} to Int32",
     "Description": "Convert to Int32",
@@ -939,7 +1232,7 @@
     "Return": "Int32"
   },
   {
-    "Category": "Type Conversion",
+    "Category": "Conversion",
     "Name": "ToLong",
     "DisplayName": "Convert {0} to Int64",
     "Description": "Convert to Int64",
@@ -953,7 +1246,7 @@
     "Return": "Int64"
   },
   {
-    "Category": "Type Conversion",
+    "Category": "Conversion",
     "Name": "ToFloat",
     "DisplayName": "Convert {0} to Single",
     "Description": "Convert to float",
@@ -967,7 +1260,7 @@
     "Return": "Single"
   },
   {
-    "Category": "Type Conversion",
+    "Category": "Conversion",
     "Name": "ToDouble",
     "DisplayName": "Convert {0} to Double",
     "Description": "Convert to double",
@@ -981,7 +1274,7 @@
     "Return": "Double"
   },
   {
-    "Category": "Type Conversion",
+    "Category": "Conversion",
     "Name": "ToString",
     "DisplayName": "Convert {0} to String",
     "Description": "Convert to string",
@@ -995,7 +1288,7 @@
     "Return": "String"
   },
   {
-    "Category": "Type Conversion",
+    "Category": "Conversion",
     "Name": "ToBool",
     "DisplayName": "Convert {0} to Boolean",
     "Description": "Convert to bool",

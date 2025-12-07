@@ -7,7 +7,7 @@
              x:Name="Root"
              d:DesignHeight="30" d:DesignWidth="150">
     <ComboBox x:Name="MainComboBox" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" 
-              Text="{Binding ElementName=Root, Path=DisplayText, Mode=OneWay}" IsEditable="True" IsReadOnly="True"
+              Text="{Binding ElementName=Root, Path=DisplayText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEditable="True"
               DropDownOpened="MainComboBox_DropDownOpened">
         <ComboBox.ItemTemplate>
             <DataTemplate>

@@ -1,0 +1,53 @@
+<local:CWindow x:Class="ModCreator.Windows.DonateWindow" x:TypeArguments="localData:DonateWindowData"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:ModCreator.Windows"
+        xmlns:localData="clr-namespace:ModCreator.WindowData" xmlns:helper="clr-namespace:ModCreator.Helpers" mc:Ignorable="d"
+        Title="{x:Static helper:DonateWindowText.Title}" Height="800" Width="500" WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize" Icon="/Resources/app-icon.png" FontFamily="Segoe UI">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#FF2E5090" Padding="20">
+            <StackPanel HorizontalAlignment="Center">
+                <TextBlock Text="{x:Static helper:DonateWindowText.Title}" FontSize="32" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
+                <TextBlock Text="{x:Static helper:DonateWindowText.Subtitle}" FontSize="14" Foreground="#FFCCCCCC" HorizontalAlignment="Center" Margin="0,5,0,0" TextWrapping="Wrap" TextAlignment="Center"/>
+            </StackPanel>
+        </Border>
+        
+        <!-- Content -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="30,20">
+                <TextBlock Text="{x:Static helper:DonateWindowText.Message}" TextWrapping="Wrap" FontSize="13" Margin="0,0,0,20" TextAlignment="Center"/>
+                
+                <!-- QR Code Image -->
+                <Border BorderBrush="#FFCCCCCC" BorderThickness="2" Margin="0,10" CornerRadius="5" HorizontalAlignment="Center">
+                    <Image Source="{Binding DonateImage}" Stretch="Uniform" MaxWidth="300" MaxHeight="300" Margin="10"/>
+                </Border>
+                <TextBlock Text="{x:Static helper:DonateWindowText.ScanQR}" TextWrapping="Wrap" FontSize="12" Foreground="Gray" Margin="0,10,0,0" TextAlignment="Center"/>
+                
+                <!-- Ko-fi Link -->
+                <Border Background="#FF29ABE0" Padding="15" Margin="0,20,0,0" CornerRadius="5" Cursor="Hand" MouseLeftButtonDown="KofiLink_Click">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="☕" FontSize="20" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <TextBlock FontSize="14" Foreground="White" VerticalAlignment="Center">
+                            <Run Text="{x:Static helper:DonateWindowText.KofiMessage}" FontWeight="SemiBold"/>
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+                
+                <TextBlock Text="{x:Static helper:DonateWindowText.ThankYou}" TextWrapping="Wrap" FontSize="13" FontWeight="SemiBold" Margin="0,20,0,0" TextAlignment="Center" Foreground="#FF2E5090"/>
+            </StackPanel>
+        </ScrollViewer>
+        
+        <!-- Footer -->
+        <Border Grid.Row="2" Background="#FFF5F5F5" Padding="16" BorderBrush="#FFDDDDDD" BorderThickness="0,1,0,0">
+            <Button Content="{x:Static helper:DonateWindowText.Close}" Click="Close_Click" Style="{StaticResource ActionButton}" Width="100" HorizontalAlignment="Right"/>
+        </Border>
+    </Grid>
+</local:CWindow>

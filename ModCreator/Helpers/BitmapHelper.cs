@@ -75,5 +75,45 @@ namespace ModCreator.Helpers
         {
             return LoadFromFile(filePath) != null;
         }
+
+        /// <summary>
+        /// Converts a <see cref="BitmapImage"/> to its equivalent Base64 string representation.
+        /// </summary>
+        /// <remarks>This method encodes the image using the PNG format. To use a different format, modify
+        /// the encoder as needed.</remarks>
+        /// <param name="bitmapImage">The <see cref="BitmapImage"/> to convert. Must not be null.</param>
+        /// <returns>A Base64-encoded string representing the image data of the provided <see cref="BitmapImage"/>.</returns>
+        public static string BitmapImageToBase64(BitmapImage bitmapImage)
+        {
+            BitmapEncoder encoder = new PngBitmapEncoder(); // or JpegBitmapEncoder
+            using (MemoryStream ms = new MemoryStream())
+            {
+                encoder.Frames.Add(BitmapFrame.Create(bitmapImage));
+                encoder.Save(ms);
+                return Convert.ToBase64String(ms.ToArray());
+            }
+        }
+
+        /// <summary>
+        /// Converts a Base64-encoded string to a <see cref="BitmapImage"/>.
+        /// </summary>
+        /// <remarks>The resulting <see cref="BitmapImage"/> is frozen to make it thread-safe and
+        /// immutable.</remarks>
+        /// <param name="base64">The Base64-encoded string representing image data.</param>
+        /// <returns>A <see cref="BitmapImage"/> created from the provided Base64 string.</returns>
+        public static BitmapImage Base64ToBitmapImage(string base64)
+        {
+            byte[] bytes = Convert.FromBase64String(base64);
+            using (MemoryStream ms = new MemoryStream(bytes))
+            {
+                BitmapImage bmp = new BitmapImage();
+                bmp.BeginInit();
+                bmp.CacheOption = BitmapCacheOption.OnLoad;
+                bmp.StreamSource = ms;
+                bmp.EndInit();
+                bmp.Freeze();
+                return bmp;
+            }
+        }
     }
 }

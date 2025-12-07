@@ -71,7 +71,7 @@ namespace ModCreator.Helpers
         public static List<ModConfValue> GetValues(string groupName)
         {
             var values = LoadValues();
-            return values.TryGetValue(groupName, out var valueList) ? valueList : new List<ModConfValue>();
+            return values.TryGetValue(groupName, out var valueList) ? valueList : [];
         }
 
         /// <summary>

@@ -283,107 +283,111 @@ namespace ModCreator.WindowData
             return generatedCode;
         }
 
-        private string GenerateCodeFromEventActions(ObservableCollection<EventActionBase> actions, bool isCondition = false)
+        private string GenerateCodeFromEventActions(ObservableCollection<EventActionBase> actions, bool isCondition)
         {
-            if (actions == null || actions.Count == 0)
+            var codeLines = GenerateCodeFromEventActions(actions);
+            if (codeLines == null || codeLines.Count == 0)
                 return string.Empty;
 
-            var codeBuilder = new System.Text.StringBuilder();
-            var indent = isCondition ? "" : "                "; // 16 spaces for actions, no indent for conditions
-            var needsSeparator = false;
+            if (isCondition)
+            {
+                return string.Join(" ", codeLines.Select(x => $"({x})"));
+            }
+            else
+            {
+                // Add proper indentation to each line based on brace depth
+                var indentedLines = new List<string>();
+                int indentLevel = 0;
+                foreach (var line in codeLines)
+                {
+                    var trimmedLine = line.Trim();
+                    
+                    // Decrease indent before closing brace
+                    if (trimmedLine == "}")
+                        indentLevel--;
+                    
+                    // Add indentation
+                    var indent = new string(' ', indentLevel * 4);
+                    indentedLines.Add($"                {indent}{trimmedLine}");
+                    
+                    // Increase indent after opening brace
+                    if (trimmedLine == "{")
+                        indentLevel++;
+                }
+                
+                return string.Join("\r\n", indentedLines);
+            }
+        }
 
+        private List<string> GenerateCodeFromEventActions(ObservableCollection<EventActionBase> actions)
+        {
+            if (actions == null || actions.Count == 0)
+                return [];
+
+            var codeLines = new List<string>();
             foreach (var action in actions)
             {
                 // Skip the Root placeholder - but process its children
                 if (action.Name == Constants.EventActionRootElement.Name)
                 {
-                    if (action.Children != null && action.Children.Count > 0)
+                    foreach (var child in action.Children)
                     {
-                        foreach (var child in action.Children)
-                        {
-                            var code = GenerateCodeFromSingleAction(child, isCondition);
-                            if (!string.IsNullOrEmpty(code))
-                            {
-                                var trimmedCode = code.TrimEnd();
-                                
-                                if (isCondition)
-                                {
-                                    // For conditions, wrap each in () and join with space
-                                    if (needsSeparator)
-                                        codeBuilder.Append(" ");
-                                    codeBuilder.Append($"({trimmedCode})");
-                                    needsSeparator = true;
-                                }
-                                else
-                                {
-                                    // For actions, add indent and semicolon
-                                    if (!trimmedCode.EndsWith(";") && !trimmedCode.EndsWith("}"))
-                                    {
-                                        codeBuilder.AppendLine($"{indent}{trimmedCode};");
-                                    }
-                                    else
-                                    {
-                                        codeBuilder.AppendLine($"{indent}{trimmedCode}");
-                                    }
-                                }
-                            }
-                        }
+                        codeLines.AddRange(GenerateCodeFromSingleAction(child));
                     }
-                    continue;
-                }
-
-                var actionCode = GenerateCodeFromSingleAction(action, isCondition);
-                if (!string.IsNullOrEmpty(actionCode))
-                {
-                    var trimmedCode = actionCode.TrimEnd();
-                    
-                    if (isCondition)
-                    {
-                        // For conditions, wrap each in () and join with space
-                        if (needsSeparator)
-                            codeBuilder.Append(" ");
-                        codeBuilder.Append($"({trimmedCode})");
-                        needsSeparator = true;
-                    }
-                    else
-                    {
-                        // For actions, add indent and semicolon
-                        if (!trimmedCode.EndsWith(";") && !trimmedCode.EndsWith("}"))
-                        {
-                            codeBuilder.AppendLine($"{indent}{trimmedCode};");
-                        }
-                        else
-                        {
-                            codeBuilder.AppendLine($"{indent}{trimmedCode}");
-                        }
-                    }
+                    break;
                 }
             }
 
-            return codeBuilder.ToString().TrimEnd();
+            return codeLines;
         }
 
-        private string GenerateCodeFromSingleAction(EventActionBase action, bool isCondition = false)
+        private List<string> GenerateCodeFromSingleAction(EventActionBase action)
         {
             if (action == null || string.IsNullOrEmpty(action.Code))
-                return string.Empty;
+                return [];
 
-            var code = isCondition ? $"({action.Code})" : action.Code;
+            var codeLines = new List<string>();
+            if (!string.IsNullOrEmpty(action.Code))
+                codeLines.Add(GenerateCodeWithParameters(action));
+            foreach (var child in action.Children)
+            {
+                if (child.IsCanAddChild)
+                {
+                    if (!string.IsNullOrEmpty(child.Code))
+                        codeLines.Add(GenerateCodeWithParameters(child));
+                    codeLines.Add("{");
+                    foreach (var c in child.Children)
+                    {
+                        codeLines.AddRange(GenerateCodeFromSingleAction(c));
+                    }
+                    codeLines.Add("}");
+                }
+                else
+                {
+                    codeLines.AddRange(GenerateCodeFromSingleAction(child));
+                }
+            }
 
+            return codeLines;
+        }
+
+        private string GenerateCodeWithParameters(EventActionBase action)
+        {
+            var code = action.Code;
             // Replace parameter placeholders with actual values
             if (action.Parameters != null && action.Parameters.Count > 0)
             {
                 for (int i = 0; i < action.Parameters.Count; i++)
                 {
                     var placeholder = $"{{{i}}}";
-                    
+
                     // Check if this parameter has a value
                     if (action.ParameterValues != null && action.ParameterValues.ContainsKey(i))
                     {
                         var paramValue = action.ParameterValues[i];
                         if (paramValue != null)
                         {
-                            var paramCode = GenerateCodeFromParameterValue(paramValue, isCondition);
+                            var paramCode = GenerateCodeFromParameterValue(paramValue);
                             code = code.Replace(placeholder, paramCode);
                         }
                         else
@@ -400,30 +404,10 @@ namespace ModCreator.WindowData
                     }
                 }
             }
-
-            // Process children recursively if HasBody is true
-            if (action.HasBody && action.Children != null && action.Children.Count > 0)
-            {
-                var childrenCode = new System.Text.StringBuilder();
-                foreach (var child in action.Children)
-                {
-                    var childCode = GenerateCodeFromSingleAction(child, isCondition);
-                    if (!string.IsNullOrEmpty(childCode))
-                    {
-                        childrenCode.AppendLine($"    {childCode};");
-                    }
-                }
-                
-                if (childrenCode.Length > 0)
-                {
-                    code = code.Replace("{BODY}", childrenCode.ToString().TrimEnd());
-                }
-            }
-
             return code;
         }
 
-        private string GenerateCodeFromParameterValue(ModEventItemSelectValue paramValue, bool isCondition = false)
+        private string GenerateCodeFromParameterValue(ModEventItemSelectValue paramValue)
         {
             if (paramValue == null)
                 return string.Empty;
@@ -434,9 +418,13 @@ namespace ModCreator.WindowData
                     // Generate code from nested EventAction
                     if (paramValue.SelectedEventAction != null)
                     {
-                        var nestedCode = GenerateCodeFromSingleAction(paramValue.SelectedEventAction, isCondition);
-                        // For nested actions used as parameters, remove trailing semicolon
-                        return nestedCode?.TrimEnd(';', ' ', '\r', '\n') ?? string.Empty;
+                        var nestedCodeLines = GenerateCodeFromSingleAction(paramValue.SelectedEventAction);
+                        if (nestedCodeLines != null && nestedCodeLines.Count > 0)
+                        {
+                            // Join all code lines and trim trailing semicolon for inline usage
+                            var nestedCode = string.Join(" ", nestedCodeLines);
+                            return nestedCode.TrimEnd(';', ' ', '\r', '\n');
+                        }
                     }
                     return string.Empty;
 

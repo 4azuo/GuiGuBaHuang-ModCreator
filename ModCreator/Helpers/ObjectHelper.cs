@@ -18,7 +18,7 @@ namespace ModCreator.Helpers
             PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.Objects,
         };
 
-        public static Type[] IgnoredTypes { get; } = new Type[]
+        public static Type[] IgnoredTypes { get; } = 
         {
             typeof(AutoNotifiableObject),
             typeof(HistorableObject),
@@ -157,9 +157,10 @@ namespace ModCreator.Helpers
         /// <typeparam name="T">Type of objects to compare</typeparam>
         /// <param name="obj1">First object</param>
         /// <param name="obj2">Second object</param>
+        /// <param name="trackedTypes">Types to track for deep comparison</param>
         /// <param name="ignoreProperties">Optional list of property names to ignore in comparison</param>
         /// <returns>True if all properties are equal, false otherwise</returns>
-        public static bool ArePropertiesEqual<T>(T obj1, T obj2, params string[] ignoreProperties) where T : class
+        public static bool ArePropertiesEqual<T>(T obj1, T obj2, Type[] trackedTypes, params string[] ignoreProperties) where T : class
         {
             if (obj1 == null && obj2 == null) return true;
             if (obj1 == null || obj2 == null) return false;
@@ -167,14 +168,14 @@ namespace ModCreator.Helpers
 
             var type = typeof(T);
             var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(p => p.CanRead && !ignoreProperties.Contains(p.Name) && !IgnoredTypes.Contains(p.DeclaringType));
+                .Where(p => p.CanRead && (trackedTypes == null || trackedTypes.Contains(p.DeclaringType)) && !ignoreProperties.Contains(p.Name) && !IgnoredTypes.Contains(p.DeclaringType));
 
             foreach (var property in properties)
             {
                 var value1 = property.GetValue(obj1);
                 var value2 = property.GetValue(obj2);
 
-                if (!AreValuesEqual(value1, value2))
+                if (!AreValuesEqual(value1, value2, trackedTypes, ignoreProperties))
                     return false;
             }
 
@@ -187,9 +188,10 @@ namespace ModCreator.Helpers
         /// <typeparam name="T">Type of objects to compare</typeparam>
         /// <param name="obj1">First object</param>
         /// <param name="obj2">Second object</param>
+        /// <param name="trackedTypes">Types to track for deep comparison</param>
         /// <param name="ignoreProperties">Optional list of property names to ignore in comparison</param>
         /// <returns>Dictionary with property names as keys and tuple of (value1, value2) as values</returns>
-        public static Dictionary<string, (object value1, object value2)> GetPropertyDifferences<T>(T obj1, T obj2, params string[] ignoreProperties) where T : class
+        public static Dictionary<string, (object value1, object value2)> GetPropertyDifferences<T>(T obj1, T obj2, Type[] trackedTypes, params string[] ignoreProperties) where T : class
         {
             var differences = new Dictionary<string, (object, object)>();
 
@@ -198,14 +200,14 @@ namespace ModCreator.Helpers
 
             var type = typeof(T);
             var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(p => p.CanRead && !ignoreProperties.Contains(p.Name) && !IgnoredTypes.Contains(p.DeclaringType));
+                .Where(p => p.CanRead && (trackedTypes == null || trackedTypes.Contains(p.DeclaringType)) && !ignoreProperties.Contains(p.Name) && !IgnoredTypes.Contains(p.DeclaringType));
 
             foreach (var property in properties)
             {
                 var value1 = property.GetValue(obj1);
                 var value2 = property.GetValue(obj2);
 
-                if (!AreValuesEqual(value1, value2))
+                if (!AreValuesEqual(value1, value2, trackedTypes, ignoreProperties))
                 {
                     differences[property.Name] = (value1, value2);
                 }
@@ -228,7 +230,7 @@ namespace ModCreator.Helpers
 
             var type = typeof(T);
             var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(p => p.CanRead && p.CanWrite && !ignoreProperties.Contains(p.Name));
+                .Where(p => p.CanRead && p.CanWrite && !ignoreProperties.Contains(p.Name) && !IgnoredTypes.Contains(p.DeclaringType));
 
             foreach (var property in properties)
             {
@@ -278,7 +280,7 @@ namespace ModCreator.Helpers
         /// <summary>
         /// Compare two values for equality, handling nulls and collections
         /// </summary>
-        public static bool AreValuesEqual(object value1, object value2)
+        public static bool AreValuesEqual(object value1, object value2, Type[] trackedTypes, params string[] ignoreProperties)
         {
             if (value1 == null && value2 == null) return true;
             if (value1 == null || value2 == null) return false;
@@ -299,7 +301,7 @@ namespace ModCreator.Helpers
 
                 for (int i = 0; i < list1.Count; i++)
                 {
-                    if (!AreValuesEqual(list1[i], list2[i]))
+                    if (!ArePropertiesEqual(list1[i], list2[i], trackedTypes, ignoreProperties))
                         return false;
                 }
 
@@ -309,42 +311,18 @@ namespace ModCreator.Helpers
             // Handle complex objects by comparing their properties
             var type1 = value1.GetType();
             var type2 = value2.GetType();
-            
+
             if (type1 != type2) return false;
-            
+
             // If it's a value type or primitive, use Equals
             if (type1.IsValueType || type1.IsPrimitive || type1.IsEnum)
             {
                 return Equals(value1, value2);
             }
-
-            // For complex objects, compare properties recursively
-            var properties = type1.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(p => p.CanRead && !IgnoredTypes.Contains(p.DeclaringType));
-
-            foreach (var property in properties)
+            else
             {
-                var propValue1 = property.GetValue(value1);
-                var propValue2 = property.GetValue(value2);
-
-                if (!AreValuesEqual(propValue1, propValue2))
-                    return false;
+                return ArePropertiesEqual(value1, value2, trackedTypes, ignoreProperties);
             }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Check if any property has changed between two objects
-        /// </summary>
-        /// <typeparam name="T">Type of objects to compare</typeparam>
-        /// <param name="obj1">First object</param>
-        /// <param name="obj2">Second object</param>
-        /// <param name="ignoreProperties">Optional list of property names to ignore in comparison</param>
-        /// <returns>True if at least one property is different, false otherwise</returns>
-        public static bool HasPropertyChanges<T>(T obj1, T obj2, params string[] ignoreProperties) where T : class
-        {
-            return !ArePropertiesEqual(obj1, obj2, ignoreProperties);
         }
 
         /// <summary>
@@ -355,9 +333,9 @@ namespace ModCreator.Helpers
         /// <param name="obj2">Second object</param>
         /// <param name="ignoreProperties">Optional list of property names to ignore in comparison</param>
         /// <returns>List of property names with different values</returns>
-        public static List<string> GetChangedPropertyNames<T>(T obj1, T obj2, params string[] ignoreProperties) where T : class
+        public static List<string> GetChangedPropertyNames<T>(T obj1, T obj2, Type[] trackedTypes, params string[] ignoreProperties) where T : class
         {
-            var differences = GetPropertyDifferences(obj1, obj2, ignoreProperties);
+            var differences = GetPropertyDifferences(obj1, obj2, trackedTypes, ignoreProperties);
             return differences.Keys.ToList();
         }
     }

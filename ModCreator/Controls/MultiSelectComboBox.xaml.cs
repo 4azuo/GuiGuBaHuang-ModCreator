@@ -35,6 +35,21 @@ namespace ModCreator.Controls
                 {
                     _displayText = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DisplayText)));
+                    
+                    // If user manually types, update SelectedValue and clear selections
+                    if (!_isUpdating && !string.IsNullOrEmpty(value))
+                    {
+                        _isUpdating = true;
+                        SelectedValue = value;
+                        if (ItemsSource != null)
+                        {
+                            foreach (var item in ItemsSource)
+                            {
+                                item.IsSelected = false;
+                            }
+                        }
+                        _isUpdating = false;
+                    }
                 }
             }
         }
@@ -135,7 +150,7 @@ namespace ModCreator.Controls
         private void MainComboBox_DropDownOpened(object sender, EventArgs e)
         {
             DropDownOpened?.Invoke(this, e);
-            UpdateSelectionFromValue();
+            //UpdateSelectionFromValue();
         }
     }
 }

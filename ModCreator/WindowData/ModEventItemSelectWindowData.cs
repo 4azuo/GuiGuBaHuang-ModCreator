@@ -124,10 +124,7 @@ namespace ModCreator.WindowData
                     AllItems.AddRange(ModEventHelper.LoadModEventMethodsFromAssembly());
                     break;
                 case ModEventItemType.Action:
-                    // Load from modevent-actions.json
-                    AllItems.AddRange(ResourceHelper.ReadEmbeddedResource<List<EventActionBase>>("ModCreator.Resources.modevent-actions.json"));
-                    // Load from ModLib.Helper.* classes
-                    AllItems.AddRange(ModEventHelper.LoadModActionMethodsFromAssembly());
+                    AllItems.AddRange(ModEventHelper.LoadModActionMethodsFromAssembly().Clone());
                     break;
             }
             

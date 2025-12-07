@@ -384,7 +384,7 @@ namespace ModCreator.Windows
         {
             if (WindowData.SelectedModEvent == null) return;
 
-            var selectWindow = new ModEventItemSelectWindow { Owner = this, ItemType = Enums.ModEventItemType.Action, ReturnType = "bool" };
+            var selectWindow = new ModEventItemSelectWindow { Owner = this, ItemType = Enums.ModEventItemType.Action, ReturnType = "Boolean" };
 
             if (selectWindow.ShowDialog() == true)
             {

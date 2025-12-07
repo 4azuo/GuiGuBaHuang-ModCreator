@@ -30,9 +30,16 @@ namespace ModCreator.WindowData
         public bool HasUnsavedChanges()
         {
             if (Project == null || _originalProject == null) return false;
-            
+
             // Only check ModProject properties, not nested collections
-            return !Helpers.ObjectHelper.ArePropertiesEqual(Project, _originalProject);
+            return !Helpers.ObjectHelper.ArePropertiesEqual(Project, _originalProject, [
+                typeof(ModProject),
+                typeof(GlobalVariable),
+                typeof(ModEventItem),
+                typeof(EventActionBase),
+                typeof(Models.ParameterInfo),
+                typeof(ModEventItemSelectValue),
+            ]);
         }
 
         public void BackupProject()

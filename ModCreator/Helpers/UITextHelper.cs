@@ -12,6 +12,7 @@ namespace ModCreator.Helpers
         public static string AppSubtitle => MessageHelper.Get("Windows.MainWindow.AppSubtitle");
         public static string Help => MessageHelper.Get("Windows.MainWindow.Help");
         public static string About => MessageHelper.Get("Windows.MainWindow.About");
+        public static string Donate => MessageHelper.Get("Windows.MainWindow.Donate");
         public static string Workplace => MessageHelper.Get("Windows.MainWindow.Workplace");
         public static string Browse => MessageHelper.Get("Windows.MainWindow.Browse");
         public static string ProjectList => MessageHelper.Get("Windows.MainWindow.ProjectList");
@@ -127,6 +128,7 @@ namespace ModCreator.Helpers
         public static string ProjectIdLabel => MessageHelper.Get("Windows.ProjectEditorWindow.ProjectIdLabel");
         public static string Translate => MessageHelper.Get("Windows.ProjectEditorWindow.Translate");
         public static string Help => MessageHelper.Get("Windows.ProjectEditorWindow.Help");
+        public static string Donate => MessageHelper.Get("Windows.ProjectEditorWindow.Donate");
         public static string Save => MessageHelper.Get("Windows.ProjectEditorWindow.Save");
         public static string Cancel => MessageHelper.Get("Windows.ProjectEditorWindow.Cancel");
         public static string TabProjectInfo => MessageHelper.Get("Windows.ProjectEditorWindow.TabProjectInfo");
@@ -253,5 +255,22 @@ namespace ModCreator.Helpers
         public static string Cancel => MessageHelper.Get("Windows.PatternSelectorWindow.Cancel");
         public static string AddRow => MessageHelper.Get("Windows.PatternSelectorWindow.AddRow");
         public static string RemoveRow => MessageHelper.Get("Windows.PatternSelectorWindow.RemoveRow");
+    }
+
+    /// <summary>
+    /// Donate window UI texts helper for XAML bindings
+    /// </summary>
+    public static class DonateWindowText
+    {
+        public static string Title => MessageHelper.Get("Windows.DonateWindow.Title");
+        public static string Subtitle => MessageHelper.Get("Windows.DonateWindow.Subtitle");
+        public static string Message => MessageHelper.Get("Windows.DonateWindow.Message");
+        public static string ScanQR => MessageHelper.Get("Windows.DonateWindow.ScanQR");
+        public static string StripeInfo => MessageHelper.Get("Windows.DonateWindow.StripeInfo");
+        public static string ButtonId => MessageHelper.Get("Windows.DonateWindow.ButtonId");
+        public static string PublishableKey => MessageHelper.Get("Windows.DonateWindow.PublishableKey");
+        public static string KofiMessage => MessageHelper.Get("Windows.DonateWindow.KofiMessage");
+        public static string ThankYou => MessageHelper.Get("Windows.DonateWindow.ThankYou");
+        public static string Close => MessageHelper.Get("Windows.DonateWindow.Close");
     }
 }

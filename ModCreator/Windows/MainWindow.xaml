@@ -28,7 +28,8 @@
                     <TextBlock Text="{x:Static helper:MainWindowText.AppSubtitle}" FontSize="12" Foreground="#FFCCCCCC" Margin="0,5,0,0"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Button Content="{x:Static helper:MainWindowText.Help}" Click="Help_Click" Style="{StaticResource HeaderButton}" Width="70" Margin="0,0,5,0"/>
+                    <Button Content="{x:Static helper:MainWindowText.Donate}" Click="Donate_Click" Style="{StaticResource HeaderButton}" Width="70" Margin="0,0,5,0" Background="#FFFF9800" Foreground="White"/>
+                    <Button Content="{x:Static helper:MainWindowText.Help}" Click="Help_Click" Style="{StaticResource HeaderButton}" Width="70" Margin="5,0,5,0"/>
                     <Button Content="{x:Static helper:MainWindowText.About}" Click="About_Click" Style="{StaticResource HeaderButton}" Width="70" Margin="5,0,0,0"/>
                 </StackPanel>
             </Grid>

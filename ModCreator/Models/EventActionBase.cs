@@ -19,7 +19,6 @@ namespace ModCreator.Models
         public List<ParameterInfo> Parameters { get; set; } = [];
         public Dictionary<int, ModEventItemSelectValue> ParameterValues { get; set; } = [];
         public string Return { get; set; }
-        public bool HasBody { get; set; } = false;
         public bool IsHidden { get; set; } = false;
         public bool IsCanAddChild { get; set; } = false;
         public List<string> SubItems { get; set; } = [];
