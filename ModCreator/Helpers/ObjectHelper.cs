@@ -338,5 +338,102 @@ namespace ModCreator.Helpers
             var differences = GetPropertyDifferences(obj1, obj2, trackedTypes, ignoreProperties);
             return differences.Keys.ToList();
         }
+
+        /// <summary>
+        /// Calculate hash code for an object, supporting complex types and collections
+        /// </summary>
+        /// <param name="obj">The object to calculate hash code for</param>
+        /// <param name="trackedTypes">Types to track for deep hash calculation</param>
+        /// <param name="ignoreProperties">Optional list of property names to ignore</param>
+        /// <returns>Combined hash code</returns>
+        public static int GetObjectHashCode(object obj, Type[] trackedTypes, params string[] ignoreProperties)
+        {
+            var visited = new HashSet<object>(new ReferenceEqualityComparer());
+            return GetObjectHashCodeInternal(obj, trackedTypes, ignoreProperties, visited);
+        }
+
+        /// <summary>
+        /// Internal method to calculate hash code with circular reference detection
+        /// </summary>
+        private static int GetObjectHashCodeInternal(object obj, Type[] trackedTypes, string[] ignoreProperties, HashSet<object> visited)
+        {
+            if (obj == null) return 0;
+
+            var type = obj.GetType();
+
+            // Handle strings separately to avoid treating them as IEnumerable
+            if (obj is string)
+            {
+                return obj.GetHashCode();
+            }
+
+            // Handle primitives and value types
+            if (type.IsValueType || type.IsPrimitive || type.IsEnum)
+            {
+                return obj.GetHashCode();
+            }
+
+            // Check for circular references
+            if (!visited.Add(obj))
+            {
+                // Already visited, return a constant to avoid infinite recursion
+                return 0;
+            }
+
+            // Handle collections
+            if (obj is System.Collections.IEnumerable enumerable)
+            {
+                unchecked
+                {
+                    int hash = 17;
+                    foreach (var item in enumerable)
+                    {
+                        hash = hash * 31 + GetObjectHashCodeInternal(item, trackedTypes, ignoreProperties, visited);
+                    }
+                    return hash;
+                }
+            }
+
+            // Handle complex objects - only if tracked
+            if (trackedTypes != null && !trackedTypes.Contains(type))
+            {
+                // Non-tracked types, use default GetHashCode
+                return obj.GetHashCode();
+            }
+
+            // For tracked complex objects, calculate hash from properties
+            unchecked
+            {
+                int hash = 17;
+                var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                    .Where(p => p.CanRead && 
+                                !ignoreProperties.Contains(p.Name) && 
+                                !IgnoredTypes.Contains(p.DeclaringType));
+
+                foreach (var property in properties)
+                {
+                    var value = property.GetValue(obj);
+                    hash = hash * 31 + GetObjectHashCodeInternal(value, trackedTypes, ignoreProperties, visited);
+                }
+
+                return hash;
+            }
+        }
+
+        /// <summary>
+        /// Reference equality comparer for HashSet to detect circular references
+        /// </summary>
+        private class ReferenceEqualityComparer : IEqualityComparer<object>
+        {
+            public new bool Equals(object x, object y)
+            {
+                return ReferenceEquals(x, y);
+            }
+
+            public int GetHashCode(object obj)
+            {
+                return System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(obj);
+            }
+        }
     }
 }

@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
 using Newtonsoft.Json;
+using ModCreator.Helpers;
 
 namespace ModCreator.Commons
 {
@@ -16,8 +17,8 @@ namespace ModCreator.Commons
         /// <summary>
         /// Consts
         /// </summary>
-        public const int AUTO_RENOTIFY_PERIOD = 125;
-        public const int AUTO_RENOTIFY_MAX = 8;
+        public const int AUTO_RENOTIFY_PERIOD = 100;
+        public const int AUTO_RENOTIFY_MAX = 10;
 
         /// <summary>
         /// Delegates
@@ -147,7 +148,7 @@ namespace ModCreator.Commons
         /// </summary>
         private void NotifyPropertyChanged(PropertyInfo prop)
         {
-            if (PausedProperties.Contains(prop))
+            if (PausedProperties.Contains(prop) || IsPaused)
                 return;
             object val = GetCheckSumValue(prop.GetValue(this));
             object befVal = null;
@@ -174,7 +175,7 @@ namespace ModCreator.Commons
             {
                 foreach (var m in notiMethods)
                 {
-                    m.Invoke(this, new object[] { this, prop, oldValue, val });
+                    m.Invoke(this, [this, prop, oldValue, val]);
                 }
             }
         }
@@ -187,25 +188,9 @@ namespace ModCreator.Commons
                 ((AutoNotifiableObject)val).RefreshAll(true);
         }
 
-        private object GetCheckSumValue(object iValue)
+        private long GetCheckSumValue(object iValue)
         {
-            if (iValue == null) return null;
-            var enumerable = typeof(IEnumerable);
-            if (enumerable.IsAssignableFrom(iValue.GetType()))
-            {
-                long sum = 0;
-                long index = 0;
-                foreach (var i in (IEnumerable)iValue)
-                {
-                    sum += i?.GetHashCode() ?? index;
-                    index++;
-                }
-                return sum;
-            }
-            else
-            {
-                return iValue;
-            }
+            return ObjectHelper.GetObjectHashCode(iValue, null);
         }
 
         /// <summary>

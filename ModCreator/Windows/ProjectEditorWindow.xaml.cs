@@ -51,6 +51,9 @@ namespace ModCreator.Windows
 
                 // Initialize auto-save timer
                 InitializeAutoSaveTimer();
+
+                // Setup Event Source Editor binding
+                SetupEventSourceEditorBinding();
             }
 
             // Subscribe to Closed event to notify parent window
@@ -111,8 +114,28 @@ namespace ModCreator.Windows
         [SupportedOSPlatform("windows6.1")]
         private void Window_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
+            // Handle Ctrl+Z for Undo
+            if (e.Key == System.Windows.Input.Key.Z && !WindowData.IsCodeModeOnly &&
+                (System.Windows.Input.Keyboard.Modifiers & System.Windows.Input.ModifierKeys.Control) == System.Windows.Input.ModifierKeys.Control)
+            {
+                if (WindowData?.CanUndo == true)
+                {
+                    e.Handled = true;
+                    Undo_Click(sender, e);
+                }
+            }
+            // Handle Ctrl+Y for Redo
+            else if (e.Key == System.Windows.Input.Key.Y && !WindowData.IsCodeModeOnly &&
+                (System.Windows.Input.Keyboard.Modifiers & System.Windows.Input.ModifierKeys.Control) == System.Windows.Input.ModifierKeys.Control)
+            {
+                if (WindowData?.CanRedo == true)
+                {
+                    e.Handled = true;
+                    Redo_Click(sender, e);
+                }
+            }
             // Handle Ctrl+F to open replace panel
-            if (e.Key == System.Windows.Input.Key.F && 
+            else if (e.Key == System.Windows.Input.Key.F && 
                 (System.Windows.Input.Keyboard.Modifiers & System.Windows.Input.ModifierKeys.Control) == System.Windows.Input.ModifierKeys.Control)
             {
                 if (WindowData?.HasSelectedConfFile == true)
@@ -152,6 +175,16 @@ namespace ModCreator.Windows
         {
             var donateWindow = new Windows.DonateWindow { Owner = this };
             donateWindow.ShowDialog();
+        }
+
+        private void Undo_Click(object sender, RoutedEventArgs e)
+        {
+            WindowData?.UndoModEvent();
+        }
+
+        private void Redo_Click(object sender, RoutedEventArgs e)
+        {
+            WindowData?.RedoModEvent();
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)

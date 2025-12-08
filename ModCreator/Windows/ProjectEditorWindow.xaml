@@ -9,6 +9,8 @@
         WindowState="Maximized" Icon="/Resources/app-icon.png" FontFamily="Segoe UI" PreviewKeyDown="Window_PreviewKeyDown">
     <Window.Resources>
         <converter:BoolToIconConverter x:Key="BoolToIconConverter"/>
+        <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <converter:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
         <converter:FilePathToImageConverter x:Key="FilePathToImageConverter"/>
         <converter:RootItemToVisibilityConverter x:Key="RootItemToVisibilityConverter"/>
         <ObjectDataProvider x:Key="EventModeEnum" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
@@ -314,11 +316,13 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
-                                <Button x:Name="btnGuiMode" Content="{x:Static helper:ProjectEditorWindowText.GuiMode}" Click="ToggleGuiMode_Click" Style="{StaticResource ActionButton}" Background="#FF2E5090" Foreground="White" Width="120" Margin="0,0,5,0"/>
+                                <Button x:Name="btnGuiMode" Content="{x:Static helper:ProjectEditorWindowText.GuiMode}" Click="ToggleGuiMode_Click" Style="{StaticResource ActionButton}" Background="#FF2E5090" Foreground="White" Width="120" Margin="0,0,5,0" IsEnabled="{Binding IsGuiModeEnabled, Mode=OneWay}"/>
                                 <Button x:Name="btnCodeMode" Content="{x:Static helper:ProjectEditorWindowText.CodeMode}" Click="ToggleCodeMode_Click" Style="{StaticResource ActionButton}" Width="120" Margin="0,0,20,0"/>
+                                <Button x:Name="btnUndo" Content="↶ Undo" ToolTip="Undo (Ctrl+Z)" Click="Undo_Click" Style="{StaticResource ActionButton}" Width="80" Margin="0,0,5,0" IsEnabled="{Binding CanUndo, Mode=OneWay}"/>
+                                <Button x:Name="btnRedo" Content="↷ Redo" ToolTip="Redo (Ctrl+Y)" Click="Redo_Click" Style="{StaticResource ActionButton}" Width="80" Margin="0,0,20,0" IsEnabled="{Binding CanRedo, Mode=OneWay}"/>
                                 <Button Content="{x:Static helper:ProjectEditorWindowText.SaveModEvent}" Click="SaveModEvent_Click" Style="{StaticResource PrimaryButton}" Width="100" IsEnabled="{Binding HasSelectedEventFile, Mode=OneWay}"/>
                             </StackPanel>
-                            <Grid x:Name="guiModePanel" Grid.Row="1" Visibility="Visible">
+                            <Grid x:Name="guiModePanel" Grid.Row="1" Visibility="{Binding IsCodeModeOnly, Converter={StaticResource InverseBoolToVisibilityConverter}}">
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                                     <Grid IsEnabled="{Binding HasSelectedEventFile, Mode=OneWay}">
                                         <Grid.RowDefinitions>
@@ -423,7 +427,7 @@
                                     </Grid>
                                 </ScrollViewer>
                             </Grid>
-                            <Grid x:Name="codeModePanel" Grid.Row="1" Visibility="Collapsed">
+                            <Grid x:Name="codeModePanel" Grid.Row="1" Visibility="{Binding IsCodeModeOnly, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>

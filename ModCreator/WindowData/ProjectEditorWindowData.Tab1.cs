@@ -35,6 +35,7 @@ namespace ModCreator.WindowData
             return !Helpers.ObjectHelper.ArePropertiesEqual(Project, _originalProject, [
                 typeof(ModProject),
                 typeof(GlobalVariable),
+                typeof(FileItem),
                 typeof(ModEventItem),
                 typeof(EventActionBase),
                 typeof(Models.ParameterInfo),

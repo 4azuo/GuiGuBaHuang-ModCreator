@@ -13,17 +13,20 @@ namespace ModCreator.WindowData
     {
         public List<string> ConfFiles { get; set; } = [];
         public ObservableCollection<FileItem> ConfItems { get; set; } = [];
-
         [NotifyMethod(nameof(LoadConfContent))]
         public string SelectedConfFile { get; set; }
-
-        [NotifyMethod(nameof(OnConfItemSelected))]
-        public FileItem SelectedConfItem { get; set; }
-
-        public string SelectedConfContent { get; set; }
+        public FileItem SelectedConfItem => ConfItems.FirstOrDefault(item => item.RelativePath == SelectedConfFile);
+        public string SelectedConfContent
+        {
+            get => SelectedConfItem?.Content;
+            set
+            {
+                if (SelectedConfItem != null)
+                    SelectedConfItem.Content = value;
+            }
+        }
         public bool HasSelectedConfFile => !string.IsNullOrEmpty(SelectedConfFile);
         public bool HasSelectedConfItem => SelectedConfItem != null;
-
         [NotifyMethod(nameof(OnFilterLocalTextChanged))]
         public bool FilterLocalText { get; set; }
 
@@ -55,14 +58,12 @@ namespace ModCreator.WindowData
                     if (!File.Exists(fullPath))
                     {
                         SelectedConfFile = null;
-                        SelectedConfItem = null;
                     }
                 }
             }
             else
             {
                 SelectedConfFile = null;
-                SelectedConfItem = null;
             }
         }
 
@@ -104,22 +105,12 @@ namespace ModCreator.WindowData
                     FullPath = file,
                     RelativePath = Path.GetRelativePath(rootPath, file),
                     IsFolder = false,
-                    Parent = parent
+                    Parent = parent,
+                    Content = File.ReadAllText(file)
                 });
             }
 
             return items;
-        }
-
-        public void OnConfItemSelected(object obj, PropertyInfo prop, object oldValue, object newValue)
-        {
-            if (SelectedConfItem == null || SelectedConfItem.IsFolder)
-            {
-                SelectedConfFile = null;
-                return;
-            }
-
-            SelectedConfFile = SelectedConfItem.RelativePath;
         }
 
         public void LoadConfContent(object obj, PropertyInfo prop, object oldValue, object newValue)
@@ -132,24 +123,12 @@ namespace ModCreator.WindowData
 
             var filePath = Path.Combine(Project.ProjectPath, "ModProject", "ModConf", SelectedConfFile);
             SelectedConfContent = File.Exists(filePath) ? File.ReadAllText(filePath) : string.Empty;
-            
-            // Update the content in the corresponding FileItem
-            if (SelectedConfItem != null && !SelectedConfItem.IsFolder)
-            {
-                SelectedConfItem.Content = SelectedConfContent;
-            }
         }
 
         public void SaveConfContent()
         {
             if (Project == null)
                 return;
-
-            // Update current item's content
-            if (SelectedConfItem != null && !SelectedConfItem.IsFolder && !string.IsNullOrEmpty(SelectedConfContent))
-            {
-                SelectedConfItem.Content = SelectedConfContent;
-            }
 
             // Save all files in ConfItems
             int savedCount = 0;

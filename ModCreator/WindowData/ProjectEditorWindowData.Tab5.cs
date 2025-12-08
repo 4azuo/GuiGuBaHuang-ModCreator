@@ -1,6 +1,7 @@
 using ModCreator.Attributes;
 using ModCreator.Helpers;
 using ModCreator.Models;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -15,13 +16,59 @@ namespace ModCreator.WindowData
         [NotifyMethod(nameof(OnEventItemSelected))]
         public FileItem SelectedEventItem { get; set; }
         [NotifyMethod(nameof(LoadModEventContent))]
-        public ModEventItem SelectedModEvent { get; set; }
-        public string EventSourceContent { get; set; }
+        public ModEventItem SelectedModEvent
+        {
+            get => (ModEventItem)SelectedEventItem?.ObjectContent;
+            set
+            {
+                if (SelectedEventItem != null)
+                    SelectedEventItem.ObjectContent = value;
+            }
+        }
+        public string EventSourceContent
+        {
+            get => SelectedEventItem?.Content;
+            set
+            {
+                if (SelectedEventItem != null)
+                    SelectedEventItem.Content = value;
+            }
+        }
         public bool HasSelectedEventFile => SelectedModEvent != null;
-        public bool IsGuiMode { get; set; } = true;
+        public bool IsCodeModeOnly => SelectedModEvent?.IsCodeModeOnly == true;
+        public bool IsGuiModeEnabled => SelectedModEvent != null && !IsCodeModeOnly;
         public List<string> CacheTypes { get; set; } = [];
         public List<string> WorkOnTypes { get; set; } = [];
         public List<EventActionBase> AvailableEvents { get; set; } = ModEventHelper.LoadModEventMethodsFromAssembly();
+
+        public bool CanUndo => SelectedModEvent?.CanUndo ?? false && !IsCodeModeOnly;
+        public bool CanRedo => SelectedModEvent?.CanRedo ?? false && !IsCodeModeOnly;
+
+        public void UndoModEvent()
+        {
+            if (SelectedEventItem == null)
+                return;
+
+            if (!IsCodeModeOnly)
+            {
+                SelectedModEvent.Undo();
+            }
+
+            StatusMessage = MessageHelper.Get("Messages.Success.Undo");
+        }
+
+        public void RedoModEvent()
+        {
+            if (SelectedEventItem == null)
+                return;
+
+            if (!IsCodeModeOnly)
+            {
+                SelectedModEvent.Redo();
+            }
+
+            StatusMessage = MessageHelper.Get("Messages.Success.Redo");
+        }
 
         public void LoadModEventFiles()
         {
@@ -71,7 +118,9 @@ namespace ModCreator.WindowData
                     Name = Path.GetFileName(file),
                     FullPath = file,
                     IsFolder = false,
-                    Parent = parent
+                    Parent = parent,
+                    Content = File.ReadAllText(file),
+                    ObjectContent = Project?.ModEvents?.FirstOrDefault(e => e.FilePath == file)
                 });
             }
 
@@ -112,12 +161,6 @@ namespace ModCreator.WindowData
             EventSourceContent = SelectedModEvent != null && File.Exists(SelectedModEvent.FilePath)
                 ? File.ReadAllText(SelectedModEvent.FilePath)
                 : string.Empty;
-            
-            // Update the content in the corresponding FileItem
-            if (SelectedEventItem != null && !SelectedEventItem.IsFolder && SelectedModEvent != null)
-            {
-                SelectedEventItem.Content = EventSourceContent;
-            }
         }
 
         public void SaveModEvent()
@@ -125,7 +168,7 @@ namespace ModCreator.WindowData
             if (SelectedModEvent == null || string.IsNullOrEmpty(SelectedModEvent.FilePath))
                 return;
 
-            var content = IsGuiMode ? GenerateModEventCode(SelectedModEvent) : EventSourceContent;
+            var content = !IsCodeModeOnly ? GenerateModEventCode(SelectedModEvent) : EventSourceContent;
             File.WriteAllText(SelectedModEvent.FilePath, content);
             StatusMessage = MessageHelper.GetFormat("Messages.Success.SavedModEventFile", Path.GetFileName(SelectedModEvent.FilePath));
         }
@@ -138,8 +181,7 @@ namespace ModCreator.WindowData
             // Update current item's content
             if (SelectedEventItem != null && !SelectedEventItem.IsFolder && SelectedModEvent != null)
             {
-                var content = IsGuiMode ? GenerateModEventCode(SelectedModEvent) : EventSourceContent;
-                SelectedEventItem.Content = content;
+                EventSourceContent = !IsCodeModeOnly ? GenerateModEventCode(SelectedModEvent) : EventSourceContent;
             }
 
             // Save all files in EventItems
@@ -170,7 +212,7 @@ namespace ModCreator.WindowData
                         // If this is the selected item, use current GUI/code mode
                         if (item == SelectedEventItem)
                         {
-                            content = IsGuiMode ? GenerateModEventCode(modEvent) : EventSourceContent;
+                            content = !IsCodeModeOnly ? GenerateModEventCode(modEvent) : EventSourceContent;
                         }
                         else
                         {

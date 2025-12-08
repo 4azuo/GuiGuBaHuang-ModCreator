@@ -1,3 +1,4 @@
+using ModCreator.Commons;
 using ModCreator.Helpers;
 using ModCreator.Models;
 using ModCreator.WindowData;
@@ -20,45 +21,6 @@ namespace ModCreator.Windows
             if (e.NewValue is FileItem fileItem)
             {
                 WindowData.SelectedEventItem = fileItem;
-                UpdateModeButtonsBasedOnCodeModeFlag();
-            }
-        }
-
-        [SupportedOSPlatform("windows6.1")]
-        private void UpdateModeButtonsBasedOnCodeModeFlag()
-        {
-            var guiPanel = this.FindName("guiModePanel") as Grid;
-            var codePanel = this.FindName("codeModePanel") as Grid;
-            var btnGui = this.FindName("btnGuiMode") as Button;
-            var btnCode = this.FindName("btnCodeMode") as Button;
-
-            if (guiPanel == null || codePanel == null || btnGui == null || btnCode == null) return;
-
-            if (WindowData?.SelectedModEvent?.IsCodeModeOnly == true)
-            {
-                guiPanel.Visibility = Visibility.Collapsed;
-                codePanel.Visibility = Visibility.Visible;
-                WindowData.IsGuiMode = false;
-
-                btnCode.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2E5090"));
-                btnCode.Foreground = Brushes.White;
-                btnGui.Background = Brushes.White;
-                btnGui.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF666666"));
-                btnGui.IsEnabled = false;
-
-                SetupEventSourceEditorBinding();
-            }
-            else
-            {
-                guiPanel.Visibility = Visibility.Visible;
-                codePanel.Visibility = Visibility.Collapsed;
-                WindowData.IsGuiMode = true;
-
-                btnGui.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2E5090"));
-                btnGui.Foreground = Brushes.White;
-                btnCode.Background = Brushes.White;
-                btnCode.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF666666"));
-                btnGui.IsEnabled = true;
             }
         }
 
@@ -182,26 +144,7 @@ namespace ModCreator.Windows
                 return;
             }
 
-            var maxOrder = 0;
-            if (WindowData.EventItems != null)
-            {
-                void TraverseItems(System.Collections.Generic.IEnumerable<FileItem> items)
-                {
-                    foreach (var item in items)
-                    {
-                        if (!item.IsFolder && item.FullPath.EndsWith(".cs", StringComparison.OrdinalIgnoreCase))
-                        {
-                            var content = File.ReadAllText(item.FullPath);
-                            var match = System.Text.RegularExpressions.Regex.Match(content, @"OrderIndex\s*=\s*(\d+)");
-                            if (match.Success && int.TryParse(match.Groups[1].Value, out int order) && order > maxOrder)
-                                maxOrder = order;
-                        }
-                        if (item.Children?.Any() == true)
-                            TraverseItems(item.Children);
-                    }
-                }
-                TraverseItems(WindowData.EventItems);
-            }
+            var maxOrder = WindowData.EventItems.Select(x => x.GetObjectContentAs<ModEventItem>().OrderIndex).Max();
 
             var newEvent = new ModEventItem
             {
@@ -213,6 +156,7 @@ namespace ModCreator.Windows
             };
 
             File.WriteAllText(filePath, WindowData.GenerateModEventCode(newEvent));
+            WindowData.Project.ModEvents.Add(newEvent);
             WindowData.LoadModEventFiles();
             WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.CreatedModEvent", className);
 
@@ -622,21 +566,6 @@ namespace ModCreator.Windows
                 return;
             }
 
-            var guiPanel = this.FindName("guiModePanel") as Grid;
-            var codePanel = this.FindName("codeModePanel") as Grid;
-            var btnGui = this.FindName("btnGuiMode") as Button;
-            var btnCode = this.FindName("btnCodeMode") as Button;
-
-            if (guiPanel == null || codePanel == null || btnGui == null || btnCode == null) return;
-
-            guiPanel.Visibility = Visibility.Visible;
-            codePanel.Visibility = Visibility.Collapsed;
-            WindowData.IsGuiMode = true;
-
-            btnGui.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2E5090"));
-            btnGui.Foreground = Brushes.White;
-            btnCode.Background = Brushes.White;
-            btnCode.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF666666"));
             WindowData.StatusMessage = MessageHelper.Get("Messages.Success.SwitchedToGuiMode");
         }
 
@@ -661,24 +590,6 @@ namespace ModCreator.Windows
                 WindowData.SelectedModEvent.Actions.Clear();
             }
 
-            var guiPanel = this.FindName("guiModePanel") as Grid;
-            var codePanel = this.FindName("codeModePanel") as Grid;
-            var btnGui = this.FindName("btnGuiMode") as Button;
-            var btnCode = this.FindName("btnCodeMode") as Button;
-
-            if (guiPanel == null || codePanel == null || btnGui == null || btnCode == null) return;
-
-            guiPanel.Visibility = Visibility.Collapsed;
-            codePanel.Visibility = Visibility.Visible;
-            WindowData.IsGuiMode = false;
-
-            SetupEventSourceEditorBinding();
-
-            btnCode.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2E5090"));
-            btnCode.Foreground = Brushes.White;
-            btnGui.Background = Brushes.White;
-            btnGui.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF666666"));
-            btnGui.IsEnabled = false;
             WindowData.StatusMessage = MessageHelper.Get("Messages.Success.SwitchedToCodeMode");
         }
 

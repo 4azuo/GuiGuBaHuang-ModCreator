@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using ModCreator.Attributes;
 using ModCreator.Commons;
 using ModCreator.Enums;
 
@@ -7,7 +8,7 @@ namespace ModCreator.Models
     /// <summary>
     /// Represents a ModEvent with its configuration
     /// </summary>
-    public class ModEventItem : AutoNotifiableObject
+    public class ModEventItem : HistorableObject
     {
         /// <summary>
         /// Event mode: ModEvent or NonEvent

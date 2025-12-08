@@ -52,7 +52,7 @@ namespace ModCreator.Windows
         {
             if (e.NewValue is FileItem fileItem)
             {
-                WindowData.SelectedConfItem = fileItem;
+                WindowData.SelectedConfFile = fileItem.RelativePath;
             }
         }
 
