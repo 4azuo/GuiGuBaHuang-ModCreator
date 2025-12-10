@@ -97,15 +97,11 @@ namespace ModCreator.Commons
         public void ClearValidation()
         {
             ValidationError = null;
-            Notify(nameof(ValidationError));
-            Notify(nameof(IsValid));
         }
 
         public void SetValidationError(string error)
         {
             ValidationError = error;
-            Notify(nameof(ValidationError));
-            Notify(nameof(IsValid));
         }
     }
 }

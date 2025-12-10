@@ -124,7 +124,8 @@ namespace ModCreator.Controls
                 ReturnType = parameter.Type,
                 ParameterValues = p != null && p.SelectType == ModEventSelectType.EventAction ? p.SelectedEventAction.ParameterValues : [],
                 SelectedItemName = p?.Name,
-                ShowOptionalValueSection = true
+                ShowOptionalValueSection = true,
+                OptionalValue = p != null && p.SelectType == ModEventSelectType.OptionalValue ? p.OptionalValue : string.Empty,
             };
 
             if (selectWindow.ShowDialog() == true)
@@ -142,7 +143,6 @@ namespace ModCreator.Controls
                     item.ParameterValues[paramIndex] = new ModEventItemSelectValue(selectWindow.WindowData.OptionalValue, parameter.Type);
                 }
 
-                item.RefreshDisplayName();
                 UpdateText(item);
             }
         }

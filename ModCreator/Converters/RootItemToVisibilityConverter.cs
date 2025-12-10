@@ -11,7 +11,11 @@ namespace ModCreator.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is EventActionBase action)
-                return action.Name == Constants.EventActionRootElement.Name ? Visibility.Collapsed : Visibility.Visible;
+            {
+                // Hide button if it's root element or hidden item
+                if (action.Name == Constants.EventActionRootElement.Name || action.IsHidden)
+                    return Visibility.Collapsed;
+            }
             
             return Visibility.Visible;
         }

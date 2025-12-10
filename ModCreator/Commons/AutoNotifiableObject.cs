@@ -1,7 +1,6 @@
 using ModCreator.Attributes;
 using System;
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
@@ -17,7 +16,7 @@ namespace ModCreator.Commons
         /// <summary>
         /// Consts
         /// </summary>
-        public const int AUTO_RENOTIFY_PERIOD = 100;
+        public const int AUTO_RENOTIFY_PERIOD = 200;
         public const int AUTO_RENOTIFY_MAX = 10;
 
         /// <summary>
