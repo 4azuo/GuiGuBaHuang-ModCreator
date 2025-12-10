@@ -1,4 +1,5 @@
 using ModCreator.Commons;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace ModCreator.Models
@@ -11,6 +12,6 @@ namespace ModCreator.Models
         public string Title { get; set; }
         public string FilePath { get; set; }
         public bool IsFolder { get; set; }
-        public ObservableCollection<DocItem> Children { get; set; } = [];
+        public List<DocItem> Children { get; set; } = [];
     }
 }

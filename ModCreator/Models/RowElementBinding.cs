@@ -1,8 +1,6 @@
 using ModCreator.Commons;
 using ModCreator.Helpers;
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace ModCreator.Models
@@ -11,7 +9,7 @@ namespace ModCreator.Models
     {
         private Dictionary<string, string> _row;
         private List<PatternElement> _allElements;
-        private ObservableCollection<RowElementBinding> _allBindings;
+        private List<RowElementBinding> _allBindings;
 
         public PatternElement Element { get; set; }
 
@@ -28,13 +26,12 @@ namespace ModCreator.Models
 
                 if (oldValue != value)
                 {
-                    Notify(nameof(Value));
                     ProcessElementFormat();
                 }
             }
         }
 
-        public RowElementBinding(Dictionary<string, string> row, PatternElement element, List<PatternElement> allElements = null, ObservableCollection<RowElementBinding> allBindings = null)
+        public RowElementBinding(Dictionary<string, string> row, PatternElement element, List<PatternElement> allElements = null, List<RowElementBinding> allBindings = null)
         {
             _row = row;
             _allElements = allElements;
@@ -58,10 +55,6 @@ namespace ModCreator.Models
                         _row.Add(element.Name, generatedValue);
 
                     var targetBinding = _allBindings.FirstOrDefault(b => b.Element.Name == element.Name);
-                    if (targetBinding != null)
-                    {
-                        targetBinding.Notify(nameof(Value));
-                    }
                 }
             }
         }

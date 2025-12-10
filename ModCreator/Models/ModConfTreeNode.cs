@@ -1,5 +1,6 @@
 using ModCreator.Commons;
 using ModCreator.Enums;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace ModCreator.Models
@@ -11,6 +12,6 @@ namespace ModCreator.Models
         public string Value { get; set; }
         public string FilePath { get; set; }
         public string FieldName { get; set; }
-        public ObservableCollection<ModConfTreeNode> Children { get; set; } = [];
+        public List<ModConfTreeNode> Children { get; set; } = [];
     }
 }

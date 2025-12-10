@@ -15,7 +15,7 @@ namespace ModCreator.Models
         public bool Required { get; set; } = false;
         public bool Unique { get; set; } = false;
         public bool ModEventParam { get; set; } = false;
-        public ObservableCollection<ModConfValue> Options { get; set; } = new ObservableCollection<ModConfValue>();
+        public List<ModConfValue> Options { get; set; } = new List<ModConfValue>();
         public string Value { get; set; }
         public string Separator { get; set; }
         public List<PatternElement> SubElements { get; set; } = new List<PatternElement>();

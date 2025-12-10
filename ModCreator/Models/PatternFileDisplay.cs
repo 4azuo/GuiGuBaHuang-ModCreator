@@ -11,7 +11,7 @@ namespace ModCreator.Models
         public string FileName { get; set; }
         public List<PatternElement> Elements { get; set; } = new List<PatternElement>();
         public List<PatternElement> DisplayElements { get; set; } = new List<PatternElement>();
-        public ObservableCollection<RowDisplay> Rows { get; set; } = new ObservableCollection<RowDisplay>();
+        public List<RowDisplay> Rows { get; set; } = new List<RowDisplay>();
         public int FrozenColumns { get; set; } = 2;
         
         public List<PatternElement> FrozenDisplayElements => 

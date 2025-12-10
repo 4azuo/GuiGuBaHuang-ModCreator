@@ -9,7 +9,7 @@ namespace ModCreator.Models
     public class RowDisplay : AutoNotifiableObject
     {
         public Dictionary<string, string> RowData { get; set; }
-        public ObservableCollection<RowElementBinding> Bindings { get; set; } = new ObservableCollection<RowElementBinding>();
+        public List<RowElementBinding> Bindings { get; set; } = new List<RowElementBinding>();
         private int _frozenColumns;
 
         public RowDisplay(Dictionary<string, string> rowData, List<PatternElement> allElements, List<PatternElement> displayElements = null, int frozenColumns = 2)
@@ -24,10 +24,10 @@ namespace ModCreator.Models
             }
         }
         
-        public ObservableCollection<RowElementBinding> FrozenBindings => 
-            new ObservableCollection<RowElementBinding>(Bindings.Take(Math.Min(_frozenColumns, Bindings.Count)));
+        public List<RowElementBinding> FrozenBindings => 
+            new List<RowElementBinding>(Bindings.Take(Math.Min(_frozenColumns, Bindings.Count)));
         
-        public ObservableCollection<RowElementBinding> ScrollableBindings => 
-            new ObservableCollection<RowElementBinding>(Bindings.Skip(Math.Min(_frozenColumns, Bindings.Count)));
+        public List<RowElementBinding> ScrollableBindings => 
+            new List<RowElementBinding>(Bindings.Skip(Math.Min(_frozenColumns, Bindings.Count)));
     }
 }

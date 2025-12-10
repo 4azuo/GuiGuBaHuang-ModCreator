@@ -2,6 +2,7 @@ using ModCreator.Models;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -11,8 +12,8 @@ namespace ModCreator.Helpers
 {
     public static class ModEventHelper
     {
-        private static List<Models.EventActionBase> _cachedEvents;
-        private static List<Models.EventActionBase> _cachedActions;
+        private static List<EventActionBase> _cachedEvents;
+        private static List<EventActionBase> _cachedActions;
 
         /// <summary>
         /// Check if a member has a specific attribute
@@ -106,12 +107,12 @@ namespace ModCreator.Helpers
         /// <summary>
         /// Load ModEvent methods from ModLib.dll assembly
         /// </summary>
-        public static List<Models.EventActionBase> LoadModEventMethodsFromAssembly(bool forceReload = false)
+        public static List<EventActionBase> LoadModEventMethodsFromAssembly(bool forceReload = false)
         {
             if (!forceReload && _cachedEvents != null)
                 return _cachedEvents.Clone();
 
-            var items = LoadMethodsFromAssembly(
+            _cachedEvents = LoadMethodsFromAssembly(
                 typeFilter: t => t.FullName == "ModLib.Mod.ModEvent" && !t.IsGenericType,
                 methodFilter: m => m.IsVirtual && !m.IsSpecialName && !m.IsConstructor && !m.IsGenericMethod && !m.ContainsGenericParameters && !m.GetParameters().Any(x => x.IsOut),
                 categoryAttribute: "ModLib.Attributes.EventCatAttribute",
@@ -123,7 +124,7 @@ namespace ModCreator.Helpers
                     var description = XMLDocHelper.GetMethodDocumentation("ModLib.Mod.ModEvent", method.Name) 
                                     ?? $"ModEvent method: {method.Name}";
                     
-                    return new Models.EventActionBase
+                    return new EventActionBase
                     {
                         Category = category,
                         Name = method.Name,
@@ -148,22 +149,19 @@ namespace ModCreator.Helpers
                     };
                 });
 
-            _cachedEvents = items;
-            return items;
+            return _cachedEvents;
         }
 
         /// <summary>
         /// Load Action methods from ModLib.Helper.* classes in ModLib.dll assembly
         /// </summary>
-        public static List<Models.EventActionBase> LoadModActionMethodsFromAssembly(bool forceReload = false)
+        public static List<EventActionBase> LoadModActionMethodsFromAssembly(bool forceReload = false)
         {
             if (!forceReload && _cachedActions != null)
                 return _cachedActions.Clone();
 
-            var items = new List<Models.EventActionBase>();
-
-            items.AddRange(ResourceHelper.ReadEmbeddedResource<List<EventActionBase>>("ModCreator.Resources.modevent-actions.json"));
-            items.AddRange(LoadMethodsFromAssembly(
+            _cachedActions.AddRange(ResourceHelper.ReadEmbeddedResource<List<EventActionBase>>("ModCreator.Resources.modevent-actions.json"));
+            _cachedActions.AddRange(LoadMethodsFromAssembly(
                 typeFilter: t => t.Namespace != null && t.Namespace.StartsWith("ModLib.Helper") && !t.IsGenericType,
                 methodFilter: m => !m.IsSpecialName && !m.IsConstructor && !m.IsGenericMethod && !m.ContainsGenericParameters && !m.GetParameters().Any(x => x.IsOut),
                 categoryAttribute: "ModLib.Attributes.ActionCatAttribute",
@@ -191,7 +189,7 @@ namespace ModCreator.Helpers
                     var description = XMLDocHelper.GetMethodDocumentation(fullTypeName, method.Name)
                                     ?? $"Helper method from {typeName}";
 
-                    return new Models.EventActionBase
+                    return new EventActionBase
                     {
                         Category = category,
                         Name = $"{typeName}.{method.Name}",
@@ -216,8 +214,7 @@ namespace ModCreator.Helpers
                     };
                 }));
 
-            _cachedActions = items;
-            return items;
+            return _cachedActions;
         }
 
         /// <summary>
@@ -229,7 +226,7 @@ namespace ModCreator.Helpers
             string categoryAttribute,
             string ignoreAttribute,
             BindingFlags bindingFlags,
-            Func<string, MethodInfo, string, string, System.Reflection.ParameterInfo[], T> itemFactory) where T : Models.EventActionBase
+            Func<string, MethodInfo, string, string, System.Reflection.ParameterInfo[], T> itemFactory) where T : EventActionBase
         {
             var items = new List<T>();
 

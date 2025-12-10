@@ -333,10 +333,10 @@ namespace ModCreator.Helpers
         /// <param name="obj2">Second object</param>
         /// <param name="ignoreProperties">Optional list of property names to ignore in comparison</param>
         /// <returns>List of property names with different values</returns>
-        public static List<string> GetChangedPropertyNames<T>(T obj1, T obj2, Type[] trackedTypes, params string[] ignoreProperties) where T : class
+        public static string[] GetChangedPropertyNames<T>(T obj1, T obj2, Type[] trackedTypes, params string[] ignoreProperties) where T : class
         {
             var differences = GetPropertyDifferences(obj1, obj2, trackedTypes, ignoreProperties);
-            return differences.Keys.ToList();
+            return differences.Keys.ToArray();
         }
 
         /// <summary>

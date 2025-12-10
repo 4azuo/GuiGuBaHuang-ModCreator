@@ -1,4 +1,5 @@
 using ModCreator.Commons;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace ModCreator.Models
@@ -31,7 +32,7 @@ namespace ModCreator.Models
         /// <summary>
         /// Child items (for folders)
         /// </summary>
-        public ObservableCollection<FileItem> Children { get; set; } = [];
+        public List<FileItem> Children { get; set; } = [];
 
         /// <summary>
         /// Parent folder item
