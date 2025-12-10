@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using ModCreator.Attributes;
 using ModCreator.Commons;
@@ -38,12 +39,12 @@ namespace ModCreator.Models
         /// <summary>
         /// List of conditions for this event (uses EventActionInfo)
         /// </summary>
-        public ObservableCollection<EventActionBase> Conditions { get; set; } = [];
+        public List<EventActionBase> Conditions { get; set; } = [];
 
         /// <summary>
         /// List of actions for this event (uses EventActionInfo)
         /// </summary>
-        public ObservableCollection<EventActionBase> Actions { get; set; } = [];
+        public List<EventActionBase> Actions { get; set; } = [];
 
         /// <summary>
         /// Full file path to the ModEvent .cs file

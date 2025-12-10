@@ -1,16 +1,18 @@
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
+using System.Reflection;
+using ModCreator.Attributes;
 using ModCreator.Commons;
-using ModCreator.Enums;
 using ModCreator.Helpers;
+using Newtonsoft.Json;
 
 namespace ModCreator.Models
 {
     public class EventActionBase : AutoNotifiableObject
     {
-        private ObservableCollection<EventActionBase> _children = [];
-
+        [JsonIgnore]
+        public EventActionBase Parent { get; set; }
+        [JsonIgnore]
+        public string ComputedDisplayName => DisplayNameHelper.BuildNestedDisplayName(this);
         public string Category { get; set; }
         public string Name { get; set; }
         public string DisplayName { get; set; }
@@ -24,56 +26,24 @@ namespace ModCreator.Models
         public List<string> SubItems { get; set; } = [];
         public bool IsReturn => !string.IsNullOrEmpty(Return) && Return != "Void";
         public string DisplayText => string.IsNullOrEmpty(Category) ? DisplayName : $"{Category} - {DisplayName}";
+        [NotifyMethod(nameof(OnChildrenChanged))]
+        public List<EventActionBase> Children { get; set; } = [];
 
-        // Computed property for displaying with nested parameters
-        [Newtonsoft.Json.JsonIgnore]
-        public string ComputedDisplayName => DisplayNameHelper.BuildNestedDisplayName(this);
-
-        [Newtonsoft.Json.JsonIgnore]
-        public EventActionBase Parent { get; set; }
-
-        public ObservableCollection<EventActionBase> Children
+        public void OnChildrenChanged(object obj, PropertyInfo prop, object oldValue, object newValue)
         {
-            get => _children;
-            set
+            UpdateChildrenParent(this, Children);
+        }
+
+        private void UpdateChildrenParent(EventActionBase parent, List<EventActionBase> children)
+        {
+            if (children != null)
             {
-                if (_children != null)
-                    _children.CollectionChanged -= OnChildrenCollectionChanged;
-
-                _children = value;
-
-                if (_children != null)
+                foreach (var child in children)
                 {
-                    _children.CollectionChanged += OnChildrenCollectionChanged;
-                    foreach (var child in _children)
-                        child.Parent = this;
+                    child.Parent = parent;
+                    UpdateChildrenParent(child, child.Children);
                 }
             }
-        }
-
-        public EventActionBase()
-        {
-            _children.CollectionChanged += OnChildrenCollectionChanged;
-        }
-
-        private void OnChildrenCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.NewItems != null)
-            {
-                foreach (EventActionBase child in e.NewItems)
-                    child.Parent = this;
-            }
-
-            if (e.OldItems != null)
-            {
-                foreach (EventActionBase child in e.OldItems)
-                    child.Parent = null;
-            }
-        }
-
-        public void RefreshDisplayName()
-        {
-            Notify(nameof(ComputedDisplayName));
         }
     }
 }
