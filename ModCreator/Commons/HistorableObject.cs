@@ -8,6 +8,7 @@ using System;
 namespace ModCreator.Commons
 {
     [NotifyMethod(nameof(WriteHistory))]
+    [SetterAspect]
     public abstract class HistorableObject : AutoNotifiableObject
     {
         public const int MAX_HIST_TIMES = 8;
@@ -33,7 +34,7 @@ namespace ModCreator.Commons
         private int _histIndex = MAX_HIST_TIMES - 1;
 
         [Obsolete]
-        public void WriteHistory(object obj, PropertyInfo prop, object oldValue, object newValue) {
+        public void WriteHistory(object obj, PropertyInfo prop, object before = null, object after = null) {
             if (IsUpdated())
             {
                 if (_stopHistoryRecording)
@@ -46,8 +47,8 @@ namespace ModCreator.Commons
                     Histories.RemoveRange(_histIndex + 1, Histories.Count - (_histIndex + 1));
                 }
 
-                var value = JsonConvert.SerializeObject(this, JsonSettings);
-                Histories.AddRange(Enumerable.Repeat(value, Math.Max(1, MAX_HIST_TIMES - Histories.Count)));
+                var v = JsonConvert.SerializeObject(this, JsonSettings);
+                Histories.AddRange(Enumerable.Repeat(v, Math.Max(1, MAX_HIST_TIMES - Histories.Count)));
                 if (Histories.Count > MAX_HIST_TIMES)
                 {
                     Histories.RemoveAt(0);

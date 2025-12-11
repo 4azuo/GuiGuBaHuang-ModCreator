@@ -1,3 +1,4 @@
+using ModCreator.Attributes;
 using ModCreator.Commons;
 using ModCreator.Enums;
 using System.Collections.Generic;
@@ -5,6 +6,7 @@ using System.Collections.ObjectModel;
 
 namespace ModCreator.Models
 {
+    [SetterAspect]
     public class ModConfTreeNode : AutoNotifiableObject
     {
         public string DisplayName { get; set; }

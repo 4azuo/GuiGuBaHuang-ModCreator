@@ -1,5 +1,8 @@
+using ModCreator.Attributes;
+
 namespace ModCreator.WindowData
 {
+    [SetterAspect]
     public class AboutWindowData : CWindowData
     {
         public string AppName => "ModCreator";

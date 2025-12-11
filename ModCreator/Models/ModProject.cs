@@ -1,3 +1,4 @@
+using ModCreator.Attributes;
 using ModCreator.Commons;
 using ModCreator.Enums;
 using System;
@@ -8,6 +9,7 @@ namespace ModCreator.Models
     /// <summary>
     /// Represents a mod project
     /// </summary>
+    [SetterAspect]
     public class ModProject : AutoNotifiableObject
     {
         public string ProjectId { get; set; }

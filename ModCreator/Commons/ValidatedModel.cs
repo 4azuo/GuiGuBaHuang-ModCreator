@@ -1,3 +1,4 @@
+using ModCreator.Attributes;
 using ModCreator.Helpers;
 using ModCreator.Models;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ namespace ModCreator.Commons
     /// <summary>
     /// var-types.json driven model with validation capabilities
     /// </summary>
+    [SetterAspect]
     public abstract class ValidatedModel : AutoNotifiableObject
     {
         public static List<VarType> VarTypes { get; private set; }

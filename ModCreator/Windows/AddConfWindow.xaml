@@ -27,7 +27,7 @@
                 <GroupBox Grid.Row="0" Header="{x:Static helper:AddConfWindowText.Prefix}" Margin="0,0,0,10">
                     <Grid Margin="10">
                         <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                        <TextBox Grid.Column="0" Text="{Binding FilePrefix, UpdateSourceTrigger=PropertyChanged}" Width="150" Padding="8" FontSize="13" VerticalContentAlignment="Center"/>
+                        <TextBox Grid.Column="0" Text="{Binding FilePrefix, UpdateSourceTrigger=PropertyChanged}" Width="150" VerticalContentAlignment="Center"/>
                         <TextBlock Grid.Column="1" Text="{x:Static helper:AddConfWindowText.PrefixSeparator}" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0"/>
                         <TextBlock Grid.Column="2" Text="{Binding SelectedConfig.Name}" FontSize="13" VerticalAlignment="Center" Foreground="Gray"/>
                     </Grid>

@@ -9,6 +9,7 @@ namespace ModCreator.Models
     /// <summary>
     /// Represents a ModEvent with its configuration
     /// </summary>
+    [SetterAspect]
     public class ModEventItem : HistorableObject
     {
         /// <summary>

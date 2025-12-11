@@ -1,3 +1,4 @@
+using ModCreator.Attributes;
 using ModCreator.Commons;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,6 +8,7 @@ namespace ModCreator.Models
     /// <summary>
     /// Documentation item
     /// </summary>
+    [SetterAspect]
     public class DocItem : AutoNotifiableObject
     {
         public string Title { get; set; }

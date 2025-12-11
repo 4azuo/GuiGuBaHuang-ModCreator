@@ -1,172 +1,120 @@
 using ModCreator.Attributes;
+using ModCreator.Helpers;
+using Newtonsoft.Json;
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Threading;
-using Newtonsoft.Json;
-using ModCreator.Helpers;
 
 namespace ModCreator.Commons
 {
-    public abstract class AutoNotifiableObject : INotifyPropertyChanged
+    /// <summary>
+    /// Provides a base class that implements automatic property change notification and periodic update functionality for derived objects.
+    /// Important: Requires SetterAspectAttribute on property setters or class to function correctly.
+    /// </summary>
+    /// <remarks><para> <b>AutoNotifiableObject</b> enables automatic notification of property changes by
+    /// implementing <see cref="INotifyPropertyChanged"/>. It also supports periodic updates via a dispatcher timer,
+    /// allowing properties to be refreshed and notifications to be sent at regular intervals. </para> <para> The class
+    /// manages notification state, including pausing and resuming notifications, and tracks old property values to
+    /// prevent redundant change events. It is designed for use in scenarios where property changes need to be observed,
+    /// such as data binding in UI frameworks. </para> <para> Derived classes can leverage the built-in mechanisms for
+    /// property change notification and timer-based updates without manually implementing <see
+    /// cref="INotifyPropertyChanged"/> logic. </para> <para> <b>Thread Safety:</b> This class is not thread-safe. All
+    /// interactions should occur on the UI thread associated with the dispatcher. </para> <para> <b>Disposal:</b> When
+    /// disposed, the periodic update timer is stopped and event handlers are detached to release resources.
+    /// </para></remarks>
+    public abstract class AutoNotifiableObject : INotifyPropertyChanged, IDisposable
     {
-        /// <summary>
-        /// Consts
-        /// </summary>
-        public const int AUTO_RENOTIFY_PERIOD = 200;
-        public const int AUTO_RENOTIFY_MAX = 10;
-
-        /// <summary>
-        /// Delegates
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
-
-        /// <summary>
-        /// Variables
-        /// </summary>
-        [JsonIgnore]
-        private int _isPaused = 0;
-
-        /// <summary>
-        /// Properties
-        /// </summary>
-        public static readonly DispatcherTimer AutoUpdateTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(AUTO_RENOTIFY_PERIOD), DispatcherPriority.Background, (s, e) => { }, Application.Current.Dispatcher);
-        public static readonly Dictionary<Type, PropertyInfo[]> ListNotifyProperties = new Dictionary<Type, PropertyInfo[]>();
-        public static readonly Dictionary<PropertyInfo, MethodInfo[]> ListNotifyMethods = new Dictionary<PropertyInfo, MethodInfo[]>();
-        public static readonly List<Type> LoadedTypes = new List<Type>();
-
+        public event PropertyChangedEventHandler PropertyChanged;
 
         [JsonIgnore, IgnoredProperty]
-        public static bool StaticLoad { get; private set; } = false;
-        [JsonIgnore, IgnoredProperty]
-        public static List<AutoNotifiableObject> StaticLoadObjs { get; } = new List<AutoNotifiableObject>();
-
+        public DispatcherTimer AutoUpdateTimer { get; } = new(TimeSpan.FromMilliseconds(AUTO_RENOTIFY_PERIOD), DispatcherPriority.Background, (s, e) => { }, Application.Current.Dispatcher);
 
         [JsonIgnore, IgnoredProperty]
-        public Dictionary<PropertyInfo, object> PropertyOldValues { get; } = new Dictionary<PropertyInfo, object>();
-        [JsonIgnore, IgnoredProperty]
-        public List<PropertyInfo> PausedProperties { get; } = new List<PropertyInfo>();
-        [JsonIgnore, IgnoredProperty]
-        public bool IsPaused
-        {
-            get
-            {
-                return StaticLoad || _isPaused > 0;
-            }
-        }
-        [JsonIgnore, IgnoredProperty]
-        public bool IsNotifyDown { get; private set; }
-        [JsonIgnore, IgnoredProperty]
-        public int NotifyIndex { get; private set; }
+        public Dictionary<PropertyInfo, int> PropertyOldValues { get; } = [];
 
-        /// <summary>
-        /// Begin/End Load
-        /// </summary>
-        public static void Begin()
-        {
-            StaticLoadObjs.Clear();
-            StaticLoad = true;
-        }
+        [JsonIgnore, IgnoredProperty]
+        public bool IsPaused { get; private set; } = false;
 
-        public static void End()
-        {
-            StaticLoad = false;
-            foreach (var obj in StaticLoadObjs)
-            {
-                obj.RefreshAll(true);
-            }
-        }
+        [JsonIgnore, IgnoredProperty]
+        public bool IsConstructing { get; private set; } = true;
 
-        /// <summary>
-        /// Methods
-        /// </summary>
         public void Pause()
         {
-            _isPaused++;
+            IsPaused = true;
         }
 
-        public void Unpause()
+        public void Resume()
         {
-            if (_isPaused > 0) _isPaused--;
+            IsPaused = false;
+            NotifyAll();
         }
 
-        public void Pause(PropertyInfo prop)
+        public void Notify(string propName, bool postprocess = true)
         {
-            PausedProperties.Add(prop);
+            Notify(GetType().GetProperty(propName));
         }
 
-        public void Unpause(PropertyInfo prop)
-        {
-            PausedProperties.Remove(prop);
-        }
-
-        public void NotifyAll()
+        public void NotifyAll(bool postprocess = true)
         {
             foreach (var prop in ListNotifyProperties[GetType()])
             {
-                var val = PropertyOldValues.ContainsKey(prop) ? PropertyOldValues[prop] : null;
-                Notify(prop, val);
+                Notify(prop, postprocess);
             }
         }
 
-        public void Notify(string propName)
+        private void Notify(PropertyInfo prop, bool postprocess = true)
         {
-            var p = ListNotifyProperties[GetType()].FirstOrDefault(x => x.Name == propName);
-            if (p != null)
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop.Name));
+            if (IsCollectionProperty(prop))
             {
-                var val = PropertyOldValues.TryGetValue(p, out object value) ? value : null;
-                Notify(p, val);
+                CollectionViewSource.GetDefaultView(prop.GetValue(this))?.Refresh();
             }
-        }
-
-        public void Notify(PropertyInfo prop)
-        {
-            Notify(prop.Name);
-        }
-
-        public void RefreshAll(bool recursive = false)
-        {
-            foreach (var prop in ListNotifyProperties[GetType()])
+            if (postprocess)
             {
-                Refresh(prop, recursive);
+                PostPropertyChanged(prop, null, prop.GetValue(this));
             }
         }
 
-        public void Refresh(object obj, PropertyInfo prop, bool recursive = false)
+        private bool IsCollectionProperty(PropertyInfo prop)
         {
-            var p = ListNotifyProperties[GetType()].FirstOrDefault(x => x.Name == prop.Name);
-            if (p != null)
-                Refresh(p, recursive);
+            return prop.PropertyType != typeof(string) && typeof(System.Collections.IEnumerable).IsAssignableFrom(prop.PropertyType);
         }
 
-        /// <summary>
-        /// NotifyPropertyChanged
-        /// </summary>
-        private void NotifyPropertyChanged(PropertyInfo prop)
+        public void OnPropertyChanged(string propertyName, object before, object after)
         {
-            if (PausedProperties.Contains(prop) || IsPaused)
+            if (IsPaused)
                 return;
-            object val = GetCheckSumValue(prop.GetValue(this));
-            object befVal = null;
-            PropertyOldValues.TryGetValue(prop, out befVal);
-            if (!Equals(val, befVal))
+
+            if (IsConstructing)
+                return;
+
+            var thisType = GetType();
+            var prop = thisType.GetProperty(propertyName);
+
+            if (!ListNotifyProperties.ContainsKey(thisType) ||
+                !ListNotifyProperties[thisType].Contains(prop))
+                return;
+
+            var oldValueCode = PropertyOldValues.ContainsKey(prop) ? PropertyOldValues[prop] : 0;
+            var newValueCode = ObjectHelper.GetObjectHashCode(after, null);
+
+            if (!Equals(oldValueCode, newValueCode))
             {
-                Notify(prop, val);
+                PropertyOldValues[prop] = newValueCode;
+
+                //notify property changed
+                Notify(prop, false);
+                PostPropertyChanged(prop, before, after);
             }
         }
 
-        private void Notify(PropertyInfo prop, object val = null)
+        private void PostPropertyChanged(PropertyInfo prop, object before, object after)
         {
-            //reassign value
-            var oldValue = PropertyOldValues.ContainsKey(prop) ? PropertyOldValues[prop] : null;
-            PropertyOldValues[prop] = val ?? GetCheckSumValue(prop.GetValue(this));
-
-            //self
-            PropertyChanged.Invoke(this, new PropertyChangedEventArgs(prop.Name));
-
             //notify methods
             MethodInfo[] notiMethods = null;
             ListNotifyMethods.TryGetValue(prop, out notiMethods);
@@ -174,71 +122,58 @@ namespace ModCreator.Commons
             {
                 foreach (var m in notiMethods)
                 {
-                    m.Invoke(this, [this, prop, oldValue, val]);
+                    m.Invoke(this, [this, prop, before, after]);
                 }
             }
-        }
-
-        private void Refresh(PropertyInfo prop, bool recursive = false)
-        {
-            var val = prop.GetValue(this);
-            PropertyOldValues[prop] = GetCheckSumValue(val);
-            if (recursive && val != null && typeof(AutoNotifiableObject).IsAssignableFrom(val.GetType()))
-                ((AutoNotifiableObject)val).RefreshAll(true);
-        }
-
-        private long GetCheckSumValue(object iValue)
-        {
-            return ObjectHelper.GetObjectHashCode(iValue, null);
-        }
-
-        /// <summary>
-        /// Create AutoUpdateTimer
-        /// </summary>
-        private void CreateAutoUpdater()
-        {
-            AutoUpdateTimer.Tick += AutoUpdate;
-            if (!AutoUpdateTimer.IsEnabled) AutoUpdateTimer.Start();
         }
 
         private void AutoUpdate(object sender, EventArgs e)
         {
             if (IsPaused)
                 return;
-
-            PropertyInfo[] properties;
-            if (!ListNotifyProperties.TryGetValue(GetType(), out properties))
-                return;
-
-            if (properties.Length == 0)
-                return;
-
-            for (int i = 0; i < AUTO_RENOTIFY_MAX; i++)
+            if (IsConstructing)
             {
-                if (IsNotifyDown)
-                    NotifyIndex++;
-                else
-                    NotifyIndex--;
-                if (NotifyIndex < 0)
-                    NotifyIndex = properties.Length - 1;
-                if (NotifyIndex >= properties.Length)
-                    NotifyIndex = 0;
-                var item = properties[NotifyIndex];
-                NotifyPropertyChanged(item);
+                IsConstructing = false;
+                Resume();
+            }
+            else
+            {
+                PropertyInfo[] properties;
+                if (!ListAutoNotifyProperties.TryGetValue(GetType(), out properties))
+                    return;
+
+                foreach (var item in properties)
+                {
+                    OnPropertyChanged(item.Name, null, item.GetValue(this));
+                }
             }
         }
 
-        /// <summary>
-        /// Prepare
-        /// </summary>
+        public AutoNotifiableObject()
+        {
+            var thisType = GetType();
+            if (!LoadedTypes.Contains(thisType))
+            {
+                LoadedTypes.Add(thisType);
+                PrepareNotifyProperties();
+                PrepareNotifyMethods();
+            }
+            AutoUpdateTimer.Tick += AutoUpdate;
+            AutoUpdateTimer.Start();
+        }
+
+        public void Dispose()
+        {
+            AutoUpdateTimer.Tick -= AutoUpdate;
+            AutoUpdateTimer.Stop();
+        }
+
         private void PrepareNotifyProperties()
         {
             var thisType = GetType();
-            ListNotifyProperties[thisType] = thisType.GetProperties()
-                .Where(p =>
-                {
-                    return p.CanRead && p.GetCustomAttribute<IgnoredPropertyAttribute>() == null;
-                }).ToArray();
+            var properties = thisType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            ListNotifyProperties[thisType] = properties.Where(p => p.CanRead && p.GetCustomAttribute<IgnoredPropertyAttribute>() == null).ToArray();
+            ListAutoNotifyProperties[thisType] = ListNotifyProperties[thisType].Where(p => !p.CanWrite || IsCollectionProperty(p)).ToArray();
         }
 
         private void PrepareNotifyMethods()
@@ -289,30 +224,15 @@ namespace ModCreator.Commons
                 throw new ArgumentException();
         }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public AutoNotifiableObject()
-        {
-            var thisType = GetType();
-            IsNotifyDown = thisType.GetCustomAttribute<NotifyDirectAttribute>()?.WayDown ?? false;
-            if (!LoadedTypes.Contains(thisType))
-            {
-                LoadedTypes.Add(thisType);
-                PrepareNotifyProperties();
-                PrepareNotifyMethods();
-            }
-            CreateAutoUpdater();
-            if (StaticLoad)
-                StaticLoadObjs.Add(this);
-        }
+        public const int AUTO_RENOTIFY_PERIOD = 200;
 
-        /// <summary>
-        /// Destructor
-        /// </summary>
-        ~AutoNotifiableObject()
-        {
-            AutoUpdateTimer.Tick -= AutoUpdate;
-        }
+        [JsonIgnore, IgnoredProperty]
+        public static List<Type> LoadedTypes { get; } = [];
+        [JsonIgnore, IgnoredProperty]
+        public static Dictionary<PropertyInfo, MethodInfo[]> ListNotifyMethods { get; } = [];
+        [JsonIgnore, IgnoredProperty]
+        public static Dictionary<Type, PropertyInfo[]> ListNotifyProperties { get; } = [];
+        [JsonIgnore, IgnoredProperty]
+        public static Dictionary<Type, PropertyInfo[]> ListAutoNotifyProperties { get; } = [];
     }
 }

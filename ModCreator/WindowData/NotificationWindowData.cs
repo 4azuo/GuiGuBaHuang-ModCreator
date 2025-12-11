@@ -1,4 +1,6 @@
+using ModCreator.Attributes;
 using ModCreator.Commons;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Media;
 
@@ -13,12 +15,13 @@ namespace ModCreator.WindowData
         Success
     }
 
+    [SetterAspect]
     public class NotificationWindowData : CWindowData
     {
         public string Title { get; set; } = "Notification";
         public string Subtitle { get; set; }
         public string Message { get; set; }
-        public ObservableCollection<string> Details { get; set; } = new ObservableCollection<string>();
+        public List<string> Details { get; set; } = new List<string>();
         public NotificationType NotificationType { get; set; } = NotificationType.Information;
         public bool ShowCancel { get; set; } = false;
 

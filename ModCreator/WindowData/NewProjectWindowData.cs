@@ -6,6 +6,7 @@ using System.Reflection;
 
 namespace ModCreator.WindowData
 {
+    [SetterAspect]
     public class NewProjectWindowData : CWindowData
     {
         [NotifyMethod(nameof(ValidateInput))]
@@ -17,7 +18,7 @@ namespace ModCreator.WindowData
         public string WorkplacePath { get; set; }
         public ModProject CreatedProject { get; private set; }
 
-        public void ValidateInput(object obj, PropertyInfo prop, object oldValue, object newValue)
+        public void ValidateInput(object obj, PropertyInfo prop, object before = null, object after = null)
         {
             CanCreate = !string.IsNullOrWhiteSpace(ProjectName);
         }

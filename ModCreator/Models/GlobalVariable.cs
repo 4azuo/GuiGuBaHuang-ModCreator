@@ -6,6 +6,7 @@ namespace ModCreator.Models
     /// <summary>
     /// Global variable model
     /// </summary>
+    [SetterAspect]
     public class GlobalVariable : ValidatedModel
     {
         public string Name { get; set; }

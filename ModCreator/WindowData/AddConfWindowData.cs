@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 
 namespace ModCreator.WindowData
 {
+    [SetterAspect]
     public class AddConfWindowData : CWindowData
     {
         private static readonly Regex JsonWithDescriptionPattern = new Regex(@"^-\s+\*\*(.+?\.json)\*\*\s+-\s+(.+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
@@ -23,7 +24,7 @@ namespace ModCreator.WindowData
 
         public string FilePrefix { get; set; }
 
-        public ObservableCollection<ConfigFileInfo> FilteredConfigs { get; set; }
+        public List<ConfigFileInfo> FilteredConfigs { get; set; }
 
         public ConfigFileInfo SelectedConfig { get; set; }
 
@@ -38,7 +39,7 @@ namespace ModCreator.WindowData
         public AddConfWindowData()
         {
             _allConfigs = new List<ConfigFileInfo>();
-            FilteredConfigs = new ObservableCollection<ConfigFileInfo>();
+            FilteredConfigs = new List<ConfigFileInfo>();
             _configDescriptions = new Dictionary<string, string>();
             LoadDescriptionsFromDocs();
         }
@@ -64,10 +65,10 @@ namespace ModCreator.WindowData
                 }
             }
 
-            FilterConfigurations(this, null, null, null);
+            FilterConfigurations(this, null);
         }
 
-        public void FilterConfigurations(object obj, PropertyInfo prop, object oldValue, object newValue)
+        public void FilterConfigurations(object obj, PropertyInfo prop, object before = null, object after = null)
         {
             FilteredConfigs.Clear();
             var filtered = string.IsNullOrWhiteSpace(SearchText)

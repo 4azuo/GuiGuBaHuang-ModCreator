@@ -87,7 +87,7 @@ namespace ModCreator.Windows
             {
                 Title = title,
                 Subtitle = subtitle,
-                Details = new System.Collections.ObjectModel.ObservableCollection<string>(details),
+                Details = details,
                 NotificationType = type,
                 ShowCancel = false
             };

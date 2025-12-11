@@ -1,3 +1,4 @@
+using ModCreator.Attributes;
 using ModCreator.Commons;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Linq;
 
 namespace ModCreator.Models
 {
+    [SetterAspect]
     public class PatternFileDisplay : AutoNotifiableObject
     {
         public string FileName { get; set; }

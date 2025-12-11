@@ -1,5 +1,8 @@
+using ModCreator.Attributes;
+
 namespace ModCreator.WindowData
 {
+    [SetterAspect]
     public class InputWindowData : CWindowData
     {
         public string WindowTitle { get; set; } = "Input";

@@ -1,9 +1,11 @@
+using ModCreator.Attributes;
 using ModCreator.Commons;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace ModCreator.Models
 {
+    [SetterAspect]
     public class PatternElement : ValidatedModel
     {
         public string Name { get; set; }

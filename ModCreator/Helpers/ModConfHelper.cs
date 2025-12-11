@@ -9,6 +9,19 @@ namespace ModCreator.Helpers
         private static List<RegularPattern> _cachedPatterns;
         private static Dictionary<string, ModConfElement> _cachedElements;
         private static Dictionary<string, List<ModConfValue>> _cachedValues;
+        private static List<Language> _cachedLanguages;
+
+        /// <summary>
+        /// Load all languages from embedded resource (cached)
+        /// </summary>
+        public static List<Language> LoadLanguages(bool forceReload = false)
+        {
+            if (!forceReload && _cachedLanguages != null)
+                return _cachedLanguages;
+
+            _cachedLanguages = ResourceHelper.ReadEmbeddedResource<List<Language>>("ModCreator.Resources.languages.json");
+            return _cachedLanguages;
+        }
 
         /// <summary>
         /// Load all patterns from embedded resource (cached)
@@ -99,6 +112,7 @@ namespace ModCreator.Helpers
             _cachedPatterns = null;
             _cachedElements = null;
             _cachedValues = null;
+            _cachedLanguages = null;
         }
 
         /// <summary>

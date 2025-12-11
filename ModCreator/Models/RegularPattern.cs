@@ -1,8 +1,10 @@
+using ModCreator.Attributes;
 using ModCreator.Commons;
 using System.Collections.Generic;
 
 namespace ModCreator.Models
 {
+    [SetterAspect]
     public class RegularPattern : AutoNotifiableObject
     {
         public string Name { get; set; }

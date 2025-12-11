@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 
 namespace ModCreator.Models
 {
+    [SetterAspect]
     public class EventActionBase : AutoNotifiableObject
     {
         [JsonIgnore]
@@ -29,7 +30,7 @@ namespace ModCreator.Models
         [NotifyMethod(nameof(OnChildrenChanged))]
         public List<EventActionBase> Children { get; set; } = [];
 
-        public void OnChildrenChanged(object obj, PropertyInfo prop, object oldValue, object newValue)
+        public void OnChildrenChanged(object obj, PropertyInfo prop, object before = null, object after = null)
         {
             UpdateChildrenParent(this, Children);
         }

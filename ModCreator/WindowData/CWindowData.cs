@@ -22,6 +22,7 @@ namespace ModCreator.WindowData
     /// 2. OnLoad() - Called when window is loaded (optional override)
     /// 3. OnDestroy() - Called when window is closing (optional override)
     /// </summary>
+    [SetterAspect]
     public abstract class CWindowData : AutoNotifiableObject
     {
         /// <summary>
@@ -57,15 +58,12 @@ namespace ModCreator.WindowData
             //load
             if (!initDataFlg.Cancel)
             {
-                Pause();
                 OnLoad();
-                Unpause();
             }
         }
 
         ~CWindowData()
         {
-            Pause();
             OnDestroy();
         }
     }

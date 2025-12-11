@@ -14,6 +14,32 @@ namespace ModCreator.Helpers
     {
         private static List<EventActionBase> _cachedEvents;
         private static List<EventActionBase> _cachedActions;
+        private static List<string> _cachedCacheTypes;
+        private static List<string> _cachedWorkOnTypes;
+
+        /// <summary>
+        /// Load ModEvent cache types from embedded resource (cached)
+        /// </summary>
+        public static List<string> LoadCacheTypes(bool forceReload = false)
+        {
+            if (!forceReload && _cachedCacheTypes != null)
+                return _cachedCacheTypes;
+
+            _cachedCacheTypes = ResourceHelper.ReadEmbeddedResource<List<string>>("ModCreator.Resources.modevent-cachetype.json");
+            return _cachedCacheTypes;
+        }
+
+        /// <summary>
+        /// Load ModEvent work-on types from embedded resource (cached)
+        /// </summary>
+        public static List<string> LoadWorkOnTypes(bool forceReload = false)
+        {
+            if (!forceReload && _cachedWorkOnTypes != null)
+                return _cachedWorkOnTypes;
+
+            _cachedWorkOnTypes = ResourceHelper.ReadEmbeddedResource<List<string>>("ModCreator.Resources.modevent-workon.json");
+            return _cachedWorkOnTypes;
+        }
 
         /// <summary>
         /// Check if a member has a specific attribute

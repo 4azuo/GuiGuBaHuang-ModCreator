@@ -8,6 +8,7 @@ using System.Reflection;
 
 namespace ModCreator.WindowData
 {
+    [SetterAspect]
     public class HelperWindowData : CWindowData
     {
         public List<DocItem> DocItems { get; set; } = new List<DocItem>();
@@ -92,7 +93,7 @@ namespace ModCreator.WindowData
             return null;
         }
 
-        public void LoadDocContent(object obj, PropertyInfo prop, object oldValue, object newValue)
+        public void LoadDocContent(object obj, PropertyInfo prop, object before = null, object after = null)
         {
             if (SelectedDoc == null)
             {

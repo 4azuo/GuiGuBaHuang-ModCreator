@@ -1,9 +1,11 @@
+using ModCreator.Attributes;
 using ModCreator.Commons;
 using ModCreator.Enums;
 using ModCreator.Helpers;
 
 namespace ModCreator.Models
 {
+    [SetterAspect]
     public class ModEventItemSelectValue : AutoNotifiableObject
     {
 

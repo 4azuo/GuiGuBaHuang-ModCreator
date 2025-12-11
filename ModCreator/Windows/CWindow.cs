@@ -67,11 +67,11 @@ namespace ModCreator.Windows
 
             var initDataFlg = new CancelEventArgs(false);
             WindowData = InitData(initDataFlg);
-            DataContext = WindowData;
             
             Loaded += (s, e) =>
             {
                 WindowData.InitWindow(this, initDataFlg);
+                DataContext = WindowData;
             };
 
             Closing += (s, e) =>
