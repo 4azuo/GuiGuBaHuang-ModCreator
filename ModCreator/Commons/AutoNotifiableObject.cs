@@ -13,35 +13,29 @@ using System.Windows.Threading;
 namespace ModCreator.Commons
 {
     /// <summary>
-    /// Provides a base class that implements automatic property change notification and periodic update functionality for derived objects.
-    /// Important: Requires SetterAspectAttribute on property setters or class to function correctly.
+    /// Provides a base class that implements <see cref="INotifyPropertyChanged"/> and supports automatic property
+    /// change notification for derived objects.
     /// </summary>
-    /// <remarks><para> <b>AutoNotifiableObject</b> enables automatic notification of property changes by
-    /// implementing <see cref="INotifyPropertyChanged"/>. It also supports periodic updates via a dispatcher timer,
-    /// allowing properties to be refreshed and notifications to be sent at regular intervals. </para> <para> The class
-    /// manages notification state, including pausing and resuming notifications, and tracks old property values to
-    /// prevent redundant change events. It is designed for use in scenarios where property changes need to be observed,
-    /// such as data binding in UI frameworks. </para> <para> Derived classes can leverage the built-in mechanisms for
-    /// property change notification and timer-based updates without manually implementing <see
-    /// cref="INotifyPropertyChanged"/> logic. </para> <para> <b>Thread Safety:</b> This class is not thread-safe. All
-    /// interactions should occur on the UI thread associated with the dispatcher. </para> <para> <b>Disposal:</b> When
-    /// disposed, the periodic update timer is stopped and event handlers are detached to release resources.
-    /// </para></remarks>
-    public abstract class AutoNotifiableObject : INotifyPropertyChanged, IDisposable
+    /// <remarks><para> <b>AutoNotifiableObject</b> simplifies the implementation of property change
+    /// notification by automatically tracking and notifying changes to properties in derived classes. It manages
+    /// property state, supports pausing and resuming notifications, and allows for custom notification methods to be
+    /// invoked when properties change. </para> <para> Properties marked with <see cref="IgnoredPropertyAttribute"/> are
+    /// excluded from notification. The class also maintains dictionaries to track previous property values and hash
+    /// codes, which can be useful for advanced scenarios such as change tracking or undo functionality. </para> <para>
+    /// This class is thread-agnostic and does not provide built-in thread safety. If used in a multithreaded
+    /// environment, callers are responsible for synchronizing access to instances as needed. </para></remarks>
+    public abstract class AutoNotifiableObject : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
         [JsonIgnore, IgnoredProperty]
-        public DispatcherTimer AutoUpdateTimer { get; } = new(TimeSpan.FromMilliseconds(AUTO_RENOTIFY_PERIOD), DispatcherPriority.Background, (s, e) => { }, Application.Current.Dispatcher);
+        public Dictionary<PropertyInfo, int> PropertyOldHashes { get; } = [];
 
         [JsonIgnore, IgnoredProperty]
-        public Dictionary<PropertyInfo, int> PropertyOldValues { get; } = [];
+        public Dictionary<PropertyInfo, object> PropertyOldValues { get; } = [];
 
         [JsonIgnore, IgnoredProperty]
         public bool IsPaused { get; private set; } = false;
-
-        [JsonIgnore, IgnoredProperty]
-        public bool IsConstructing { get; private set; } = true;
 
         public void Pause()
         {
@@ -76,7 +70,22 @@ namespace ModCreator.Commons
             }
             if (postprocess)
             {
-                PostPropertyChanged(prop, null, prop.GetValue(this));
+                var oldValue = PropertyOldValues.ContainsKey(prop) ? PropertyOldValues[prop] : 0;
+                PostPropertyChanged(prop, oldValue, prop.GetValue(this));
+            }
+            if (!ListPassiveNotifyProperties[GetType()].Contains(prop))
+            {
+                NotifyPassives(postprocess, prop);
+            }
+        }
+
+        private void NotifyPassives(bool postprocess = true, PropertyInfo triggerProp = null)
+        {
+            foreach (var prop in ListPassiveNotifyProperties[GetType()])
+            {
+                if (prop == triggerProp)
+                    continue;
+                OnPropertyChanged(prop, PropertyOldValues.ContainsKey(prop) ? PropertyOldValues[prop] : null, prop.GetValue(this));
             }
         }
 
@@ -85,31 +94,27 @@ namespace ModCreator.Commons
             return prop.PropertyType != typeof(string) && typeof(System.Collections.IEnumerable).IsAssignableFrom(prop.PropertyType);
         }
 
-        public void OnPropertyChanged(string propertyName, object before, object after)
+        public void OnPropertyChanged(PropertyInfo prop, object before, object after)
         {
             if (IsPaused)
                 return;
 
-            if (IsConstructing)
-                return;
-
-            var thisType = GetType();
-            var prop = thisType.GetProperty(propertyName);
+            var thisType = prop.DeclaringType;
 
             if (!ListNotifyProperties.ContainsKey(thisType) ||
                 !ListNotifyProperties[thisType].Contains(prop))
                 return;
 
-            var oldValueCode = PropertyOldValues.ContainsKey(prop) ? PropertyOldValues[prop] : 0;
+            var oldValueCode = PropertyOldHashes.ContainsKey(prop) ? PropertyOldHashes[prop] : 0;
             var newValueCode = ObjectHelper.GetObjectHashCode(after, null);
 
             if (!Equals(oldValueCode, newValueCode))
             {
-                PropertyOldValues[prop] = newValueCode;
+                PropertyOldValues[prop] = after;
+                PropertyOldHashes[prop] = newValueCode;
 
                 //notify property changed
-                Notify(prop, false);
-                PostPropertyChanged(prop, before, after);
+                Notify(prop);
             }
         }
 
@@ -127,28 +132,6 @@ namespace ModCreator.Commons
             }
         }
 
-        private void AutoUpdate(object sender, EventArgs e)
-        {
-            if (IsPaused)
-                return;
-            if (IsConstructing)
-            {
-                IsConstructing = false;
-                Resume();
-            }
-            else
-            {
-                PropertyInfo[] properties;
-                if (!ListAutoNotifyProperties.TryGetValue(GetType(), out properties))
-                    return;
-
-                foreach (var item in properties)
-                {
-                    OnPropertyChanged(item.Name, null, item.GetValue(this));
-                }
-            }
-        }
-
         public AutoNotifiableObject()
         {
             var thisType = GetType();
@@ -158,14 +141,6 @@ namespace ModCreator.Commons
                 PrepareNotifyProperties();
                 PrepareNotifyMethods();
             }
-            AutoUpdateTimer.Tick += AutoUpdate;
-            AutoUpdateTimer.Start();
-        }
-
-        public void Dispose()
-        {
-            AutoUpdateTimer.Tick -= AutoUpdate;
-            AutoUpdateTimer.Stop();
         }
 
         private void PrepareNotifyProperties()
@@ -173,7 +148,7 @@ namespace ModCreator.Commons
             var thisType = GetType();
             var properties = thisType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
             ListNotifyProperties[thisType] = properties.Where(p => p.CanRead && p.GetCustomAttribute<IgnoredPropertyAttribute>() == null).ToArray();
-            ListAutoNotifyProperties[thisType] = ListNotifyProperties[thisType].Where(p => !p.CanWrite || IsCollectionProperty(p)).ToArray();
+            ListPassiveNotifyProperties[thisType] = ListNotifyProperties[thisType].Where(p => !p.CanWrite || IsCollectionProperty(p)).ToArray();
         }
 
         private void PrepareNotifyMethods()
@@ -224,8 +199,6 @@ namespace ModCreator.Commons
                 throw new ArgumentException();
         }
 
-        public const int AUTO_RENOTIFY_PERIOD = 200;
-
         [JsonIgnore, IgnoredProperty]
         public static List<Type> LoadedTypes { get; } = [];
         [JsonIgnore, IgnoredProperty]
@@ -233,6 +206,6 @@ namespace ModCreator.Commons
         [JsonIgnore, IgnoredProperty]
         public static Dictionary<Type, PropertyInfo[]> ListNotifyProperties { get; } = [];
         [JsonIgnore, IgnoredProperty]
-        public static Dictionary<Type, PropertyInfo[]> ListAutoNotifyProperties { get; } = [];
+        public static Dictionary<Type, PropertyInfo[]> ListPassiveNotifyProperties { get; } = [];
     }
 }
