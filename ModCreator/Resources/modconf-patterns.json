@@ -76,8 +76,8 @@
         "FrozenColumns": 1,
         "Elements": [
           "RoleEffect.id",
-          "RoleEffect.effectType",
-          "RoleEffect.value"
+          "RoleEffect1.effectType",
+          "RoleEffect1.value"
         ]
       }
     ]
@@ -131,6 +131,302 @@
           "LocalText.id",
           "LocalText.key::dramaText{LocalText.id}",
           "LocalText.en"
+        ]
+      }
+    ]
+  },
+  {
+    "Name": "Item Skill Book",
+    "Description": "Create skill book items with pricing and worth",
+    "Files": [
+      {
+        "FileName": "ItemSkill.json",
+        "FrozenColumns": 1,
+        "Elements": [
+          "ItemSkill.id",
+          "ItemSkill.skillType",
+          "ItemSkill.grade",
+          "ItemSkill.level",
+          "ItemSkill.price",
+          "ItemSkill.cost",
+          "ItemSkill.auction",
+          "ItemSkill.contribution",
+          "ItemSkill.worth",
+          "ItemSkill.sale"
+        ]
+      }
+    ]
+  },
+  {
+    "Name": "Item Pill",
+    "Description": "Create pill items with effects and requirements",
+    "Files": [
+      {
+        "FileName": "ItemPill.json",
+        "FrozenColumns": 1,
+        "Elements": [
+          "ItemPill.id",
+          "ItemPill.effectType",
+          "ItemPill.operUse",
+          "ItemPill.operEquip",
+          "ItemPill.autoUse",
+          "ItemPill.effectValue",
+          "ItemPill.basType",
+          "ItemPill.basRequire",
+          "ItemPill.grade",
+          "ItemPill.spCost",
+          "ItemPill.useIgnoreGrade",
+          "ItemPill.applyCD",
+          "ItemPill.cdGroup",
+          "ItemPill.pillType",
+          "ItemPill.fateRandomWeight",
+          "ItemPill.carryCount",
+          "ItemPill.noUseTogether",
+          "ItemPill.cost",
+          "ItemPill.battleUIHide",
+          "ItemPill.consume"
+        ]
+      }
+    ]
+  },
+  {
+    "Name": "Item Horse",
+    "Description": "Create horse/mount items with models and effects",
+    "Files": [
+      {
+        "FileName": "ItemHorse.json",
+        "FrozenColumns": 1,
+        "Elements": [
+          "ItemHorse.id",
+          "ItemHorse.effectValue",
+          "ItemHorse.feature",
+          "ItemHorse.model",
+          "ItemHorse.mapMoveSounds",
+          "ItemHorse.desc::[LocalText.key]",
+          "ItemHorse.grade"
+        ]
+      },
+      {
+        "FileName": "LocalText.json",
+        "FrozenColumns": 2,
+        "Elements": [
+          "LocalText.id",
+          "LocalText.key::item_horse_desc_{ItemHorse.id}",
+          "LocalText.en"
+        ]
+      }
+    ]
+  },
+  {
+    "Name": "Item Herbal",
+    "Description": "Create herbal medicine items with effects",
+    "Files": [
+      {
+        "FileName": "ItemHerbal.json",
+        "FrozenColumns": 1,
+        "Elements": [
+          "ItemHerbal.id",
+          "ItemHerbal.effectType",
+          "ItemHerbal.effectValue"
+        ]
+      }
+    ]
+  },
+  {
+    "Name": "Item Function",
+    "Description": "Create functional items that trigger dramas",
+    "Files": [
+      {
+        "FileName": "ItemFunction.json",
+        "FrozenColumns": 1,
+        "Elements": [
+          "ItemFunction.id",
+          "ItemFunction.condition",
+          "ItemFunction.function",
+          "ItemFunction.consume",
+          "ItemFunction.multiUse"
+        ]
+      }
+    ]
+  },
+  {
+    "Name": "Item Hobby",
+    "Description": "Create hobby items with levels and effects",
+    "Files": [
+      {
+        "FileName": "ItemHobby.json",
+        "FrozenColumns": 1,
+        "Elements": [
+          "ItemHobby.id",
+          "ItemHobby.effectValue",
+          "ItemHobby.hobbyID",
+          "ItemHobby.level",
+          "ItemHobby.lasting"
+        ]
+      }
+    ]
+  },
+  {
+    "Name": "Item Rarity Materials",
+    "Description": "Create rare material items with stat effects",
+    "Files": [
+      {
+        "FileName": "ItemRarityMaterials.json",
+        "FrozenColumns": 1,
+        "Elements": [
+          "ItemRarityMaterials.id",
+          "ItemRarityMaterials.effect",
+          "ItemRarityMaterials.grade",
+          "ItemRarityMaterials.hunger"
+        ]
+      }
+    ]
+  },
+  {
+    "Name": "Item Lotus Seed",
+    "Description": "Create lotus seed items with class properties",
+    "Files": [
+      {
+        "FileName": "ItemLotusSeed.json",
+        "FrozenColumns": 1,
+        "Elements": [
+          "ItemLotusSeed.id",
+          "ItemLotusSeed.className",
+          "ItemLotusSeed.useType",
+          "ItemLotusSeed.isUse",
+          "ItemLotusSeed.addLuck",
+          "ItemLotusSeed.effectValue",
+          "ItemLotusSeed.isGive",
+          "ItemLotusSeed.addProp",
+          "ItemLotusSeed.weight"
+        ]
+      }
+    ]
+  },
+  {
+    "Name": "Item Chest Drops",
+    "Description": "Create chest drop configurations",
+    "Files": [
+      {
+        "FileName": "ItemChestDrops.json",
+        "FrozenColumns": 1,
+        "Elements": [
+          "ItemChestDrops.id",
+          "ItemChestDrops.dropID",
+          "ItemChestDrops.itemID",
+          "ItemChestDrops.number",
+          "ItemChestDrops.weight"
+        ]
+      }
+    ]
+  },
+  {
+    "Name": "Item Treasure Map",
+    "Description": "Create treasure map items with locations",
+    "Files": [
+      {
+        "FileName": "ItemTreasureMap.json",
+        "FrozenColumns": 1,
+        "Elements": [
+          "ItemTreasureMap.id",
+          "ItemTreasureMap.eventID",
+          "ItemTreasureMap.pointType",
+          "ItemTreasureMap.pointValues",
+          "ItemTreasureMap.cost"
+        ]
+      }
+    ]
+  },
+  {
+    "Name": "Item Map Search",
+    "Description": "Create map search items for exploration",
+    "Files": [
+      {
+        "FileName": "ItemMapSearch.json",
+        "FrozenColumns": 1,
+        "Elements": [
+          "ItemMapSearch.id",
+          "ItemMapSearch.areaID",
+          "ItemMapSearch.range",
+          "ItemMapSearch.type",
+          "ItemMapSearch.value",
+          "ItemMapSearch.searchEventID"
+        ]
+      }
+    ]
+  },
+  {
+    "Name": "Item Transfer",
+    "Description": "Create transfer items for teleportation",
+    "Files": [
+      {
+        "FileName": "ItemTransfer.json",
+        "FrozenColumns": 1,
+        "Elements": [
+          "ItemTransfer.id",
+          "ItemTransfer.effectType",
+          "ItemTransfer.area"
+        ]
+      }
+    ]
+  },
+  {
+    "Name": "Item Gloom",
+    "Description": "Create gloom items with drama triggers",
+    "Files": [
+      {
+        "FileName": "ItemGloom.json",
+        "FrozenColumns": 1,
+        "Elements": [
+          "ItemGloom.id",
+          "ItemGloom.condition",
+          "ItemGloom.function",
+          "ItemGloom.failFunction"
+        ]
+      }
+    ]
+  },
+  {
+    "Name": "Item Fate",
+    "Description": "Create fate items for grade modification",
+    "Files": [
+      {
+        "FileName": "ItemFate.json",
+        "FrozenColumns": 1,
+        "Elements": [
+          "ItemFate.id",
+          "ItemFate.modifyGrade",
+          "ItemFate.requireGrade"
+        ]
+      }
+    ]
+  },
+  {
+    "Name": "Item Pill SP Require",
+    "Description": "Configure SP requirements for pill grades",
+    "Files": [
+      {
+        "FileName": "ItemPillSpRequire.json",
+        "FrozenColumns": 1,
+        "Elements": [
+          "ItemPillSpRequire.id",
+          "ItemPillSpRequire.grade",
+          "ItemPillSpRequire.spRequire"
+        ]
+      }
+    ]
+  },
+  {
+    "Name": "Item Soul Devour Sword",
+    "Description": "Create soul devour sword level configurations",
+    "Files": [
+      {
+        "FileName": "ItemSoulDevourSword.json",
+        "FrozenColumns": 1,
+        "Elements": [
+          "ItemSoulDevourSword.id",
+          "ItemSoulDevourSword.level",
+          "ItemSoulDevourSword.needExp"
         ]
       }
     ]

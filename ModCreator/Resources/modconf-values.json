@@ -51,7 +51,7 @@
     ]
   },
   {
-    "Name": "FeatureLevels",
+    "Name": "Levels",
     "Values": [
       {
         "DisplayName": "1: Common",
@@ -439,6 +439,51 @@
       {
         "DisplayName": "1: On",
         "Value": "1"
+      }
+    ]
+  },
+  {
+    "Name": "ItemGrades",
+    "Values": [
+      {
+        "DisplayName": "1: Grade 1",
+        "Value": "1"
+      },
+      {
+        "DisplayName": "2: Grade 2",
+        "Value": "2"
+      },
+      {
+        "DisplayName": "3: Grade 3",
+        "Value": "3"
+      },
+      {
+        "DisplayName": "4: Grade 4",
+        "Value": "4"
+      },
+      {
+        "DisplayName": "5: Grade 5",
+        "Value": "5"
+      },
+      {
+        "DisplayName": "6: Grade 6",
+        "Value": "6"
+      },
+      {
+        "DisplayName": "7: Grade 7",
+        "Value": "7"
+      },
+      {
+        "DisplayName": "8: Grade 8",
+        "Value": "8"
+      },
+      {
+        "DisplayName": "9: Grade 9",
+        "Value": "9"
+      },
+      {
+        "DisplayName": "10: Grade 10",
+        "Value": "10"
       }
     ]
   }
