@@ -80,9 +80,13 @@
                         </Popup>
                     </Grid>
                     <ControlTemplate.Triggers>
+                        <Trigger Property="IsReadOnly" Value="True">
+                            <Setter Property="Background" Value="#FFF0F0F0"/>
+                            <Setter Property="Foreground" Value="#FF666666"/>
+                        </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Background" Value="#FFF5F5F5"/>
-                            <Setter Property="Foreground" Value="#FF999999"/>
+                            <Setter Property="Background" Value="#FFF0F0F0"/>
+                            <Setter Property="Foreground" Value="#FF666666"/>
                         </Trigger>
                         <Trigger Property="HasItems" Value="False">
                             <Setter TargetName="DropDownBorder" Property="MinHeight" Value="95"/>

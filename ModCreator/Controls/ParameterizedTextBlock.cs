@@ -3,6 +3,7 @@ using ModCreator.Helpers;
 using ModCreator.Models;
 using ModCreator.Windows;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,7 +20,7 @@ namespace ModCreator.Controls
          DependencyProperty.Register(nameof(Item), typeof(EventActionBase), typeof(ParameterizedTextBlock), new PropertyMetadata(null, OnItemChanged));
 
         public static readonly DependencyProperty AllVariablesProperty =
-               DependencyProperty.Register(nameof(AllVariables), typeof(List<GlobalVariable>), typeof(ParameterizedTextBlock), new PropertyMetadata(null));
+               DependencyProperty.Register(nameof(AllVariables), typeof(ObservableCollection<GlobalVariable>), typeof(ParameterizedTextBlock), new PropertyMetadata(null));
 
         public EventActionBase Item
         {
@@ -27,9 +28,9 @@ namespace ModCreator.Controls
             set => SetValue(ItemProperty, value);
         }
 
-        public List<GlobalVariable> AllVariables
+        public ObservableCollection<GlobalVariable> AllVariables
         {
-            get => (List<GlobalVariable>)GetValue(AllVariablesProperty);
+            get => (ObservableCollection<GlobalVariable>)GetValue(AllVariablesProperty);
             set => SetValue(AllVariablesProperty, value);
         }
 

@@ -9,6 +9,7 @@ using System.Reflection;
 
 namespace ModCreator.WindowData
 {
+    [SetterAspect]
     public partial class ProjectEditorWindowData : CWindowData
     {
         private ModProject _originalProject;
@@ -18,7 +19,7 @@ namespace ModCreator.WindowData
         public ModProject Project { get; set; }
 
         // Language properties for translation
-        public List<Language> SourceLanguages { get; set; } = [];
+        public List<Language> SourceLanguages => ModConfHelper.LoadLanguages();
         public Language SelectedSourceLanguage { get; set; }
 
         public string StatusMessage
@@ -56,7 +57,7 @@ namespace ModCreator.WindowData
             SaveProject();
         }
 
-        public void LoadProjectData(object obj, PropertyInfo prop, object oldValue, object newValue)
+        public void LoadProjectData(object obj, PropertyInfo prop, object before = null, object after = null)
         {
             if (Project == null) return;
 
@@ -64,15 +65,16 @@ namespace ModCreator.WindowData
             LoadImageFiles();
             LoadGlobalVariables();
             LoadModEventFiles();
-            LoadModResources();
 
             BackupProject();
+            
+            SelectedSourceLanguage = SourceLanguages.FirstOrDefault();
             StatusMessage = MessageHelper.GetFormat("Messages.Success.LoadedProjects", Project.ProjectName);
         }
 
         public void ReloadProjectData()
         {
-            LoadProjectData(this, null, null, null);
+            LoadProjectData(this, null);
         }
 
         public void SaveProject()
@@ -80,25 +82,19 @@ namespace ModCreator.WindowData
             if (Project == null) return;
 
             SaveConfContent();
-            SaveGlobalVariables();
+            
+            // Save global variables from container back to Project
+            if (GlobalVariablesContainer != null)
+                Project.GlobalVariables = GlobalVariablesContainer.Variables;
+            
             SaveModEvents();
 
             Project.LastModifiedDate = DateTime.Now;
             
             // Save current project to its project.json file
             ProjectHelper.SaveProject(Project);
+
             BackupProject(); // Update backup after successful save
-        }
-
-        public void LoadModResources()
-        {
-            var resourcePrefix = "ModCreator.Resources.";
-
-            SourceLanguages = ResourceHelper.ReadEmbeddedResource<List<Language>>($"{resourcePrefix}languages.json");
-            CacheTypes = ResourceHelper.ReadEmbeddedResource<List<string>>($"{resourcePrefix}modevent-cachetype.json");
-            WorkOnTypes = ResourceHelper.ReadEmbeddedResource<List<string>>($"{resourcePrefix}modevent-workon.json");
-
-            SelectedSourceLanguage = SourceLanguages[0];
         }
     }
 }

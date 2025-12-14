@@ -34,7 +34,7 @@ namespace ModCreator.Models
         /// <summary>
         /// Child items (for folders)
         /// </summary>
-        public List<FileItem> Children { get; set; } = [];
+        public ObservableCollection<FileItem> Children { get; set; } = [];
 
         /// <summary>
         /// Parent folder item

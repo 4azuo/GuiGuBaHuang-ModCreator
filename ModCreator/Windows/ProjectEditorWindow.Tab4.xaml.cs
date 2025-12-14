@@ -1,7 +1,7 @@
-﻿using ModCreator.Helpers;
+﻿using ModCreator.Businesses;
+using ModCreator.Helpers;
 using ModCreator.Models;
 using ModCreator.WindowData;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Versioning;
@@ -14,6 +14,10 @@ namespace ModCreator.Windows
 {
     public partial class ProjectEditorWindow : CWindow<ProjectEditorWindowData>
     {
+        // Business logic handlers
+        private GlobalVariablesDragDropBusiness _globalVariablesDragDropBusiness;
+        private Tab4CodeGenerationBusiness _tab4CodeGenerationBusiness;
+
         [SupportedOSPlatform("windows6.1")]
         private void SetupVariablesSourceBinding()
         {
@@ -44,13 +48,13 @@ namespace ModCreator.Windows
 
         private void AddVariable_Click(object sender, RoutedEventArgs e)
         {
-            if (WindowData.GlobalVariables.Any(v => string.IsNullOrWhiteSpace(v.Name)))
+            if (WindowData.GlobalVariablesContainer?.Variables.Any(v => string.IsNullOrWhiteSpace(v.Name)) == true)
             {
                 MessageBox.Show(MessageHelper.Get("Messages.Error.CompleteExistingVariable"), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            WindowData.GlobalVariables.Add(new GlobalVariable
+            WindowData.GlobalVariablesContainer?.Variables.Add(new GlobalVariable
             {
                 Name = "",
                 Type = "Object",
@@ -74,7 +78,7 @@ namespace ModCreator.Windows
                 MessageBox.Show(MessageHelper.Get("Messages.Error.EmptyVariableName"), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 
                 if (string.IsNullOrWhiteSpace(variable.Type) && string.IsNullOrWhiteSpace(variable.Value) && string.IsNullOrWhiteSpace(variable.Description))
-                    WindowData.GlobalVariables.Remove(variable);
+                    WindowData.GlobalVariablesContainer?.Variables.Remove(variable);
                 return;
             }
 
@@ -87,8 +91,8 @@ namespace ModCreator.Windows
             }
 
             // Check for duplicate variable names
-            var duplicates = WindowData.GlobalVariables.Where(v => v != variable && v.Name == variable.Name).ToList();
-            if (duplicates.Any())
+            var duplicates = WindowData.GlobalVariablesContainer?.Variables.Where(v => v != variable && v.Name == variable.Name).ToList();
+            if (duplicates?.Any() == true)
             {
                 e.Cancel = true;
                 MessageBox.Show(MessageHelper.GetFormat("Messages.Error.VariableNameDuplicate", variable.Name), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -117,8 +121,11 @@ namespace ModCreator.Windows
 
         private void GenerateVariablesCode_Click(object sender, RoutedEventArgs e)
         {
-            var outputPath = WindowData.SaveGlobalVariables();
-            MessageBox.Show(MessageHelper.GetFormat("Messages.Success.VariablesCodeGenerated", outputPath), MessageHelper.Get("Messages.Info.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
+            var outputPath = _tab4CodeGenerationBusiness?.GenerateGlobalVariablesCode();
+            if (!string.IsNullOrEmpty(outputPath))
+            {
+                _tab4CodeGenerationBusiness?.ShowGlobalVariablesCodeGeneratedMessage(outputPath);
+            }
         }
 
         private void CloneVariable_Click(object sender, RoutedEventArgs e)
@@ -134,11 +141,11 @@ namespace ModCreator.Windows
                 Description = variable.Description
             };
 
-            var index = WindowData.GlobalVariables.IndexOf(variable);
+            var index = WindowData.GlobalVariablesContainer.Variables.IndexOf(variable);
             if (index >= 0)
-                WindowData.GlobalVariables.Insert(index + 1, clonedVar);
+                WindowData.GlobalVariablesContainer.Variables.Insert(index + 1, clonedVar);
             else
-                WindowData.GlobalVariables.Add(clonedVar);
+                WindowData.GlobalVariablesContainer.Variables.Add(clonedVar);
             
             WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.ClonedVariable", variable.Name);
         }
@@ -152,7 +159,7 @@ namespace ModCreator.Windows
 
             if (result == MessageBoxResult.Yes)
             {
-                WindowData.GlobalVariables.Remove(variable);
+                WindowData.GlobalVariablesContainer.Variables.Remove(variable);
                 WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.RemovedVariable", variable.Name);
             }
         }
@@ -160,43 +167,33 @@ namespace ModCreator.Windows
         [SupportedOSPlatform("windows7.0")]
         private void ToggleGridView_Click(object sender, RoutedEventArgs e)
         {
-            var dgVariables = this.FindName("dgGlobalVariables") as DataGrid;
-            var txtSource = this.FindName("txtVariablesSource") as ICSharpCode.AvalonEdit.TextEditor;
-            var btnGrid = this.FindName("btnGridView") as Button;
-            var btnSource = this.FindName("btnSourceView") as Button;
-
-            if (dgVariables == null || txtSource == null || btnGrid == null || btnSource == null) return;
-
-            dgVariables.Visibility = Visibility.Visible;
-            txtSource.Visibility = Visibility.Collapsed;
-            
-            btnGrid.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2E5090"));
-            btnGrid.Foreground = Brushes.White;
-            btnSource.Background = Brushes.White;
-            btnSource.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF666666"));
-            WindowData.StatusMessage = MessageHelper.Get("Messages.Success.SwitchedToGridView");
+            WindowData?.ToggleToGridView();
         }
 
         [SupportedOSPlatform("windows7.0")]
         private void ToggleSourceView_Click(object sender, RoutedEventArgs e)
         {
-            var dgVariables = this.FindName("dgGlobalVariables") as DataGrid;
-            var txtSource = this.FindName("txtVariablesSource") as ICSharpCode.AvalonEdit.TextEditor;
-            var btnGrid = this.FindName("btnGridView") as Button;
-            var btnSource = this.FindName("btnSourceView") as Button;
-
-            if (dgVariables == null || txtSource == null || btnGrid == null || btnSource == null) return;
-
-            LoadVariablesSourceFile();
-
-            dgVariables.Visibility = Visibility.Collapsed;
-            txtSource.Visibility = Visibility.Visible;
-            
-            btnSource.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF2E5090"));
-            btnSource.Foreground = Brushes.White;
-            btnGrid.Background = Brushes.White;
-            btnGrid.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF666666"));
-            WindowData.StatusMessage = MessageHelper.Get("Messages.Success.SwitchedToSourceView");
+            WindowData?.ToggleToSourceView();
+        }
+        
+        private void SortVariables_Click(object sender, RoutedEventArgs e)
+        {
+            WindowData?.SortVariablesByName();
+        }
+        
+        private void DragHandle_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            _globalVariablesDragDropBusiness?.OnDragHandlePreviewMouseLeftButtonDown(sender, e);
+        }
+        
+        private void DataGrid_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            // Not used anymore - drag only from handle
+        }
+        
+        private void DataGrid_Drop(object sender, DragEventArgs e)
+        {
+            _globalVariablesDragDropBusiness?.OnDataGridDrop(sender, e);
         }
     }
 }

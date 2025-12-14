@@ -4,12 +4,12 @@
     "Description": "Create localization texts for game",
     "Files": [
       {
-        "FileName": "RoleEffect.json",
-        "FrozenColumns": 1,
+        "FileName": "LocalText.json",
+        "FrozenColumns": 2,
         "Elements": [
-          "RoleEffect.id",
-          "RoleEffect.effectType",
-          "RoleEffect.value"
+          "LocalText.id",
+          "LocalText.key::localtext{LocalText.id}",
+          "LocalText.en"
         ]
       }
     ]
@@ -29,21 +29,21 @@
           "RoleCreateFeature.duration",
           "RoleCreateFeature.conceal",
           "RoleCreateFeature.refreshType",
-          "RoleCreateFeature.name:[LocalText.key]",
-          "RoleCreateFeature.tips:[LocalText.key]",
-          "RoleCreateFeature.effect:#RoleEffect.id#",
+          "RoleCreateFeature.name::[LocalText.key]",
+          "RoleCreateFeature.tips::[LocalText.key]",
+          "RoleCreateFeature.effect::#RoleEffect.id#",
           "RoleCreateFeature.iconAndDesc",
           "RoleCreateFeature.lockLuck",
-          "RoleCreateFeature.introduceText",
+          "RoleCreateFeature.introduceText::[LocalText.key]",
           "RoleCreateFeature.weight"
         ]
       },
       {
         "FileName": "LocalText.json",
-        "FrozenColumns": 1,
+        "FrozenColumns": 2,
         "Elements": [
           "LocalText.id",
-          "LocalText.key:localtext{LocalText.id}",
+          "LocalText.key::localtext{LocalText.id}",
           "LocalText.en"
         ]
       },
@@ -52,8 +52,17 @@
         "FrozenColumns": 1,
         "Elements": [
           "RoleEffect.id",
-          "RoleEffect.effectType",
-          "RoleEffect.value"
+          "RoleEffect1.effectType",
+          "RoleEffect1.value"
+        ]
+      },
+      {
+        "FileName": "RoleEffect.json",
+        "FrozenColumns": 1,
+        "Elements": [
+          "RoleEffect.id",
+          "RoleEffect2.effectType[Disabled]",
+          "RoleEffect2.value[RefDocs:=ModRoleEffectType3.json]"
         ]
       }
     ]
@@ -92,10 +101,10 @@
           "DramaDialogue.soundsBg",
           "DramaDialogue.soundsEffect",
           "DramaDialogue.title",
-          "DramaDialogue.dialogue:[LocalText.key]",
+          "DramaDialogue.dialogue::[LocalText.key]",
           "DramaDialogue.openFunction",
           "DramaDialogue.function",
-          "DramaDialogue.options:#DramaOptions.id#",
+          "DramaDialogue.options::#DramaOptions.id#",
           "DramaDialogue.nextDialogue"
         ]
       },
@@ -107,20 +116,20 @@
           "DramaOptions.condition",
           "DramaOptions.hue",
           "DramaOptions.optionsHide",
-          "DramaOptions.text:[LocalText.key]",
+          "DramaOptions.text::[LocalText.key]",
           "DramaOptions.cost",
           "DramaOptions.costHide",
           "DramaOptions.function",
-          "DramaOptions.clickTip:[LocalText.key]",
-          "DramaOptions.nextDialogue:[DramaDialogue.id]"
+          "DramaOptions.clickTip::[LocalText.key]",
+          "DramaOptions.nextDialogue::[DramaDialogue.id]"
         ]
       },
       {
         "FileName": "LocalText.json",
-        "FrozenColumns": 1,
+        "FrozenColumns": 2,
         "Elements": [
           "LocalText.id",
-          "LocalText.key:dramaText{LocalText.id}",
+          "LocalText.key::dramaText{LocalText.id}",
           "LocalText.en"
         ]
       }

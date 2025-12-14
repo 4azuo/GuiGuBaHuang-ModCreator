@@ -1,5 +1,6 @@
 using ModCreator.Commons;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -325,99 +326,127 @@ namespace ModCreator.Helpers
             }
         }
 
-        /// <summary>
-        /// Get list of property names that have different values between two objects
-        /// </summary>
-        /// <typeparam name="T">Type of objects to compare</typeparam>
-        /// <param name="obj1">First object</param>
-        /// <param name="obj2">Second object</param>
-        /// <param name="ignoreProperties">Optional list of property names to ignore in comparison</param>
-        /// <returns>List of property names with different values</returns>
-        public static string[] GetChangedPropertyNames<T>(T obj1, T obj2, Type[] trackedTypes, params string[] ignoreProperties) where T : class
-        {
-            var differences = GetPropertyDifferences(obj1, obj2, trackedTypes, ignoreProperties);
-            return differences.Keys.ToArray();
-        }
+        ///// <summary>
+        ///// Get list of property names that have different values between two objects
+        ///// </summary>
+        ///// <typeparam name="T">Type of objects to compare</typeparam>
+        ///// <param name="obj1">First object</param>
+        ///// <param name="obj2">Second object</param>
+        ///// <param name="ignoreProperties">Optional list of property names to ignore in comparison</param>
+        ///// <returns>List of property names with different values</returns>
+        //public static string[] GetChangedPropertyNames<T>(T obj1, T obj2, Type[] trackedTypes, params string[] ignoreProperties) where T : class
+        //{
+        //    var differences = GetPropertyDifferences(obj1, obj2, trackedTypes, ignoreProperties);
+        //    return differences.Keys.ToArray();
+        //}
+
+        ///// <summary>
+        ///// Calculate hash code for an object, supporting complex types and collections
+        ///// </summary>
+        ///// <param name="obj">The object to calculate hash code for</param>
+        ///// <param name="trackedTypes">Types to track for deep hash calculation</param>
+        ///// <param name="ignoreProperties">Optional list of property names to ignore</param>
+        ///// <returns>Combined hash code</returns>
+        //public static int GetObjectHashCode(object obj, Type[] trackedTypes, params string[] ignoreProperties)
+        //{
+        //    var visited = new HashSet<object>(new ReferenceEqualityComparer());
+        //    return GetObjectHashCodeInternal(obj, trackedTypes, ignoreProperties, visited);
+        //}
+
+        ///// <summary>
+        ///// Internal method to calculate hash code with circular reference detection
+        ///// </summary>
+        //private static int GetObjectHashCodeInternal(object obj, Type[] trackedTypes, string[] ignoreProperties, HashSet<object> visited)
+        //{
+        //    if (obj == null) return 0;
+
+        //    var type = obj.GetType();
+
+        //    // Handle strings separately to avoid treating them as IEnumerable
+        //    // Handle primitives and value types
+        //    if (obj is string || type.IsValueType || type.IsPrimitive || type.IsEnum)
+        //    {
+        //        return obj.GetHashCode();
+        //    }
+
+        //    // Check for circular references
+        //    if (!visited.Add(obj))
+        //    {
+        //        // Already visited, return a constant to avoid infinite recursion
+        //        return 0;
+        //    }
+
+        //    // Handle collections
+        //    if (obj is IEnumerable enumerable)
+        //    {
+        //        unchecked
+        //        {
+        //            return enumerable.GetHashCode() + enumerable switch
+        //            {
+        //                ICollection c1 => c1.Count,
+        //                _ => enumerable.FastCount()
+        //            };
+        //            //int hash = 17;
+        //            //foreach (var item in enumerable)
+        //            //{
+        //            //    hash = hash * 31 + GetObjectHashCodeInternal(item, trackedTypes, ignoreProperties, visited);
+        //            //}
+        //            //return hash;
+        //        }
+        //    }
+
+        //    // Handle complex objects - only if tracked
+        //    if (trackedTypes != null && !trackedTypes.Contains(type))
+        //    {
+        //        // Non-tracked types, use default GetHashCode
+        //        return obj.GetHashCode();
+        //    }
+
+        //    // For tracked complex objects, calculate hash from properties
+        //    unchecked
+        //    {
+        //        int hash = 17;
+        //        var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+        //            .Where(p => p.CanRead && 
+        //                        !ignoreProperties.Contains(p.Name) && 
+        //                        !IgnoredTypes.Contains(p.DeclaringType));
+
+        //        foreach (var property in properties)
+        //        {
+        //            var value = property.GetValue(obj);
+        //            hash = hash * 31 + GetObjectHashCodeInternal(value, trackedTypes, ignoreProperties, visited);
+        //        }
+
+        //        return hash;
+        //    }
+        //}
 
         /// <summary>
-        /// Calculate hash code for an object, supporting complex types and collections
+        /// Returns the number of elements in a non-generic <see cref="IEnumerable"/> sequence.
         /// </summary>
-        /// <param name="obj">The object to calculate hash code for</param>
-        /// <param name="trackedTypes">Types to track for deep hash calculation</param>
-        /// <param name="ignoreProperties">Optional list of property names to ignore</param>
-        /// <returns>Combined hash code</returns>
-        public static int GetObjectHashCode(object obj, Type[] trackedTypes, params string[] ignoreProperties)
+        /// <remarks>If <paramref name="source"/> implements <see cref="ICollection"/>, the operation is
+        /// performed efficiently using the <see cref="ICollection.Count"/> property. Otherwise, the method enumerates
+        /// the sequence to determine the count.</remarks>
+        /// <param name="source">The sequence whose elements are to be counted. Cannot be <see langword="null"/>.</param>
+        /// <returns>The number of elements in the <paramref name="source"/> sequence.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="source"/> is <see langword="null"/>.</exception>
+        public static int FastCount(this IEnumerable source)
         {
-            var visited = new HashSet<object>(new ReferenceEqualityComparer());
-            return GetObjectHashCodeInternal(obj, trackedTypes, ignoreProperties, visited);
-        }
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (source is ICollection col)
+                return col.Count;
 
-        /// <summary>
-        /// Internal method to calculate hash code with circular reference detection
-        /// </summary>
-        private static int GetObjectHashCodeInternal(object obj, Type[] trackedTypes, string[] ignoreProperties, HashSet<object> visited)
-        {
-            if (obj == null) return 0;
-
-            var type = obj.GetType();
-
-            // Handle strings separately to avoid treating them as IEnumerable
-            if (obj is string)
+            int c = 0;
+            var e = source.GetEnumerator();
+            try
             {
-                return obj.GetHashCode();
+                while (e.MoveNext()) c++;
             }
-
-            // Handle primitives and value types
-            if (type.IsValueType || type.IsPrimitive || type.IsEnum)
+            finally
             {
-                return obj.GetHashCode();
+                (e as IDisposable)?.Dispose();
             }
-
-            // Check for circular references
-            if (!visited.Add(obj))
-            {
-                // Already visited, return a constant to avoid infinite recursion
-                return 0;
-            }
-
-            // Handle collections
-            if (obj is System.Collections.IEnumerable enumerable)
-            {
-                unchecked
-                {
-                    int hash = 17;
-                    foreach (var item in enumerable)
-                    {
-                        hash = hash * 31 + GetObjectHashCodeInternal(item, trackedTypes, ignoreProperties, visited);
-                    }
-                    return hash;
-                }
-            }
-
-            // Handle complex objects - only if tracked
-            if (trackedTypes != null && !trackedTypes.Contains(type))
-            {
-                // Non-tracked types, use default GetHashCode
-                return obj.GetHashCode();
-            }
-
-            // For tracked complex objects, calculate hash from properties
-            unchecked
-            {
-                int hash = 17;
-                var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                    .Where(p => p.CanRead && 
-                                !ignoreProperties.Contains(p.Name) && 
-                                !IgnoredTypes.Contains(p.DeclaringType));
-
-                foreach (var property in properties)
-                {
-                    var value = property.GetValue(obj);
-                    hash = hash * 31 + GetObjectHashCodeInternal(value, trackedTypes, ignoreProperties, visited);
-                }
-
-                return hash;
-            }
+            return c;
         }
 
         /// <summary>

@@ -12,7 +12,7 @@ namespace ModCreator.WindowData
 {
     public partial class ProjectEditorWindowData : CWindowData
     {
-        public ObservableCollection<FileItem> EventItems { get; set; } = [];
+        public List<FileItem> EventItems { get; set; } = [];
         [NotifyMethod(nameof(OnEventItemSelected))]
         public FileItem SelectedEventItem { get; set; }
         [NotifyMethod(nameof(LoadModEventContent))]
@@ -37,12 +37,13 @@ namespace ModCreator.WindowData
         public bool HasSelectedEventFile => SelectedModEvent != null;
         public bool IsCodeModeOnly => SelectedModEvent?.IsCodeModeOnly == true;
         public bool IsGuiModeEnabled => SelectedModEvent != null && !IsCodeModeOnly;
-        public List<string> CacheTypes { get; set; } = [];
-        public List<string> WorkOnTypes { get; set; } = [];
+        public List<string> CacheTypes => ModEventHelper.LoadCacheTypes();
+        public List<string> WorkOnTypes => ModEventHelper.LoadWorkOnTypes();
         public List<EventActionBase> AvailableEvents { get; set; } = ModEventHelper.LoadModEventMethodsFromAssembly();
 
         public bool CanUndo => SelectedModEvent?.CanUndo ?? false && !IsCodeModeOnly;
         public bool CanRedo => SelectedModEvent?.CanRedo ?? false && !IsCodeModeOnly;
+        public bool CanSwitchEventToCodeMode => !IsCodeModeOnly;
 
         public void UndoModEvent()
         {
@@ -127,7 +128,7 @@ namespace ModCreator.WindowData
             return items;
         }
 
-        public void OnEventItemSelected(object obj, PropertyInfo prop, object oldValue, object newValue)
+        public void OnEventItemSelected(object obj, PropertyInfo prop, object before = null, object after = null)
         {
             if (SelectedEventItem != null && !SelectedEventItem.IsFolder)
             {
@@ -156,21 +157,26 @@ namespace ModCreator.WindowData
                 SelectedModEvent = null;
         }
 
-        public void LoadModEventContent(object obj, PropertyInfo prop, object oldValue, object newValue)
+        public void LoadModEventContent(object obj, PropertyInfo prop, object before = null, object after = null)
         {
             EventSourceContent = SelectedModEvent != null && File.Exists(SelectedModEvent.FilePath)
                 ? File.ReadAllText(SelectedModEvent.FilePath)
                 : string.Empty;
         }
 
-        public void SaveModEvent()
+        public void SaveModEvent(FileItem file, bool showStatusMsg = true)
         {
-            if (SelectedModEvent == null || string.IsNullOrEmpty(SelectedModEvent.FilePath))
+            if (file == null || string.IsNullOrEmpty(file.FullPath))
                 return;
 
-            var content = !IsCodeModeOnly ? GenerateModEventCode(SelectedModEvent) : EventSourceContent;
-            File.WriteAllText(SelectedModEvent.FilePath, content);
-            StatusMessage = MessageHelper.GetFormat("Messages.Success.SavedModEventFile", Path.GetFileName(SelectedModEvent.FilePath));
+            var modEventItem = file.GetObjectContentAs<ModEventItem>();
+            if (modEventItem == null)
+                return;
+
+            var content = file.Content;
+            File.WriteAllText(file.FullPath, content);
+            if (showStatusMsg)
+                StatusMessage = MessageHelper.GetFormat("Messages.Success.SavedModEventFile", Path.GetFileName(SelectedModEvent.FilePath));
         }
 
         public void SaveModEvents()
@@ -178,308 +184,16 @@ namespace ModCreator.WindowData
             if (Project == null)
                 return;
 
-            // Update current item's content
-            if (SelectedEventItem != null && !SelectedEventItem.IsFolder && SelectedModEvent != null)
-            {
-                EventSourceContent = !IsCodeModeOnly ? GenerateModEventCode(SelectedModEvent) : EventSourceContent;
-            }
-
             // Save all files in EventItems
             int savedCount = 0;
-            SaveAllEventItems(EventItems, ref savedCount);
-            
+            foreach (var item in EventItems)
+            {
+                SaveModEvent(item);
+                savedCount++;
+            }
+
             if (savedCount > 0)
                 StatusMessage = MessageHelper.GetFormat("Messages.Success.SavedModEventFiles", savedCount);
-        }
-
-        private void SaveAllEventItems(ObservableCollection<FileItem> items, ref int savedCount)
-        {
-            foreach (var item in items)
-            {
-                if (item.IsFolder)
-                {
-                    // Recursively save children
-                    SaveAllEventItems(item.Children, ref savedCount);
-                }
-                else
-                {
-                    // Find the ModEventItem for this file
-                    var modEvent = Project?.ModEvents?.FirstOrDefault(e => e.FilePath == item.FullPath);
-                    if (modEvent != null)
-                    {
-                        var content = string.Empty;
-                        
-                        // If this is the selected item, use current GUI/code mode
-                        if (item == SelectedEventItem)
-                        {
-                            content = !IsCodeModeOnly ? GenerateModEventCode(modEvent) : EventSourceContent;
-                        }
-                        else
-                        {
-                            // For other items, check if they have stored content or generate from ModEventItem
-                            if (!string.IsNullOrEmpty(item.Content))
-                            {
-                                content = item.Content;
-                            }
-                            else if (!modEvent.IsCodeModeOnly)
-                            {
-                                content = GenerateModEventCode(modEvent);
-                            }
-                            else if (File.Exists(item.FullPath))
-                            {
-                                // Code mode only, keep existing file content
-                                content = File.ReadAllText(item.FullPath);
-                            }
-                        }
-                        
-                        if (!string.IsNullOrEmpty(content))
-                        {
-                            File.WriteAllText(item.FullPath, content);
-                            savedCount++;
-                        }
-                    }
-                }
-            }
-        }
-
-        public string GenerateModEventCode(ModEventItem modEvent)
-        {
-            if (modEvent == null || string.IsNullOrEmpty(modEvent.FilePath))
-                return string.Empty;
-
-            // Load templates
-            var eventTemplate = ResourceHelper.ReadEmbeddedResource("ModCreator.Resources.EventTemplate.tmp");
-            var eventTemplateContent = ResourceHelper.ReadEmbeddedResource("ModCreator.Resources.EventTemplateContent.tmp");
-
-            if (string.IsNullOrEmpty(eventTemplate) || string.IsNullOrEmpty(eventTemplateContent))
-                return string.Empty;
-
-            // Get class name from file name
-            var className = modEvent.FileName;
-
-            // Generate event method signature and base call
-            string eventMethod;
-            string baseCall = string.Empty;
-            
-            if (modEvent.EventMode == Enums.EventMode.ModEvent && !string.IsNullOrEmpty(modEvent.SelectedEvent))
-            {
-                // Find the event method signature from available events
-                var selectedEvent = AvailableEvents.FirstOrDefault(e => e.Name == modEvent.SelectedEvent);
-                if (selectedEvent != null)
-                {
-                    eventMethod = $"public override {selectedEvent.Code}";
-                    
-                    // Generate base call with parameters
-                    if (selectedEvent.Parameters != null && selectedEvent.Parameters.Count > 0)
-                    {
-                        var paramNames = string.Join(", ", selectedEvent.Parameters.Select(p => p.Name));
-                        baseCall = $"base.{selectedEvent.Name}({paramNames});";
-                    }
-                    else
-                    {
-                        baseCall = $"base.{selectedEvent.Name}();";
-                    }
-                }
-                else
-                {
-                    eventMethod = $"public override void {modEvent.SelectedEvent}()";
-                    baseCall = $"base.{modEvent.SelectedEvent}();";
-                }
-            }
-            else
-            {
-                // NonEvent mode - use custom event name or default "Run"
-                eventMethod = $"public void Run()";
-                // No base call for non-event methods
-            }
-
-            // Generate condition code
-            var conditionCode = GenerateCodeFromEventActions(modEvent.Conditions, isCondition: true);
-            if (string.IsNullOrEmpty(conditionCode))
-                conditionCode = "true";
-
-            // Generate action code
-            var actionCode = GenerateCodeFromEventActions(modEvent.Actions, isCondition: false);
-            if (string.IsNullOrEmpty(actionCode))
-                actionCode = "// No actions";
-
-            // Replace placeholders in event content
-            var eventContent = eventTemplateContent
-                .Replace("#BASECALL#", baseCall)
-                .Replace("#EVENTMETHOD#", eventMethod)
-                .Replace("#CONDITION#", conditionCode)
-                .Replace("#ACTION#", actionCode);
-
-            // Replace placeholders in main template
-            var cacheType = string.IsNullOrEmpty(modEvent.CacheType) ? "Local" : $"{modEvent.CacheType}";
-            var workOn = string.IsNullOrEmpty(modEvent.WorkOn) ? "Local" : $"{modEvent.WorkOn}";
-
-            var generatedCode = eventTemplate
-                .Replace("#PROJECTID#", Project.ProjectId)
-                .Replace("#CLASSNAME#", className)
-                .Replace("#CACHETYPE#", cacheType)
-                .Replace("#WORKON#", workOn)
-                .Replace("#ORDERINDEX#", modEvent.OrderIndex.ToString())
-                .Replace("#EVENTCONTENT#", eventContent);
-
-            return generatedCode;
-        }
-
-        private string GenerateCodeFromEventActions(ObservableCollection<EventActionBase> actions, bool isCondition)
-        {
-            var codeLines = GenerateCodeFromEventActions(actions);
-            if (codeLines == null || codeLines.Count == 0)
-                return string.Empty;
-
-            if (isCondition)
-            {
-                return string.Join(" ", codeLines.Select(x => $"({x})"));
-            }
-            else
-            {
-                // Add proper indentation to each line based on brace depth
-                var indentedLines = new List<string>();
-                int indentLevel = 0;
-                foreach (var line in codeLines)
-                {
-                    var trimmedLine = line.Trim();
-                    
-                    // Decrease indent before closing brace
-                    if (trimmedLine == "}")
-                        indentLevel--;
-                    
-                    // Add indentation
-                    var indent = new string(' ', indentLevel * 4);
-                    indentedLines.Add($"                {indent}{trimmedLine}");
-                    
-                    // Increase indent after opening brace
-                    if (trimmedLine == "{")
-                        indentLevel++;
-                }
-                
-                return string.Join("\r\n", indentedLines);
-            }
-        }
-
-        private List<string> GenerateCodeFromEventActions(ObservableCollection<EventActionBase> actions)
-        {
-            if (actions == null || actions.Count == 0)
-                return [];
-
-            var codeLines = new List<string>();
-            foreach (var action in actions)
-            {
-                // Skip the Root placeholder - but process its children
-                if (action.Name == Constants.EventActionRootElement.Name)
-                {
-                    foreach (var child in action.Children)
-                    {
-                        codeLines.AddRange(GenerateCodeFromSingleAction(child));
-                    }
-                    break;
-                }
-            }
-
-            return codeLines;
-        }
-
-        private List<string> GenerateCodeFromSingleAction(EventActionBase action)
-        {
-            if (action == null || string.IsNullOrEmpty(action.Code))
-                return [];
-
-            var codeLines = new List<string>();
-            if (!string.IsNullOrEmpty(action.Code))
-                codeLines.Add(GenerateCodeWithParameters(action));
-            foreach (var child in action.Children)
-            {
-                if (child.IsCanAddChild)
-                {
-                    if (!string.IsNullOrEmpty(child.Code))
-                        codeLines.Add(GenerateCodeWithParameters(child));
-                    codeLines.Add("{");
-                    foreach (var c in child.Children)
-                    {
-                        codeLines.AddRange(GenerateCodeFromSingleAction(c));
-                    }
-                    codeLines.Add("}");
-                }
-                else
-                {
-                    codeLines.AddRange(GenerateCodeFromSingleAction(child));
-                }
-            }
-
-            return codeLines;
-        }
-
-        private string GenerateCodeWithParameters(EventActionBase action)
-        {
-            var code = action.Code;
-            // Replace parameter placeholders with actual values
-            if (action.Parameters != null && action.Parameters.Count > 0)
-            {
-                for (int i = 0; i < action.Parameters.Count; i++)
-                {
-                    var placeholder = $"{{{i}}}";
-
-                    // Check if this parameter has a value
-                    if (action.ParameterValues != null && action.ParameterValues.ContainsKey(i))
-                    {
-                        var paramValue = action.ParameterValues[i];
-                        if (paramValue != null)
-                        {
-                            var paramCode = GenerateCodeFromParameterValue(paramValue);
-                            code = code.Replace(placeholder, paramCode);
-                        }
-                        else
-                        {
-                            // Parameter is null, use empty or default
-                            code = code.Replace(placeholder, "/* missing parameter */");
-                        }
-                    }
-                    else
-                    {
-                        // Parameter not provided, use parameter name or placeholder comment
-                        var paramName = action.Parameters[i].Name;
-                        code = code.Replace(placeholder, $"/* {paramName} */");
-                    }
-                }
-            }
-            return code;
-        }
-
-        private string GenerateCodeFromParameterValue(ModEventItemSelectValue paramValue)
-        {
-            if (paramValue == null)
-                return string.Empty;
-
-            switch (paramValue.SelectType)
-            {
-                case Enums.ModEventSelectType.EventAction:
-                    // Generate code from nested EventAction
-                    if (paramValue.SelectedEventAction != null)
-                    {
-                        var nestedCodeLines = GenerateCodeFromSingleAction(paramValue.SelectedEventAction);
-                        if (nestedCodeLines != null && nestedCodeLines.Count > 0)
-                        {
-                            // Join all code lines and trim trailing semicolon for inline usage
-                            var nestedCode = string.Join(" ", nestedCodeLines);
-                            return nestedCode.TrimEnd(';', ' ', '\r', '\n');
-                        }
-                    }
-                    return string.Empty;
-
-                case Enums.ModEventSelectType.Variable:
-                    return paramValue.SelectedVariable?.Name ?? string.Empty;
-
-                case Enums.ModEventSelectType.OptionalValue:
-                    // Return the optional value as-is (could be code snippet)
-                    return paramValue.OptionalValue ?? string.Empty;
-
-                default:
-                    return string.Empty;
-            }
         }
     }
 }

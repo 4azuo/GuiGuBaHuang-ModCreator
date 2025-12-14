@@ -55,7 +55,7 @@ namespace ModCreator.Attributes
         public void OnExit()
         {
             if (_instance == null || _property == null) return;
-            _instance.OnPropertyChanged(_propertyName, _oldValue, _newValue);
+            _instance.OnPropertyChanged(_property, _oldValue, _newValue);
         }
 
         public void OnException(Exception exception)

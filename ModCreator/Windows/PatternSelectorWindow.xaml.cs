@@ -1,27 +1,31 @@
-using ModCreator.Helpers;
+using ModCreator.Businesses;
 using ModCreator.Models;
 using ModCreator.WindowData;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Windows;
-using MessageBox = System.Windows.MessageBox;
+using System.IO;
 
 namespace ModCreator.Windows
 {
     public partial class PatternSelectorWindow : CWindow<PatternSelectorWindowData>
     {
+        // Business logic handler
+        private PatternSelectorWindowCodeGenerationBusiness _codeGenerationBusiness;
+
         public override PatternSelectorWindowData InitData(System.ComponentModel.CancelEventArgs e)
         {
             var data = base.InitData(e);
+
+            // Initialize business
+            _codeGenerationBusiness = new PatternSelectorWindowCodeGenerationBusiness(data, this);
+
             Loaded += (s, ev) =>
             {
                 var projectEditorWindow = Owner as ProjectEditorWindow;
                 if (projectEditorWindow.WindowData.Project != null)
                 {
-                    data.SetProjectPath(projectEditorWindow.WindowData.Project.ProjectPath);
+                    data.ProjectPath = projectEditorWindow.WindowData.Project.ProjectPath;
                 }
             };
             return data;
@@ -29,152 +33,13 @@ namespace ModCreator.Windows
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            if (WindowData.SelectedPattern == null)
-            {
-                MessageBox.Show(MessageHelper.Get("Messages.Warning.NoPatternSelected"), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
             var projectEditorWindow = Owner as ProjectEditorWindow;
-            if (projectEditorWindow?.WindowData?.Project == null)
+            var projectPath = projectEditorWindow?.WindowData?.Project?.ProjectPath;
+
+            if (_codeGenerationBusiness.SavePatternFiles(projectPath))
             {
-                MessageBox.Show(MessageHelper.Get("Messages.Error.NoProject"), MessageHelper.Get("Messages.Error.Title"), MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                projectEditorWindow.WindowData.LoadConfFiles();
             }
-
-            if (!ValidateData(out var validationErrors))
-            {
-                NotificationWindow.ShowDetails(this, MessageHelper.Get("Messages.Error.Title"), "Validation errors found:", validationErrors, NotificationType.Error);
-                return;
-            }
-
-            var confPath = Path.Combine(projectEditorWindow.WindowData.Project.ProjectPath, "ModProject", "ModConf");
-            Directory.CreateDirectory(confPath);
-
-            SaveFiles(confPath);
-
-            projectEditorWindow.WindowData.LoadConfFiles();
-            MessageBox.Show(MessageHelper.GetFormat("Messages.Success.PatternSaved", WindowData.SelectedPattern.Name), MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-        private bool ValidateData(out List<string> validationErrors)
-        {
-            validationErrors = new List<string>();
-            foreach (var file in WindowData.DisplayFiles)
-            {
-                // Check unique values
-                var uniqueElements = file.Elements.Where(e => e.Unique).ToList();
-                foreach (var uniqueElement in uniqueElements)
-                {
-                    var values = new Dictionary<string, int>();
-                    var rowIndex = 0;
-                    foreach (var row in file.Rows)
-                    {
-                        rowIndex++;
-                        if (row.RowData.ContainsKey(uniqueElement.Name))
-                        {
-                            var value = row.RowData[uniqueElement.Name];
-                            if (!string.IsNullOrWhiteSpace(value))
-                            {
-                                if (values.ContainsKey(value))
-                                {
-                                    validationErrors.Add($"{file.FileName} - Row {rowIndex}: {uniqueElement.Label} '{value}' is duplicated (first appeared in row {values[value]})");
-                                }
-                                else
-                                {
-                                    values[value] = rowIndex;
-                                }
-                            }
-                        }
-                    }
-                }
-                
-                // Check required and validation
-                foreach (var row in file.Rows)
-                {
-                    foreach (var element in file.Elements)
-                    {
-                        var value = row.RowData.ContainsKey(element.Name) ? row.RowData[element.Name] : string.Empty;
-                        if (element.Required && string.IsNullOrWhiteSpace(value))
-                        {
-                            validationErrors.Add($"{file.FileName}: {element.Label} is required");
-                        }
-                        else if (!string.IsNullOrWhiteSpace(value) && !element.ValidateValue(value, element.VarType))
-                        {
-                            validationErrors.Add($"{file.FileName}: {element.Label} - {element.ValidationError}");
-                        }
-                    }
-                }
-            }
-            return validationErrors.Count == 0;
-        }
-
-        private void SaveFiles(string confPath)
-        {
-            foreach (var file in WindowData.DisplayFiles)
-            {
-                var fileName = GetFileName(file.FileName);
-                var filePath = Path.Combine(confPath, fileName);
-                var jsonArray = BuildJsonArray(file);
-                
-                if (jsonArray.Count > 0)
-                {
-                    var jsonContent = JsonConvert.SerializeObject(jsonArray, Formatting.Indented);
-                    Helpers.FileHelper.WriteTextFile(filePath, jsonContent);
-                }
-            }
-        }
-
-        private string GetFileName(string fileName)
-        {
-            if (string.IsNullOrWhiteSpace(WindowData.Prefix))
-                return fileName;
-
-            var fileNameWithoutExt = Path.GetFileNameWithoutExtension(fileName);
-            var ext = Path.GetExtension(fileName);
-            return $"{WindowData.Prefix}_{fileNameWithoutExt}{ext}";
-        }
-
-        private List<Dictionary<string, object>> BuildJsonArray(PatternFileDisplay file)
-        {
-            var jsonArray = new List<Dictionary<string, object>>();
-            
-            foreach (var row in file.Rows)
-            {
-                var jsonObject = BuildJsonObject(file.Elements, row);
-                if (jsonObject.Count > 0)
-                    jsonArray.Add(jsonObject);
-            }
-            
-            return jsonArray;
-        }
-
-        private Dictionary<string, object> BuildJsonObject(List<PatternElement> elements, RowDisplay row)
-        {
-            var jsonObject = new Dictionary<string, object>();
-            
-            foreach (var element in elements)
-            {
-                if (element.ParentElement != null)
-                    continue;
-
-                var value = GetElementValue(element, row.RowData);
-                if (!string.IsNullOrWhiteSpace(value))
-                    jsonObject[element.Name] = value;
-            }
-            
-            return jsonObject;
-        }
-
-        private string GetElementValue(PatternElement element, Dictionary<string, string> rowData)
-        {
-            if (element.Type == "composite")
-                return PatternHelper.ProcessCompositeValue(element, rowData);
-            
-            if (element.IsAutoGenerated)
-                return PatternHelper.ProcessAutoGenValue(element.ElementFormat, rowData);
-            
-            return rowData.ContainsKey(element.Name) ? rowData[element.Name] : string.Empty;
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
@@ -213,6 +78,32 @@ namespace ModCreator.Windows
             if (sender is Controls.MultiSelectComboBox multiCombo && multiCombo.Tag is RowElementBinding binding)
             {
                 WindowData.LoadDynamicOptionsForElement(binding.Element);
+            }
+        }
+
+        private void RefDocs_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is System.Windows.Controls.Button button && button.Tag is PatternElement element)
+            {
+                if (!string.IsNullOrEmpty(element.RefDocs))
+                {
+                    var sampleConfsPath = Path.GetFullPath(Path.Combine(Constants.RootDir, "3385996759", "SampleConfs"));
+                    var filePath = Path.Combine(sampleConfsPath, element.RefDocs);
+
+                    if (File.Exists(filePath))
+                    {
+                        var refDocsWindow = new PatternRefDocsWindow
+                        {
+                            Owner = this,
+                            FilePath = filePath
+                        };
+                        refDocsWindow.ShowDialog();
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Reference documentation file not found:\n{filePath}", "File Not Found", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
+                }
             }
         }
     }

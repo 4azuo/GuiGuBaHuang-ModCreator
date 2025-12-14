@@ -14,7 +14,7 @@ namespace ModCreator.WindowData
     public partial class ProjectEditorWindowData : CWindowData
     {
         public List<string> ImageFiles { get; set; } = [];
-        public ObservableCollection<FileItem> ImageItems { get; set; } = [];
+        public List<FileItem> ImageItems { get; set; } = [];
         public List<ImageExtension> ImageExtensions { get; set; } = ResourceHelper.ReadEmbeddedResource<List<ImageExtension>>("ModCreator.Resources.image-extensions.json");
         public string SelectedImageFile { get; set; }
         [NotifyMethod(nameof(OnImageItemSelected))]
@@ -34,7 +34,7 @@ namespace ModCreator.WindowData
         public bool HasSelectedImageFile => !string.IsNullOrEmpty(SelectedImageFile);
         public bool HasSelectedImageItem => SelectedImageItem != null;
 
-        public void OnImageItemSelected(object obj, PropertyInfo prop, object oldValue, object newValue)
+        public void OnImageItemSelected(object obj, PropertyInfo prop, object before = null, object after = null)
         {
             if (SelectedImageItem == null || SelectedImageItem.IsFolder)
             {

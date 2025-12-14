@@ -1,5 +1,6 @@
 using ModCreator.Attributes;
 using ModCreator.Commons;
+using ModCreator.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,16 +12,14 @@ namespace ModCreator.Models
     public class PatternFileDisplay : AutoNotifiableObject
     {
         public string FileName { get; set; }
-        public List<PatternElement> Elements { get; set; } = new List<PatternElement>();
-        public List<PatternElement> DisplayElements { get; set; } = new List<PatternElement>();
-        public List<RowDisplay> Rows { get; set; } = new List<RowDisplay>();
-        public int FrozenColumns { get; set; } = 2;
-        
-        public List<PatternElement> FrozenDisplayElements => 
-            DisplayElements.Take(Math.Min(FrozenColumns, DisplayElements.Count)).ToList();
-        
-        public List<PatternElement> ScrollableDisplayElements => 
-            DisplayElements.Skip(Math.Min(FrozenColumns, DisplayElements.Count)).ToList();
+        public int FrozenColumns { get; set; }
+        public ObservableCollection<PatternElement> Elements { get; set; } = [];
+        public ObservableCollection<PatternElement> DisplayElements { get; set; } = [];
+        public ObservableCollection<RowDisplay> Rows { get; set; } = [];
+        public ObservableCollection<PatternElement> FrozenDisplayElements => 
+            DisplayElements.Take(Math.Min(FrozenColumns, DisplayElements.Count)).ToOC();
+        public ObservableCollection<PatternElement> ScrollableDisplayElements => 
+            DisplayElements.Skip(Math.Min(FrozenColumns, DisplayElements.Count)).ToOC();
 
         public void AddRow()
         {

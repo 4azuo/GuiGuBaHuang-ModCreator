@@ -11,7 +11,7 @@ namespace ModCreator.WindowData
 {
     public partial class ProjectEditorWindowData : CWindowData
     {
-        public List<string> ConfFiles { get; set; } = [];
+        public ObservableCollection<string> ConfFiles { get; set; } = [];
         public ObservableCollection<FileItem> ConfItems { get; set; } = [];
         [NotifyMethod(nameof(LoadConfContent))]
         public string SelectedConfFile { get; set; }
@@ -30,40 +30,22 @@ namespace ModCreator.WindowData
         [NotifyMethod(nameof(OnFilterLocalTextChanged))]
         public bool FilterLocalText { get; set; }
 
-        public void OnFilterLocalTextChanged(object obj, PropertyInfo prop, object oldValue, object newValue)
+        public void OnFilterLocalTextChanged(object obj, PropertyInfo prop, object before = null, object after = null)
         {
             LoadConfFiles();
         }
 
         public void LoadConfFiles()
         {
-            ConfFiles.Clear();
-            ConfItems.Clear();
             if (Project == null) return;
 
             var confDir = Path.Combine(Project.ProjectPath, "ModProject", "ModConf");
             if (Directory.Exists(confDir))
             {
-                ConfFiles = Directory.GetFiles(confDir, "*.json", SearchOption.AllDirectories)
-                    .Select(f => Path.GetRelativePath(confDir, f))
-                    .ToList();
+                ConfFiles.ReplaceWith(Directory.GetFiles(confDir, "*.json", SearchOption.AllDirectories)
+                    .Select(f => Path.GetRelativePath(confDir, f)));
 
-                var items = BuildFileTree(confDir, confDir);
-                foreach (var item in items)
-                    ConfItems.Add(item);
-
-                if (!string.IsNullOrEmpty(SelectedConfFile))
-                {
-                    var fullPath = Path.Combine(confDir, SelectedConfFile);
-                    if (!File.Exists(fullPath))
-                    {
-                        SelectedConfFile = null;
-                    }
-                }
-            }
-            else
-            {
-                SelectedConfFile = null;
+                ConfItems.ReplaceWith(BuildFileTree(confDir, confDir));
             }
         }
 
@@ -113,7 +95,7 @@ namespace ModCreator.WindowData
             return items;
         }
 
-        public void LoadConfContent(object obj, PropertyInfo prop, object oldValue, object newValue)
+        public void LoadConfContent(object obj, PropertyInfo prop, object before = null, object after = null)
         {
             if (string.IsNullOrEmpty(SelectedConfFile) || Project == null)
             {

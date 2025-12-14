@@ -6,7 +6,7 @@
     "Label": "Feature ID",
     "Description": "Unique identifier for the feature",
     "VarType": "Int32",
-    "Enable": true,
+    "Shown": true,
     "Required": true,
     "Unique": true,
     "ModEventParam": true
@@ -18,10 +18,10 @@
     "Label": "Feature Type",
     "Description": "Feature type identifier",
     "VarType": "Int32",
-    "Enable": true,
+    "Shown": true,
     "Required": true,
-    "Options": ["FeatureTypes"],
-    "Value": "1"
+    "Options": [ "FeatureTypes" ],
+    "Value": "2"
   },
   {
     "FileName": "RoleCreateFeature.json",
@@ -30,7 +30,7 @@
     "Label": "Group",
     "Description": "Feature group identifier",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": false
   },
   {
@@ -40,9 +40,9 @@
     "Label": "Level",
     "Description": "Feature level identifier",
     "VarType": "Int32",
-    "Enable": true,
+    "Shown": true,
     "Required": true,
-    "Options": ["FeatureLevels"],
+    "Options": [ "FeatureLevels" ],
     "Value": "1"
   },
   {
@@ -52,8 +52,9 @@
     "Label": "Duration",
     "Description": "Duration of the feature effect",
     "VarType": "Int32",
-    "Enable": true,
-    "Required": false
+    "Shown": true,
+    "Required": false,
+    "Value": "-1"
   },
   {
     "FileName": "RoleCreateFeature.json",
@@ -62,10 +63,10 @@
     "Label": "Conceal",
     "Description": "Conceal type of the feature effect",
     "VarType": "Int32",
-    "Enable": true,
+    "Shown": true,
     "Required": false,
-    "Options": ["ConcealTypes"],
-    "Value": "1"
+    "Options": [ "ConcealTypes" ],
+    "Value": "0"
   },
   {
     "FileName": "RoleCreateFeature.json",
@@ -74,9 +75,10 @@
     "Label": "Refresh Type",
     "Description": "Refresh type of the feature effect",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": true,
-    "Options": ["RefreshTypes"]
+    "Options": [ "RefreshTypes" ],
+    "Value": "2"
   },
   {
     "FileName": "RoleCreateFeature.json",
@@ -85,7 +87,7 @@
     "Label": "Name",
     "Description": "Name of the feature",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": true
   },
   {
@@ -95,7 +97,7 @@
     "Label": "Tips",
     "Description": "Tips of the feature",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": false
   },
   {
@@ -106,7 +108,7 @@
     "Description": "Effects of the feature",
     "VarType": "Array",
     "Separator": "|",
-    "Enable": true,
+    "Shown": true,
     "Required": false
   },
   {
@@ -116,8 +118,9 @@
     "Label": "Icon and Description",
     "Description": "Icon and description of the feature",
     "VarType": "String",
-    "Enable": true,
-    "Required": false
+    "Shown": true,
+    "Required": false,
+    "Value": "0"
   },
   {
     "FileName": "RoleCreateFeature.json",
@@ -126,18 +129,20 @@
     "Label": "Lock Luck",
     "Description": "Lock luck value of the feature",
     "VarType": "Int32",
-    "Enable": true,
-    "Required": false
+    "Shown": true,
+    "Required": false,
+    "Value": "0"
   },
   {
     "FileName": "RoleCreateFeature.json",
     "Name": "RoleCreateFeature.introduceText",
-    "Type": "textbox",
+    "Type": "combo",
     "Label": "Introduce Text",
     "Description": "Introduce text of the feature",
     "VarType": "String",
-    "Enable": true,
-    "Required": false
+    "Shown": true,
+    "Required": false,
+    "Value": "0"
   },
   {
     "FileName": "RoleCreateFeature.json",
@@ -146,8 +151,9 @@
     "Label": "Weight",
     "Description": "Weight of the feature",
     "VarType": "Int32",
-    "Enable": true,
-    "Required": false
+    "Shown": true,
+    "Required": false,
+    "Value": "0"
   },
   {
     "FileName": "LocalText.json",
@@ -156,7 +162,7 @@
     "Label": "Local text ID",
     "Description": "Unique identifier for the localized text",
     "VarType": "Int32",
-    "Enable": true,
+    "Shown": true,
     "Required": true,
     "Unique": true
   },
@@ -167,7 +173,7 @@
     "Label": "Local text key",
     "Description": "Key for mapping localized text",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": true,
     "ModEventParam": true
   },
@@ -178,7 +184,7 @@
     "Label": "Local text",
     "Description": "Localized text",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": true
   },
   {
@@ -188,70 +194,92 @@
     "Label": "Effect ID",
     "Description": "Unique identifier for the role effect",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": true,
     "Unique": true,
     "ModEventParam": true
   },
   {
     "FileName": "RoleEffect.json",
-    "Name": "RoleEffect.effectType",
+    "Name": "RoleEffect1.effectType",
     "Type": "combo",
     "Label": "Effect Type",
     "Description": "Type of the effect",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": true,
-    "Options": ["RoleEffectTypes"],
+    "Options": [ "RoleEffectTypes" ],
     "Value": "1"
   },
   {
     "FileName": "RoleEffect.json",
-    "Name": "RoleEffect.value",
+    "Name": "RoleEffect2.effectType",
+    "Type": "combo",
+    "Label": "Effect Type",
+    "Description": "Type of the effect",
+    "VarType": "String",
+    "Shown": true,
+    "Required": true,
+    "Options": [ "RoleEffectTypes" ],
+    "Value": "3"
+  },
+  {
+    "FileName": "RoleEffect.json",
+    "Name": "RoleEffect1.value",
     "Type": "composite",
     "Label": "Value",
     "Description": "Effect value (format: property_effectType_value, e.g., luck_1_20)",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": true,
     "Separator": "_",
     "SubProperties": [
-      "RoleEffect.value.property",
-      "RoleEffect.value.effectType",
-      "RoleEffect.value.value"
+      "RoleEffect1.value.property",
+      "RoleEffect1.value.effectType",
+      "RoleEffect1.value.value"
     ]
   },
   {
     "FileName": "RoleEffect.json",
-    "Name": "RoleEffect.value.property",
+    "Name": "RoleEffect2.value",
+    "Type": "textbox",
+    "Label": "Value",
+    "Description": "Executed function (format: function_param1_param2_...)",
+    "VarType": "String",
+    "Shown": true,
+    "Required": true
+  },
+  {
+    "FileName": "RoleEffect.json",
+    "Name": "RoleEffect1.value.property",
     "Type": "combo",
     "Label": "Property",
     "Description": "Property name (e.g., luck, atk, def)",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": true,
-    "Options": ["EffectProperties"]
+    "Options": [ "EffectProperties" ]
   },
   {
     "FileName": "RoleEffect.json",
-    "Name": "RoleEffect.value.effectType",
+    "Name": "RoleEffect1.value.effectType",
     "Type": "combo",
     "Label": "Effect Type",
     "Description": "Effect type for the value",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": true,
-    "Options": ["ValueEffectTypes"],
+    "Options": [ "ValueEffectTypes" ],
     "Value": "1"
   },
   {
     "FileName": "RoleEffect.json",
-    "Name": "RoleEffect.value.value",
+    "Name": "RoleEffect1.value.value",
     "Type": "textbox",
     "Label": "Value",
-    "Description": "Numeric value for the effect",
+    "Description": "Value for the effect",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": true
   },
   {
@@ -261,7 +289,7 @@
     "Label": "Dialogue ID",
     "Description": "Unique identifier for the dialogue",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": true,
     "Unique": true,
     "ModEventParam": true
@@ -273,9 +301,9 @@
     "Label": "UI Type",
     "Description": "UI display type for the dialogue",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": true,
-    "Options": ["DramaUITypes"],
+    "Options": [ "DramaUITypes" ],
     "Value": "1"
   },
   {
@@ -285,7 +313,7 @@
     "Label": "Condition",
     "Description": "Condition for the dialogue to appear",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": false,
     "Value": "0"
   },
@@ -296,7 +324,7 @@
     "Label": "Weight",
     "Description": "Weight for random selection",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": false,
     "Value": "1"
   },
@@ -307,7 +335,7 @@
     "Label": "NPC Left",
     "Description": "NPC ID on the left side",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": false,
     "Value": "0"
   },
@@ -318,7 +346,7 @@
     "Label": "NPC Right",
     "Description": "NPC ID on the right side",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": false,
     "Value": "0"
   },
@@ -329,9 +357,9 @@
     "Label": "Speaker",
     "Description": "Which NPC is speaking",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": false,
-    "Options": ["SpeakerPosition"],
+    "Options": [ "SpeakerPosition" ],
     "Value": "0"
   },
   {
@@ -341,7 +369,7 @@
     "Label": "Background",
     "Description": "Background image ID",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": false,
     "Value": "0"
   },
@@ -352,7 +380,7 @@
     "Label": "Background Sound",
     "Description": "Background sound ID",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": false,
     "Value": "0"
   },
@@ -363,7 +391,7 @@
     "Label": "Sound Effect",
     "Description": "Sound effect ID",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": false,
     "Value": "0"
   },
@@ -374,7 +402,7 @@
     "Label": "Title",
     "Description": "Dialogue title",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": false,
     "Value": "0"
   },
@@ -385,7 +413,7 @@
     "Label": "Dialogue",
     "Description": "Dialogue text key (links to LocalText)",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": true
   },
   {
@@ -395,7 +423,7 @@
     "Label": "Open Function",
     "Description": "Function to execute when dialogue opens",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": false,
     "Value": "0"
   },
@@ -406,7 +434,7 @@
     "Label": "Function",
     "Description": "Function to execute",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": false,
     "Value": "0"
   },
@@ -418,7 +446,7 @@
     "Description": "Option IDs separated by | (e.g., 420041124|420041125)",
     "VarType": "Array",
     "Separator": "|",
-    "Enable": true,
+    "Shown": true,
     "Required": false
   },
   {
@@ -428,7 +456,7 @@
     "Label": "Next Dialogue",
     "Description": "Next dialogue ID to show",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": false,
     "Value": "0"
   },
@@ -439,7 +467,7 @@
     "Label": "Option ID",
     "Description": "Unique identifier for the option",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": true,
     "Unique": true,
     "ModEventParam": true
@@ -451,7 +479,7 @@
     "Label": "Condition",
     "Description": "Condition for the option to appear",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": false,
     "Value": "0"
   },
@@ -462,9 +490,9 @@
     "Label": "Hue",
     "Description": "Color hue for the option",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": false,
-    "Options": ["OptionHue"],
+    "Options": [ "OptionHue" ],
     "Value": "0"
   },
   {
@@ -474,7 +502,7 @@
     "Label": "Options Hide",
     "Description": "Hide this option flag",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": false,
     "Value": "0"
   },
@@ -485,7 +513,7 @@
     "Label": "Text",
     "Description": "Option text key (links to LocalText)",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": true
   },
   {
@@ -495,7 +523,7 @@
     "Label": "Cost",
     "Description": "Cost to select this option",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": false,
     "Value": "0"
   },
@@ -506,7 +534,7 @@
     "Label": "Cost Hide",
     "Description": "Hide cost flag",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": false,
     "Value": "0"
   },
@@ -517,7 +545,7 @@
     "Label": "Function",
     "Description": "Function to execute when option is selected",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": false,
     "Value": "0"
   },
@@ -528,7 +556,7 @@
     "Label": "Click Tip",
     "Description": "Tip to show when option is clicked",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": false,
     "Value": "0"
   },
@@ -539,7 +567,7 @@
     "Label": "Next Dialogue",
     "Description": "Next dialogue ID after selecting this option",
     "VarType": "String",
-    "Enable": true,
+    "Shown": true,
     "Required": false,
     "Value": "0"
   }

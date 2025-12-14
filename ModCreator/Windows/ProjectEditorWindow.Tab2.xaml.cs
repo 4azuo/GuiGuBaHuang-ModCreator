@@ -56,84 +56,6 @@ namespace ModCreator.Windows
             }
         }
 
-        private void CreateFolder_Click(object sender, RoutedEventArgs e)
-        {
-            var confPath = Path.Combine(WindowData.Project.ProjectPath, "ModProject", "ModConf");
-            
-            string parentPath = confPath;
-            if (WindowData.SelectedConfItem != null)
-            {
-                parentPath = WindowData.SelectedConfItem.IsFolder 
-                    ? WindowData.SelectedConfItem.FullPath 
-                    : Path.GetDirectoryName(WindowData.SelectedConfItem.FullPath);
-            }
-
-            var inputWindow = new InputWindow
-            {
-                Owner = this,
-                WindowData = { WindowTitle = "Create New Folder", Label = "Folder name:", InputValue = "NewFolder" }
-            };
-
-            if (inputWindow.ShowDialog() != true) return;
-
-            var folderName = inputWindow.WindowData.InputValue;
-
-            if (string.IsNullOrWhiteSpace(folderName))
-            {
-                MessageBox.Show(MessageHelper.Get("Messages.Error.FolderNameEmpty"), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            if (folderName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
-            {
-                MessageBox.Show(MessageHelper.Get("Messages.Error.FolderNameInvalidChars"), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            var newFolderPath = Path.Combine(parentPath, folderName);
-
-            if (Directory.Exists(newFolderPath))
-            {
-                MessageBox.Show(MessageHelper.GetFormat("Messages.Error.FolderAlreadyExists", folderName), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            Directory.CreateDirectory(newFolderPath);
-            WindowData.LoadConfFiles();
-            WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.CreatedFolder", folderName);
-            MessageBox.Show(MessageHelper.GetFormat("Messages.Success.FolderCreated", folderName), MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-        private void DeleteFolder_Click(object sender, RoutedEventArgs e)
-        {
-            if (WindowData.SelectedConfItem == null || !WindowData.SelectedConfItem.IsFolder) return;
-
-            var folderPath = WindowData.SelectedConfItem.FullPath;
-            var folderName = WindowData.SelectedConfItem.Name;
-
-            if (!Directory.Exists(folderPath))
-            {
-                MessageBox.Show(MessageHelper.GetFormat("Messages.Error.FolderDoesNotExist", folderName), MessageHelper.Get("Messages.Warning.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
-                WindowData.LoadConfFiles();
-                return;
-            }
-
-            var hasContents = Directory.GetFileSystemEntries(folderPath).Length > 0;
-            var warningMessage = hasContents
-                ? $"Are you sure you want to delete folder '{folderName}' and all its contents?"
-                : $"Are you sure you want to delete folder '{folderName}'?";
-
-            var result = MessageBox.Show(warningMessage, "Delete Folder", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-
-            if (result == MessageBoxResult.Yes)
-            {
-                Directory.Delete(folderPath, true);
-                WindowData.LoadConfFiles();
-                WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.DeletedFolder", folderName);
-                MessageBox.Show(MessageHelper.GetFormat("Messages.Success.FolderDeleted", folderName), MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-        }
-
         private void AddConf_Click(object sender, RoutedEventArgs e)
         {
             var addConfWindow = new AddConfWindow { Owner = this };
@@ -183,6 +105,7 @@ namespace ModCreator.Windows
             {
                 File.Delete(filePath);
                 WindowData.LoadConfFiles();
+                WindowData.SelectedConfFile = null;
                 WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.DeletedConfiguration", WindowData.SelectedConfFile);
             }
         }
@@ -215,7 +138,6 @@ namespace ModCreator.Windows
 
             var destFile = Path.Combine(sourceDir, newFileName);
             File.Copy(sourceFile, destFile);
-
             WindowData.LoadConfFiles();
             WindowData.SelectedConfFile = Path.GetRelativePath(confPath, destFile);
             WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.ClonedConfiguration", newFileName);

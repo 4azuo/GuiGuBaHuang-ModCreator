@@ -3,11 +3,11 @@
     "Name": "ConcealTypes",
     "Values": [
       {
-        "DisplayName": "Hidden",
+        "DisplayName": "0: Visible",
         "Value": "0"
       },
       {
-        "DisplayName": "Visible",
+        "DisplayName": "1: Hidden",
         "Value": "1"
       }
     ]
@@ -16,15 +16,15 @@
     "Name": "FeatureTypes",
     "Values": [
       {
-        "DisplayName": "Nature",
+        "DisplayName": "1: Nature",
         "Value": "1"
       },
       {
-        "DisplayName": "Nurture",
+        "DisplayName": "2: Nurture",
         "Value": "2"
       },
       {
-        "DisplayName": "Rewrite Destiny",
+        "DisplayName": "3: Rewrite Destiny",
         "Value": "3"
       }
     ]
@@ -33,19 +33,19 @@
     "Name": "RefreshTypes",
     "Values": [
       {
-        "DisplayName": "Only one Destiny can exist at the same time. When there is a new Destiny added, the longest non-stack time is taken.",
+        "DisplayName": "0: Longest duration (no stack)",
         "Value": "0"
       },
       {
-        "DisplayName": "Only one Destiny can exist at the same time. When there is a new Destiny added, the duration is stacked.",
+        "DisplayName": "1: Stack duration",
         "Value": "1"
       },
       {
-        "DisplayName": "If Destiny already exists, it is not added.",
+        "DisplayName": "2: No duplicate",
         "Value": "2"
       },
       {
-        "DisplayName": "Multiple Destinies are stacked at the same time.",
+        "DisplayName": "3: Multiple stack",
         "Value": "3"
       }
     ]
@@ -54,27 +54,27 @@
     "Name": "FeatureLevels",
     "Values": [
       {
-        "DisplayName": "Common",
+        "DisplayName": "1: Common",
         "Value": "1"
       },
       {
-        "DisplayName": "Uncommon",
+        "DisplayName": "2: Uncommon",
         "Value": "2"
       },
       {
-        "DisplayName": "Rare",
+        "DisplayName": "3: Rare",
         "Value": "3"
       },
       {
-        "DisplayName": "Epic",
+        "DisplayName": "4: Epic",
         "Value": "4"
       },
       {
-        "DisplayName": "Legendary",
+        "DisplayName": "5: Legendary",
         "Value": "5"
       },
       {
-        "DisplayName": "Mythic",
+        "DisplayName": "6: Mythic",
         "Value": "6"
       }
     ]
@@ -83,11 +83,11 @@
     "Name": "ValueEffectTypes",
     "Values": [
       {
-        "DisplayName": "Percentage",
+        "DisplayName": "0: Percentage",
         "Value": "0"
       },
       {
-        "DisplayName": "Fixed Value",
+        "DisplayName": "1: Fixed Value",
         "Value": "1"
       }
     ]
@@ -96,43 +96,48 @@
     "Name": "RoleEffectTypes",
     "Values": [
       {
-        "DisplayName": "Change Stats",
+        "DisplayName": "1: Change Stats",
         "Value": "1"
       },
       {
-        "DisplayName": "Locked Stats",
+        "DisplayName": "2: Locked Stats",
         "Value": "2"
       },
       {
-        "DisplayName": "Special Function",
+        "DisplayName": "3: Special Function",
         "Value": "3"
-      },
+      }
+    ]
+  },
+  {
+    "Name": "ItemEffectTypes",
+    "Values": [
       {
-        "DisplayName": "Use Item",
+        "DisplayName": "101: Use Item",
         "Value": "101"
       },
       {
-        "DisplayName": "Cast Item",
+        "DisplayName": "102: Cast Item",
         "Value": "102"
       },
       {
-        "DisplayName": "Normal Item",
+        "DisplayName": "201: Normal Item",
         "Value": "201"
       },
       {
-        "DisplayName": "Breakthrough Item",
+        "DisplayName": "301: Breakthrough Item",
         "Value": "301"
       },
       {
-        "DisplayName": "Escape Item",
+        "DisplayName": "302: Escape Item",
         "Value": "302"
       },
       {
-        "DisplayName": "Hobby Item",
+        "DisplayName": "401: Hobby Item",
         "Value": "401"
       },
       {
-        "DisplayName": "Battle Debuff Item",
+        "DisplayName": "501: Battle Debuff Item",
         "Value": "501"
       }
     ]
@@ -378,35 +383,35 @@
     "Name": "DramaUITypes",
     "Values": [
       {
-        "DisplayName": "Normal",
+        "DisplayName": "1: Normal",
         "Value": "1"
       },
       {
-        "DisplayName": "Adventure",
+        "DisplayName": "2: Adventure",
         "Value": "2"
       },
       {
-        "DisplayName": "Full screen",
+        "DisplayName": "3: Full screen",
         "Value": "3"
       },
       {
-        "DisplayName": "Artifact Spirit",
+        "DisplayName": "4: Artifact Spirit",
         "Value": "4"
       },
       {
-        "DisplayName": "Artifact Spirit (no character, no button)",
+        "DisplayName": "5: Artifact Spirit (no character, no button)",
         "Value": "5"
       },
       {
-        "DisplayName": "Mail",
+        "DisplayName": "6: Mail",
         "Value": "6"
       },
       {
-        "DisplayName": "Secret Order",
+        "DisplayName": "7: Secret Order",
         "Value": "7"
       },
       {
-        "DisplayName": "Mail (silk texture)",
+        "DisplayName": "8: Mail (silk texture)",
         "Value": "8"
       }
     ]
@@ -415,11 +420,11 @@
     "Name": "SpeakerPosition",
     "Values": [
       {
-        "DisplayName": "Left",
+        "DisplayName": "1: Left",
         "Value": "1"
       },
       {
-        "DisplayName": "Right",
+        "DisplayName": "2: Right",
         "Value": "2"
       }
     ]
@@ -428,11 +433,11 @@
     "Name": "OptionHue",
     "Values": [
       {
-        "DisplayName": "Hide",
+        "DisplayName": "0: Off",
         "Value": "0"
       },
       {
-        "DisplayName": "Show",
+        "DisplayName": "1: On",
         "Value": "1"
       }
     ]

@@ -17,7 +17,16 @@
 
     <!-- Standard TextBox -->
     <Style TargetType="TextBox" BasedOn="{StaticResource BaseTextBox}">
-        <!-- <Setter Property="Margin" Value="0,5"/> -->
+        <Style.Triggers>
+            <Trigger Property="IsReadOnly" Value="True">
+                <Setter Property="Background" Value="#FFF0F0F0"/>
+                <Setter Property="Foreground" Value="#FF666666"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Background" Value="#FFF0F0F0"/>
+                <Setter Property="Foreground" Value="#FF666666"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <!-- PlaceHolder TextBox -->

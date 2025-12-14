@@ -2,7 +2,7 @@ using ModCreator.Attributes;
 using ModCreator.Commons;
 using ModCreator.Enums;
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace ModCreator.Models
 {
@@ -22,7 +22,7 @@ namespace ModCreator.Models
         public string TitleImg { get; set; }
         public ProjectState State { get; set; } = ProjectState.Valid;
         public bool AutoSaveEnabled { get; set; } = false;
-        public List<GlobalVariable> GlobalVariables { get; set; } = new List<GlobalVariable>();
-        public List<ModEventItem> ModEvents { get; set; } = new List<ModEventItem>();
+        public ObservableCollection<GlobalVariable> GlobalVariables { get; set; } = [];
+        public ObservableCollection<ModEventItem> ModEvents { get; set; } = [];
     }
 }

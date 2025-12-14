@@ -12,24 +12,29 @@ using System.Windows.Threading;
 
 namespace ModCreator.Commons
 {
-    /// <summary>
-    /// Provides a base class that implements <see cref="INotifyPropertyChanged"/> and supports automatic property
-    /// change notification for derived objects.
-    /// </summary>
-    /// <remarks><para> <b>AutoNotifiableObject</b> simplifies the implementation of property change
-    /// notification by automatically tracking and notifying changes to properties in derived classes. It manages
-    /// property state, supports pausing and resuming notifications, and allows for custom notification methods to be
-    /// invoked when properties change. </para> <para> Properties marked with <see cref="IgnoredPropertyAttribute"/> are
-    /// excluded from notification. The class also maintains dictionaries to track previous property values and hash
-    /// codes, which can be useful for advanced scenarios such as change tracking or undo functionality. </para> <para>
-    /// This class is thread-agnostic and does not provide built-in thread safety. If used in a multithreaded
-    /// environment, callers are responsible for synchronizing access to instances as needed. </para></remarks>
-    public abstract class AutoNotifiableObject : INotifyPropertyChanged
+    public abstract class AutoNotifiableObject : INotifyPropertyChanged, IDisposable
     {
+        public const int AUTO_NOTIFY_PERIOD = 200;
+
+        public static readonly JsonSerializerSettings JsonSettings = new()
+        {
+            TypeNameHandling = TypeNameHandling.Auto,
+            Formatting = Formatting.None,
+            NullValueHandling = NullValueHandling.Ignore,
+            ObjectCreationHandling = ObjectCreationHandling.Replace,
+            PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+            ReferenceLoopHandling = ReferenceLoopHandling.Serialize
+        };
+
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public AutoNotifiableObject ParentObject { get; set; }
+
         [JsonIgnore, IgnoredProperty]
-        public Dictionary<PropertyInfo, int> PropertyOldHashes { get; } = [];
+        public DispatcherTimer AutoUpdateTimer { get; } = new(TimeSpan.FromMilliseconds(AUTO_NOTIFY_PERIOD), DispatcherPriority.Background, (s, e) => { }, Application.Current.Dispatcher);
+
+        [JsonIgnore, IgnoredProperty]
+        public Dictionary<PropertyInfo, string> PropertyOldHashes { get; } = [];
 
         [JsonIgnore, IgnoredProperty]
         public Dictionary<PropertyInfo, object> PropertyOldValues { get; } = [];
@@ -61,17 +66,18 @@ namespace ModCreator.Commons
             }
         }
 
-        private void Notify(PropertyInfo prop, bool postprocess = true)
+        public void Notify(PropertyInfo prop, bool postprocess = true)
         {
+            var value = prop.GetValue(this);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop.Name));
             if (IsCollectionProperty(prop))
             {
-                CollectionViewSource.GetDefaultView(prop.GetValue(this))?.Refresh();
+                CollectionViewSource.GetDefaultView(value)?.Refresh();
             }
             if (postprocess)
             {
                 var oldValue = PropertyOldValues.ContainsKey(prop) ? PropertyOldValues[prop] : 0;
-                PostPropertyChanged(prop, oldValue, prop.GetValue(this));
+                PostPropertyChanged(prop, oldValue, value);
             }
             if (!ListPassiveNotifyProperties[GetType()].Contains(prop))
             {
@@ -79,7 +85,7 @@ namespace ModCreator.Commons
             }
         }
 
-        private void NotifyPassives(bool postprocess = true, PropertyInfo triggerProp = null)
+        public void NotifyPassives(bool postprocess = true, PropertyInfo triggerProp = null)
         {
             foreach (var prop in ListPassiveNotifyProperties[GetType()])
             {
@@ -89,7 +95,7 @@ namespace ModCreator.Commons
             }
         }
 
-        private bool IsCollectionProperty(PropertyInfo prop)
+        public bool IsCollectionProperty(PropertyInfo prop)
         {
             return prop.PropertyType != typeof(string) && typeof(System.Collections.IEnumerable).IsAssignableFrom(prop.PropertyType);
         }
@@ -105,10 +111,12 @@ namespace ModCreator.Commons
                 !ListNotifyProperties[thisType].Contains(prop))
                 return;
 
-            var oldValueCode = PropertyOldHashes.ContainsKey(prop) ? PropertyOldHashes[prop] : 0;
-            var newValueCode = ObjectHelper.GetObjectHashCode(after, null);
+            //var oldValueCode = PropertyOldHashes.ContainsKey(prop) ? PropertyOldHashes[prop] : 0;
+            //var newValueCode = ObjectHelper.GetObjectHashCode(after, null);
+            var oldValueCode = PropertyOldHashes.ContainsKey(prop) ? PropertyOldHashes[prop] : null;
+            var newValueCode = JsonConvert.SerializeObject(after, JsonSettings);
 
-            if (!Equals(oldValueCode, newValueCode))
+            if (oldValueCode != newValueCode)
             {
                 PropertyOldValues[prop] = after;
                 PropertyOldHashes[prop] = newValueCode;
@@ -134,6 +142,7 @@ namespace ModCreator.Commons
 
         public AutoNotifiableObject()
         {
+            // Prepare notifying properties and methods
             var thisType = GetType();
             if (!LoadedTypes.Contains(thisType))
             {
@@ -141,6 +150,21 @@ namespace ModCreator.Commons
                 PrepareNotifyProperties();
                 PrepareNotifyMethods();
             }
+            // Setup auto update timer
+            AutoUpdateTimer.Tick += AutoUpdateTimer_Tick;
+            AutoUpdateTimer.Start();
+        }
+
+        public void Dispose()
+        {
+            AutoUpdateTimer.Stop();
+            AutoUpdateTimer.IsEnabled = false;
+            AutoUpdateTimer.Tick -= AutoUpdateTimer_Tick;
+        }
+
+        private void AutoUpdateTimer_Tick(object sender, EventArgs e)
+        {
+            NotifyPassives();
         }
 
         private void PrepareNotifyProperties()
@@ -148,7 +172,7 @@ namespace ModCreator.Commons
             var thisType = GetType();
             var properties = thisType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
             ListNotifyProperties[thisType] = properties.Where(p => p.CanRead && p.GetCustomAttribute<IgnoredPropertyAttribute>() == null).ToArray();
-            ListPassiveNotifyProperties[thisType] = ListNotifyProperties[thisType].Where(p => !p.CanWrite || IsCollectionProperty(p)).ToArray();
+            ListPassiveNotifyProperties[thisType] = ListNotifyProperties[thisType].Where(p => !p.CanWrite/* || IsCollectionProperty(p)*/).ToArray();
         }
 
         private void PrepareNotifyMethods()

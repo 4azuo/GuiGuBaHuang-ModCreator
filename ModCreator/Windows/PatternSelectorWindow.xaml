@@ -10,6 +10,8 @@
         <converter:TextBoxVisibilityConverter x:Key="TextBoxVisibilityConverter"/>
         <converter:ComboBoxVisibilityConverter x:Key="ComboBoxVisibilityConverter"/>
         <converter:MultiComboBoxVisibilityConverter x:Key="MultiComboBoxVisibilityConverter"/>
+        <converter:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <converter:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -29,7 +31,7 @@
             <TextBlock Grid.Column="0" Text="{x:Static helpers:PatternSelectorWindowText.SearchIcon}" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0"/>
             <TextBox Grid.Column="1" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" BorderBrush="#FFCCCCCC" BorderThickness="1" FontSize="13" Style="{StaticResource SearchTextBox}" helpers:TextBoxBehaviors.Placeholder="{x:Static helpers:PatternSelectorWindowText.SearchPlaceholder}"/>
         </Grid>
-        <Grid Grid.Row="2" Margin="10">
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="300"/>
                 <ColumnDefinition Width="*"/>
@@ -39,15 +41,15 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <GroupBox Grid.Row="0" Header="{x:Static helpers:PatternSelectorWindowText.Prefix}" Margin="0,0,10,5">
-                    <TextBox Text="{Binding Prefix, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Padding="5" VerticalContentAlignment="Center"/>
+                <GroupBox Grid.Row="0" Header="{x:Static helpers:PatternSelectorWindowText.Prefix}">
+                    <TextBox Text="{Binding Prefix, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" VerticalContentAlignment="Center"/>
                 </GroupBox>
-                <GroupBox Grid.Row="1" Header="{x:Static helpers:PatternSelectorWindowText.SelectPattern}" Margin="0,0,10,0">
+                <GroupBox Grid.Row="1" Header="{x:Static helpers:PatternSelectorWindowText.SelectPattern}">
                     <ListBox ItemsSource="{Binding FilteredPatterns}" SelectedItem="{Binding SelectedPattern, Mode=TwoWay}" DisplayMemberPath="Name" ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
                 </GroupBox>
             </Grid>
             <GroupBox Grid.Column="1" Header="{x:Static helpers:PatternSelectorWindowText.PatternDetails}">
-                <Grid Margin="10">
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
@@ -74,7 +76,7 @@
                                                     </Grid.ColumnDefinitions>
                                                     
                                                     <!-- Add Row Button -->
-                                                    <Button Grid.Column="0" Content="{x:Static helpers:PatternSelectorWindowText.AddRow}" Click="AddRow_Click" Tag="{Binding}" Margin="0,0,5,0" Padding="10,5" Background="#FF2E5090" Foreground="White" BorderThickness="0" Cursor="Hand"/>
+                                                    <Button Grid.Column="0" Content="{x:Static helpers:PatternSelectorWindowText.AddRow}" Click="AddRow_Click" Tag="{Binding}" Padding="10,5" Background="#FF2E5090" Foreground="White" BorderThickness="0" Cursor="Hand"/>
                                                     
                                                     <!-- Frozen columns header -->
                                                     <ItemsControl Grid.Column="1" ItemsSource="{Binding FrozenDisplayElements}">
@@ -85,8 +87,14 @@
                                                         </ItemsControl.ItemsPanel>
                                                         <ItemsControl.ItemTemplate>
                                                             <DataTemplate>
-                                                                <Border BorderBrush="#FFCCCCCC" BorderThickness="0,0,1,1" Padding="5" Width="150" Background="#FFE8EAF6">
-                                                                    <TextBlock Text="{Binding Label}" TextAlignment="Center" FontWeight="SemiBold"/>
+                                                                <Border BorderBrush="#FFCCCCCC" BorderThickness="0,0,1,1" Padding="8" Width="150" Background="#FFE8EAF6">
+                                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                                        <TextBlock Text="{Binding Label}" TextAlignment="Center" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="14"/>
+                                                                        <Button Content="📄" Click="RefDocs_Click" Tag="{Binding}"  Padding="0" Margin="0"
+                                                                                Background="Transparent" BorderThickness="0" FontSize="14" Cursor="Hand"
+                                                                                ToolTip="View reference documentation"
+                                                                                Visibility="{Binding RefDocs, Converter={StaticResource StringToVisibilityConverter}}"/>
+                                                                    </StackPanel>
                                                                 </Border>
                                                             </DataTemplate>
                                                         </ItemsControl.ItemTemplate>
@@ -104,7 +112,7 @@
                                                                 </Grid.ColumnDefinitions>
                                                                 
                                                                 <!-- Remove Row Button -->
-                                                                <Button Grid.Column="0" Content="{x:Static helpers:PatternSelectorWindowText.RemoveRow}" Click="RemoveRow_Click" Tag="{Binding}" Margin="0,0,5,0" Padding="10,5" Background="#FFCC0000" Foreground="White" BorderThickness="0" Cursor="Hand"/>
+                                                                <Button Grid.Column="0" Content="{x:Static helpers:PatternSelectorWindowText.RemoveRow}" Click="RemoveRow_Click" Tag="{Binding}" Padding="10,5" Background="#FFCC0000" Foreground="White" BorderThickness="0" Cursor="Hand"/>
                                                                 
                                                                 <!-- Frozen columns data -->
                                                                 <ItemsControl Grid.Column="1" ItemsSource="{Binding FrozenBindings}">
@@ -115,22 +123,11 @@
                                                                     </ItemsControl.ItemsPanel>
                                                                     <ItemsControl.ItemTemplate>
                                                                         <DataTemplate>
-                                                                            <Border BorderBrush="#FFCCCCCC" BorderThickness="0,0,1,1" Padding="5" Width="150">
+                                                                            <Border BorderBrush="#FFCCCCCC" BorderThickness="0,0,1,1" Width="150">
                                                                                 <Grid>
-                                                                                    <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Element.Type, Converter={StaticResource TextBoxVisibilityConverter}}" IsReadOnly="{Binding Element.IsReadOnly}">
-                                                                                        <TextBox.Style>
-                                                                                            <Style TargetType="TextBox">
-                                                                                                <Style.Triggers>
-                                                                                                    <Trigger Property="IsReadOnly" Value="True">
-                                                                                                        <Setter Property="Background" Value="#FFF0F0F0"/>
-                                                                                                        <Setter Property="Foreground" Value="#FF666666"/>
-                                                                                                    </Trigger>
-                                                                                                </Style.Triggers>
-                                                                                            </Style>
-                                                                                        </TextBox.Style>
-                                                                                    </TextBox>
-                                                                                    <ComboBox ItemsSource="{Binding Element.Options}" SelectedValue="{Binding Value, Mode=TwoWay}" SelectedValuePath="Value" DisplayMemberPath="DisplayName" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Element.Type, Converter={StaticResource ComboBoxVisibilityConverter}}" DropDownOpened="ComboBox_DropDownOpened" Tag="{Binding}" IsEditable="True"/>
-                                                                                    <controls:MultiSelectComboBox ItemsSource="{Binding Element.Options}" SelectedValue="{Binding Value, Mode=TwoWay}" Separator="{Binding Element.Separator}" Visibility="{Binding Element.Type, Converter={StaticResource MultiComboBoxVisibilityConverter}}" Tag="{Binding}" DropDownOpened="MultiSelectComboBox_DropDownOpened"/>
+                                                                                    <TextBox Text="{Binding XValue, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Element.Type, Converter={StaticResource TextBoxVisibilityConverter}}" IsReadOnly="{Binding Element.IsReadOnly}" IsEnabled="{Binding Element.IsDisabled, Converter={StaticResource InverseBooleanConverter}}"/>
+                                                                                    <ComboBox ItemsSource="{Binding Element.Options}" SelectedValue="{Binding XValue, Mode=TwoWay}" SelectedValuePath="XValue" DisplayMemberPath="DisplayName" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Element.Type, Converter={StaticResource ComboBoxVisibilityConverter}}" DropDownOpened="ComboBox_DropDownOpened" Tag="{Binding}" IsEditable="{Binding Element.IsReadOnly, Converter={StaticResource InverseBooleanConverter}}" IsReadOnly="{Binding Element.IsReadOnly}" IsEnabled="{Binding Element.IsDisabled, Converter={StaticResource InverseBooleanConverter}}"/>
+                                                                                    <controls:MultiSelectComboBox ItemsSource="{Binding Element.Options}" SelectedValue="{Binding XValue, Mode=TwoWay}" Separator="{Binding Element.Separator}" Visibility="{Binding Element.Type, Converter={StaticResource MultiComboBoxVisibilityConverter}}" Tag="{Binding}" DropDownOpened="MultiSelectComboBox_DropDownOpened" IsReadOnly="{Binding Element.IsReadOnly}" IsEnabled="{Binding Element.IsDisabled, Converter={StaticResource InverseBooleanConverter}}"/>
                                                                                 </Grid>
                                                                             </Border>
                                                                         </DataTemplate>
@@ -154,8 +151,14 @@
                                                         </ItemsControl.ItemsPanel>
                                                         <ItemsControl.ItemTemplate>
                                                             <DataTemplate>
-                                                                <Border BorderBrush="#FFCCCCCC" BorderThickness="0,0,1,1" Padding="5" MinWidth="150" MaxWidth="150" Background="#FFE8EAF6">
-                                                                    <TextBlock Text="{Binding Label}" TextAlignment="Center" FontWeight="SemiBold"/>
+                                                                <Border BorderBrush="#FFCCCCCC" BorderThickness="0,0,1,1" Padding="8" MinWidth="150" MaxWidth="150" Background="#FFE8EAF6">
+                                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                                        <TextBlock Text="{Binding Label}" TextAlignment="Center" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="14"/>
+                                                                        <Button Content="📄" Click="RefDocs_Click" Tag="{Binding}" Padding="0" Margin="0"
+                                                                                Background="Transparent" BorderThickness="0" FontSize="14" Cursor="Hand"
+                                                                                ToolTip="View reference documentation"
+                                                                                Visibility="{Binding RefDocs, Converter={StaticResource StringToVisibilityConverter}}"/>
+                                                                    </StackPanel>
                                                                 </Border>
                                                             </DataTemplate>
                                                         </ItemsControl.ItemTemplate>
@@ -173,22 +176,11 @@
                                                                     </ItemsControl.ItemsPanel>
                                                                     <ItemsControl.ItemTemplate>
                                                                         <DataTemplate>
-                                                                            <Border BorderBrush="#FFCCCCCC" BorderThickness="0,0,1,1" Padding="5" MinWidth="150" MaxWidth="150">
+                                                                            <Border BorderBrush="#FFCCCCCC" BorderThickness="0,0,1,1" MinWidth="150" MaxWidth="150">
                                                                                 <Grid>
-                                                                                    <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Element.Type, Converter={StaticResource TextBoxVisibilityConverter}}" IsReadOnly="{Binding Element.IsReadOnly}">
-                                                                                        <TextBox.Style>
-                                                                                            <Style TargetType="TextBox">
-                                                                                                <Style.Triggers>
-                                                                                                    <Trigger Property="IsReadOnly" Value="True">
-                                                                                                        <Setter Property="Background" Value="#FFF0F0F0"/>
-                                                                                                        <Setter Property="Foreground" Value="#FF666666"/>
-                                                                                                    </Trigger>
-                                                                                                </Style.Triggers>
-                                                                                            </Style>
-                                                                                        </TextBox.Style>
-                                                                                    </TextBox>
-                                                                                    <ComboBox ItemsSource="{Binding Element.Options}" SelectedValue="{Binding Value, Mode=TwoWay}" SelectedValuePath="Value" DisplayMemberPath="DisplayName" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Element.Type, Converter={StaticResource ComboBoxVisibilityConverter}}" DropDownOpened="ComboBox_DropDownOpened" Tag="{Binding}" IsEditable="True"/>
-                                                                                    <controls:MultiSelectComboBox ItemsSource="{Binding Element.Options}" SelectedValue="{Binding Value, Mode=TwoWay}" Separator="{Binding Element.Separator}" Visibility="{Binding Element.Type, Converter={StaticResource MultiComboBoxVisibilityConverter}}" Tag="{Binding}" DropDownOpened="MultiSelectComboBox_DropDownOpened"/>
+                                                                                    <TextBox Text="{Binding XValue, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Element.Type, Converter={StaticResource TextBoxVisibilityConverter}}" IsReadOnly="{Binding Element.IsReadOnly}" IsEnabled="{Binding Element.IsDisabled, Converter={StaticResource InverseBooleanConverter}}"/>
+                                                                                    <ComboBox ItemsSource="{Binding Element.Options}" SelectedValue="{Binding XValue, Mode=TwoWay}" SelectedValuePath="Value" DisplayMemberPath="DisplayName" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Element.Type, Converter={StaticResource ComboBoxVisibilityConverter}}" DropDownOpened="ComboBox_DropDownOpened" Tag="{Binding}" IsEditable="{Binding Element.IsReadOnly, Converter={StaticResource InverseBooleanConverter}}" IsReadOnly="{Binding Element.IsReadOnly}" IsEnabled="{Binding Element.IsDisabled, Converter={StaticResource InverseBooleanConverter}}"/>
+                                                                                    <controls:MultiSelectComboBox ItemsSource="{Binding Element.Options}" SelectedValue="{Binding XValue, Mode=TwoWay}" Separator="{Binding Element.Separator}" Visibility="{Binding Element.Type, Converter={StaticResource MultiComboBoxVisibilityConverter}}" Tag="{Binding}" DropDownOpened="MultiSelectComboBox_DropDownOpened" IsReadOnly="{Binding Element.IsReadOnly}" IsEnabled="{Binding Element.IsDisabled, Converter={StaticResource InverseBooleanConverter}}"/>
                                                                                 </Grid>
                                                                             </Border>
                                                                         </DataTemplate>

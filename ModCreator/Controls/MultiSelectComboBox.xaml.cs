@@ -25,6 +25,10 @@ namespace ModCreator.Controls
             DependencyProperty.Register("Separator", typeof(string), typeof(MultiSelectComboBox),
                 new PropertyMetadata(","));
 
+        public static readonly DependencyProperty IsReadOnlyProperty =
+            DependencyProperty.Register("IsReadOnly", typeof(bool), typeof(MultiSelectComboBox),
+                new PropertyMetadata(false));
+
         private string _displayText = string.Empty;
         public string DisplayText
         {
@@ -70,6 +74,12 @@ namespace ModCreator.Controls
         {
             get => (string)GetValue(SeparatorProperty);
             set => SetValue(SeparatorProperty, value);
+        }
+
+        public bool IsReadOnly
+        {
+            get => (bool)GetValue(IsReadOnlyProperty);
+            set => SetValue(IsReadOnlyProperty, value);
         }
 
         private bool _isUpdating = false;

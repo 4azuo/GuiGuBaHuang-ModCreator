@@ -40,12 +40,12 @@ namespace ModCreator.Models
         /// <summary>
         /// List of conditions for this event (uses EventActionInfo)
         /// </summary>
-        public List<EventActionBase> Conditions { get; set; } = [];
+        public ObservableCollection<EventActionBase> Conditions { get; set; } = [];
 
         /// <summary>
         /// List of actions for this event (uses EventActionInfo)
         /// </summary>
-        public List<EventActionBase> Actions { get; set; } = [];
+        public ObservableCollection<EventActionBase> Actions { get; set; } = [];
 
         /// <summary>
         /// Full file path to the ModEvent .cs file

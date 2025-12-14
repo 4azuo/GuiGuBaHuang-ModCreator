@@ -12,70 +12,48 @@ using System.Reflection;
 
 namespace ModCreator.WindowData
 {
+    [SetterAspect]
     public class MainWindowData : CWindowData
     {
-        private List<ModProject> _allProjects = new List<ModProject>();
         private string _statusMessage;
 
         [NotifyMethod(nameof(SaveWorkplacePath))]
         public string WorkplacePath { get; set; }
 
-        [JsonIgnore]
-        public List<ModProject> AllProjects
-        {
-            get => _allProjects;
-            set
-            {
-                _allProjects = value;
-                UpdateFilteredProjects(this, null, null, null);
-            }
-        }
+        [NotifyMethod(nameof(UpdateFilteredProjects))]
+        public List<ModProject> AllProjects { get; set; }
 
-        [JsonIgnore]
-        public List<ModProject> FilteredProjects { get; set; } = new List<ModProject>();
+        public List<ModProject> FilteredProjects { get; set; }
 
-        [JsonIgnore]
         public ModProject SelectedProject { get; set; }
 
-        [JsonIgnore]
         [NotifyMethod(nameof(UpdateFilteredProjects))]
         public string SearchText { get; set; }
 
-        [JsonIgnore]
         public string StatusMessage
         {
             get => _statusMessage;
             set => _statusMessage = $"{DateTime.Now:HH:mm:ss} - {value}";
         }
 
-        [JsonIgnore]
         public int TotalCount => FilteredProjects?.Count ?? 0;
 
-        [JsonIgnore]
         public bool HasSelectedProject => SelectedProject != null;
 
-        [JsonIgnore]
         public bool HasNoSelectedProject => SelectedProject == null;
 
-        [JsonIgnore]
         public bool IsSelectedProjectValid => SelectedProject?.State == Enums.ProjectState.Valid;
 
-        [JsonIgnore]
         public string ProjectName => SelectedProject?.ProjectName ?? "";
 
-        [JsonIgnore]
         public string ProjectId => SelectedProject?.ProjectId ?? "";
 
-        [JsonIgnore]
         public string ProjectPath => SelectedProject?.ProjectPath ?? "";
 
-        [JsonIgnore]
         public string Description => string.IsNullOrEmpty(SelectedProject?.Description) ? "-" : SelectedProject.Description;
 
-        [JsonIgnore]
         public string Author => SelectedProject?.Author ?? "";
 
-        [JsonIgnore]
         public string TitleImg => SelectedProject?.TitleImg ?? "";
 
         public override void OnLoad()
@@ -101,7 +79,7 @@ namespace ModCreator.WindowData
         {
             var newProject = ProjectHelper.CreateProject(projectName, targetDirectory, description);
             AllProjects.Add(newProject);
-            UpdateFilteredProjects(this, null, null, null);
+            UpdateFilteredProjects(this, null);
             StatusMessage = MessageHelper.GetFormat("Messages.Success.CreatedProject", projectName);
             return newProject;
         }
@@ -115,7 +93,7 @@ namespace ModCreator.WindowData
             ProjectHelper.DeleteProject(SelectedProject, deleteFiles);
             AllProjects.Remove(SelectedProject);
             SelectedProject = null;
-            UpdateFilteredProjects(this, null, null, null);
+            UpdateFilteredProjects(this, null);
             StatusMessage = MessageHelper.GetFormat("Messages.Success.DeletedProject", projectName);
         }
 
@@ -128,17 +106,17 @@ namespace ModCreator.WindowData
             StatusMessage = MessageHelper.GetFormat("Messages.Success.OpenedFolder", SelectedProject.ProjectName);
         }
 
-        public void UpdateFilteredProjects(object obj, PropertyInfo prop, object oldValue, object newValue)
+        public void UpdateFilteredProjects(object obj, PropertyInfo prop, object before = null, object after = null)
         {
             if (AllProjects == null)
             {
-                FilteredProjects = new List<ModProject>();
+                FilteredProjects = [];
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(SearchText))
             {
-                FilteredProjects = new List<ModProject>(AllProjects);
+                FilteredProjects = AllProjects;
             }
             else
             {
@@ -151,7 +129,7 @@ namespace ModCreator.WindowData
             }
         }
 
-        public void SaveWorkplacePath(object obj, PropertyInfo prop, object oldValue, object newValue)
+        public void SaveWorkplacePath(object obj, PropertyInfo prop, object before = null, object after = null)
         {
             if (string.IsNullOrWhiteSpace(WorkplacePath))
                 return;

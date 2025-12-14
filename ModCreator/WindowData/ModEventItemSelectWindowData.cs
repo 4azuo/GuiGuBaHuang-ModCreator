@@ -12,27 +12,28 @@ using System.Windows;
 
 namespace ModCreator.WindowData
 {
+    [SetterAspect]
     public class ModEventItemSelectWindowData : CWindowData
     {
         public string WindowTitle { get; set; } = "Select Item";
         public ModEventItemType ItemType { get; set; }
         public string ReturnType { get; set; }
         public bool HasReturn => !string.IsNullOrEmpty(ReturnType) && ReturnType != "Void";
-        public ObservableCollection<string> Categories { get; set; } = [];
+        public List<string> Categories { get; set; } = [];
         [NotifyMethod(nameof(OnCategoryChanged))]
         public string SelectedCategory { get; set; }
         [NotifyMethod(nameof(OnSearchTextChanged))]
         public string SearchText { get; set; } = string.Empty;
-        public List<EventActionBase> AllItems { get; set; } = [];
+        public ObservableCollection<EventActionBase> AllItems { get; set; } = [];
         public ObservableCollection<EventActionBase> FilteredItems { get; set; } = [];
         public EventActionBase SelectedItem { get; set; }
         public bool HasSelectedItem => SelectedItem != null;
-        public List<GlobalVariable> AllVariables { get; set; } = [];
-        public List<GlobalVariable> FilteredVariables { get; set; } = [];
+        public ObservableCollection<GlobalVariable> AllVariables { get; set; } = [];
+        public ObservableCollection<GlobalVariable> FilteredVariables { get; set; } = [];
         public GlobalVariable SelectedVariable { get; set; }
         public bool HasSelectedVariable => SelectedVariable != null;
-        public List<ModEventItem> AllNonEvents { get; set; } = [];
-        public List<ModEventItem> FilteredNonEvents { get; set; } = [];
+        public ObservableCollection<ModEventItem> AllNonEvents { get; set; } = [];
+        public ObservableCollection<ModEventItem> FilteredNonEvents { get; set; } = [];
         public ModEventItem SelectedNonEvent { get; set; }
         public bool IsNonEventMode => ReturnType == "NonEvent";
         public bool IsNotNonEventMode => ReturnType != "NonEvent";
@@ -45,73 +46,63 @@ namespace ModCreator.WindowData
         public bool HasParameters => SelectedItem?.Parameters != null && SelectedItem.Parameters.Count > 0;
         public bool ShowOptionalValueSection { get; set; } = false;
         public ModEventSelectType SelectType { get; set; }
-        public ObservableCollection<ModConfTreeNode> ModConfTree { get; set; } = [];
+        public List<ModConfTreeNode> ModConfTree { get; set; } = [];
         public ModConfTreeNode SelectedModConfNode { get; set; }
 
         public void ClearSelection()
         {
-            Begin();
-            {
-                SelectedItem = null;
-                SelectedVariable = null;
-                SelectedNonEvent = null;
-            }
-            End();
-            NotifyAll();
+            SelectedItem = null;
+            SelectedVariable = null;
+            SelectedNonEvent = null;
         }
 
         public void Initialize(ModEventItemType itemType, string returnType, string selectItemName, Dictionary<int, ModEventItemSelectValue> parameterValues = null)
         {
-            Begin();
+            ItemType = itemType;
+            ReturnType = returnType;
+            WindowTitle = itemType switch
             {
-                ItemType = itemType;
-                ReturnType = returnType;
-                WindowTitle = itemType switch
-                {
-                    ModEventItemType.Event => "Select Event",
-                    ModEventItemType.Action => "Select Action",
-                    _ => "Select Item"
-                };
+                ModEventItemType.Event => "Select Event",
+                ModEventItemType.Action => "Select Action",
+                _ => "Select Item"
+            };
 
-                LoadItems();
-                LoadCategories();
-                LoadVariables();
-                LoadNonEvents();
-                LoadModConf();
-                SelectedCategory = "All";
-                UpdateFilteredItems();
+            LoadItems();
+            LoadCategories();
+            LoadVariables();
+            LoadNonEvents();
+            LoadModConf();
+            SelectedCategory = "All";
+            UpdateFilteredItems();
 
-                if (IsNonEventMode)
+            if (IsNonEventMode)
+            {
+                // Pre-select NonEvent if SelectedItemName is provided
+                if (!string.IsNullOrEmpty(selectItemName))
                 {
-                    // Pre-select NonEvent if SelectedItemName is provided
-                    if (!string.IsNullOrEmpty(selectItemName))
+                    var c = FilteredNonEvents.FirstOrDefault(a => a.FileName == selectItemName);
+                    if (c != null)
                     {
-                        var c = FilteredNonEvents.FirstOrDefault(a => a.FileName == selectItemName);
-                        if (c != null)
-                        {
-                            SelectedNonEvent = c;
-                        }
-                    }
-                }
-                // Pre-select item if SelectedItemName is provided
-                else if (!string.IsNullOrEmpty(selectItemName))
-                {
-                    var b = FilteredVariables.FirstOrDefault(a => a.Name == selectItemName);
-                    if (b != null)
-                    {
-                        SelectedVariable = b;
-                    }
-
-                    var a = FilteredItems.FirstOrDefault(a => a.Name == selectItemName);
-                    if (a != null)
-                    {
-                        SelectedItem = a;
-                        SelectedItem.ParameterValues = parameterValues;
+                        SelectedNonEvent = c;
                     }
                 }
             }
-            End();
-            NotifyAll();
+            // Pre-select item if SelectedItemName is provided
+            else if (!string.IsNullOrEmpty(selectItemName))
+            {
+                var b = FilteredVariables.FirstOrDefault(a => a.Name == selectItemName);
+                if (b != null)
+                {
+                    SelectedVariable = b;
+                }
+
+                var a = FilteredItems.FirstOrDefault(a => a.Name == selectItemName);
+                if (a != null)
+                {
+                    SelectedItem = a;
+                    SelectedItem.ParameterValues = parameterValues;
+                }
+            }
         }
 
         private void LoadItems()
@@ -133,13 +124,13 @@ namespace ModCreator.WindowData
                 switch (ReturnType)
                 {
                     case "Object":
-                        AllItems = AllItems.Where(item => item.IsReturn).ToList();
+                        AllItems = AllItems.Where(item => item.IsReturn).ToOC();
                         break;
                     default:
                         if (ValidatedModel.VarTypes.Any(x => x.Type == ReturnType))
-                            AllItems = AllItems.Where(item => item.Return == ReturnType).ToList();
+                            AllItems = AllItems.Where(item => item.Return == ReturnType).ToOC();
                         else
-                            AllItems = AllItems.Where(item => item.IsReturn).ToList();
+                            AllItems = AllItems.Where(item => item.IsReturn).ToOC();
                         break;
 
                 }
@@ -148,25 +139,20 @@ namespace ModCreator.WindowData
 
         private void LoadCategories()
         {
-            Categories.Clear();
-            Categories.Add("All");
-            foreach (var cat in AllItems.Select(i => i.Category).Distinct().OrderBy(c => c))
-            {
-                if (!string.IsNullOrEmpty(cat))
-                    Categories.Add(cat);
-            }
+            Categories.ReplaceWith(AllItems.Select(i => i.Category).Distinct().OrderBy(c => c));
+            Categories.Insert(0, "All");
         }
 
         private void LoadVariables()
         {
             var editor = Application.Current.Windows.OfType<CWindow<ProjectEditorWindowData>>().FirstOrDefault();
-            AllVariables.AddRange(editor.WindowData.GlobalVariables);
+            AllVariables.AddRange(editor.WindowData.GlobalVariablesContainer?.Variables ?? new ObservableCollection<GlobalVariable>());
 
             if (!string.IsNullOrEmpty(ReturnType))
             {
                 if (ReturnType != "Object")
                 {
-                    AllVariables = AllVariables.Where(item => item.Type == ReturnType).ToList();
+                    AllVariables = AllVariables.Where(item => item.Type == ReturnType).ToOC();
                 }
             }
         }
@@ -183,17 +169,17 @@ namespace ModCreator.WindowData
             }
         }
 
-        private List<ModEventItem> GetNonEventFiles(List<ModEventItem> items)
+        private ObservableCollection<ModEventItem> GetNonEventFiles(ObservableCollection<ModEventItem> items)
         {
-            return items.Where(x => x.EventMode == EventMode.NonEvent).ToList();
+            return items.Where(x => x.EventMode == EventMode.NonEvent).ToOC();
         }
 
-        public void OnCategoryChanged(object obj, PropertyInfo prop, object oldValue, object newValue)
+        public void OnCategoryChanged(object obj, PropertyInfo prop, object before = null, object after = null)
         {
             UpdateFilteredItems();
         }
 
-        public void OnSearchTextChanged(object obj, PropertyInfo prop, object oldValue, object newValue)
+        public void OnSearchTextChanged(object obj, PropertyInfo prop, object before = null, object after = null)
         {
             UpdateFilteredItems();
         }

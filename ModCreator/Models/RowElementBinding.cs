@@ -2,6 +2,7 @@ using ModCreator.Attributes;
 using ModCreator.Commons;
 using ModCreator.Helpers;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace ModCreator.Models
@@ -10,8 +11,8 @@ namespace ModCreator.Models
     public class RowElementBinding : AutoNotifiableObject
     {
         private Dictionary<string, string> Row { get; set; }
-        private List<PatternElement> AllElements { get; set; }
-        private List<RowElementBinding> AllBindings { get; set; }
+        private ObservableCollection<PatternElement> AllElements { get; set; }
+        private ObservableCollection<RowElementBinding> AllBindings { get; set; }
         public PatternElement Element { get; set; }
 
         public string XValue
@@ -32,7 +33,7 @@ namespace ModCreator.Models
             }
         }
 
-        public RowElementBinding(Dictionary<string, string> row, PatternElement element, List<PatternElement> allElements = null, List<RowElementBinding> allBindings = null)
+        public RowElementBinding(Dictionary<string, string> row, PatternElement element, ObservableCollection<PatternElement> allElements = null, ObservableCollection<RowElementBinding> allBindings = null)
         {
             Row = row;
             AllElements = allElements;
@@ -56,6 +57,10 @@ namespace ModCreator.Models
                         Row.Add(element.Name, generatedValue);
 
                     var targetBinding = AllBindings.FirstOrDefault(b => b.Element.Name == element.Name);
+                    if (targetBinding != null)
+                    {
+                        targetBinding.Notify(nameof(XValue));
+                    }
                 }
             }
         }

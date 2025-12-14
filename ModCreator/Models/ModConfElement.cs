@@ -13,13 +13,15 @@ namespace ModCreator.Models
         public string Label { get; set; }
         public string Description { get; set; }
         public string VarType { get; set; }
-        public bool Enable { get; set; } = true;
+        public bool Shown { get; set; } = true;
+        public bool Disabled { get; set; } = false;
         public bool Required { get; set; } = false;
+        public bool ReadOnly { get; set; } = false;
         public bool Unique { get; set; } = false;
         public bool ModEventParam { get; set; } = false;
-        public List<string> Options { get; set; } = new List<string>();
+        public List<string> Options { get; set; } = [];
         public string Value { get; set; }
         public string Separator { get; set; }
-        public List<string> SubProperties { get; set; } = new List<string>();
+        public List<string> SubProperties { get; set; } = [];
     }
 }

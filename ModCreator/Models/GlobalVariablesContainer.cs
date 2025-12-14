@@ -1,8 +1,6 @@
 using ModCreator.Attributes;
 using ModCreator.Commons;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Reflection;
 
 namespace ModCreator.Models
 {
@@ -15,6 +13,6 @@ namespace ModCreator.Models
         /// <summary>
         /// Collection of global variables
         /// </summary>
-        public List<GlobalVariable> Variables { get; set; } = [];
+        public ObservableCollection<GlobalVariable> Variables { get; set; } = [];
     }
 }
