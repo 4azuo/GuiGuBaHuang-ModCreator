@@ -13,8 +13,8 @@ namespace ModCreator.WindowData
 {
     public partial class ProjectEditorWindowData : CWindowData
     {
-        public List<string> ImageFiles { get; set; } = [];
-        public List<FileItem> ImageItems { get; set; } = [];
+        public ObservableCollection<string> ImageFiles { get; set; } = [];
+        public ObservableCollection<FileItem> ImageItems { get; set; } = [];
         public List<ImageExtension> ImageExtensions { get; set; } = ResourceHelper.ReadEmbeddedResource<List<ImageExtension>>("ModCreator.Resources.image-extensions.json");
         public string SelectedImageFile { get; set; }
         [NotifyMethod(nameof(OnImageItemSelected))]
@@ -47,8 +47,6 @@ namespace ModCreator.WindowData
 
         public void LoadImageFiles()
         {
-            ImageFiles.Clear();
-            ImageItems.Clear();
             if (Project == null) return;
 
             var imgDir = Path.Combine(Project.ProjectPath, "ModProject", "ModImg");
@@ -57,14 +55,11 @@ namespace ModCreator.WindowData
                 if (ImageExtensions.Count == 0)
                     throw new InvalidOperationException("ImageExtensions not loaded. Cannot load image files.");
 
-                ImageFiles = Directory.EnumerateFiles(imgDir, "*", SearchOption.AllDirectories)
+                ImageFiles.ReplaceWith(Directory.EnumerateFiles(imgDir, "*", SearchOption.AllDirectories)
                     .Where(f => ImageExtensions.Any(ext => ext.Extension == Path.GetExtension(f).ToLower()))
-                    .Select(f => Path.GetRelativePath(imgDir, f))
-                    .ToList();
+                    .Select(f => Path.GetRelativePath(imgDir, f)));
 
-                var items = BuildImageFileTree(imgDir, imgDir);
-                foreach (var item in items)
-                    ImageItems.Add(item);
+                ImageItems.ReplaceWith(BuildImageFileTree(imgDir, imgDir));
 
                 if (!string.IsNullOrEmpty(SelectedImageFile))
                 {
