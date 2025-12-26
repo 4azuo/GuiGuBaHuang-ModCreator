@@ -560,6 +560,17 @@
             Prefix character for array properties in config files.
             </summary>
         </member>
+        <member name="P:ModLib.Helper.ConfHelper.LoadedIDs">
+            <summary>
+            Provides a mapping of loaded identifiers to their associated values.
+            Example: { "confName:ID", "[modId:fileName];[modId:fileName];[modId:fileName]" }
+            </summary>
+        </member>
+        <member name="P:ModLib.Helper.ConfHelper.ReplacedBaseIDs">
+            <summary>
+            Gets the list of base IDs that have been replaced.
+            </summary>
+        </member>
         <member name="M:ModLib.Helper.ConfHelper.GetConfFilePath(System.String,System.String,System.String)">
             <summary>
             Gets the full path to a configuration file.
@@ -586,11 +597,12 @@
             <param name="subFolder">Optional subfolder within ModConf</param>
             <returns>The file content as a string</returns>
         </member>
-        <member name="M:ModLib.Helper.ConfHelper.LoadConf(System.String,System.String)">
+        <member name="M:ModLib.Helper.ConfHelper.LoadConf(System.String,System.String,System.String)">
             <summary>
             Loads a configuration file and merges it with the game's configuration.
             Supports adding, updating, and deleting configuration items.
             </summary>
+            <param name="modId">Mod id</param>
             <param name="filePath">Path to the configuration file</param>
             <param name="confName">Name of the configuration class to modify</param>
         </member>
@@ -615,6 +627,17 @@
             Helper for working with collections and enumerables.
             Provides extension methods for dictionaries, lists, and LINQ operations.
             </summary>
+        </member>
+        <member name="M:ModLib.Helper.EnumerableHelper.NativeToManaged(Unity.Collections.NativeArray{System.Byte})">
+            <summary>
+            Copies the contents of a <see cref="T:Unity.Collections.NativeArray`1"/> to a managed byte array.
+            </summary>
+            <remarks>This method creates a new managed array and copies all elements from the specified
+            native array. The returned array is independent of the original native array; subsequent changes to one will
+            not affect the other.</remarks>
+            <param name="native">The native array whose contents will be copied to a managed array.</param>
+            <returns>A managed byte array containing the copied elements from the native array. The length of the returned array
+            matches the length of <paramref name="native"/>.</returns>
         </member>
         <member name="M:ModLib.Helper.EnumerableHelper.RemoveKeysStartWith(System.Collections.Generic.IDictionary{System.String,System.Object},System.String)">
             <summary>
@@ -3539,6 +3562,158 @@
             Gets the parameter store from parent ModChild or falls back to ModMaster.
             </summary>
             <returns>The parameter store</returns>
+        </member>
+        <member name="T:ModLib.Object.UICustomBase">
+            <summary>
+            Serves as the abstract base class for custom UI containers that manage layout, navigation, and dynamic UI item
+            creation.
+            </summary>
+            <remarks><para> <see cref="T:ModLib.Object.UICustomBase"/> provides a flexible framework for building custom user
+            interface panels with support for grid-based layouts, navigation between pages, and dynamic addition of various
+            UI elements such as buttons, sliders, toggles, and more. </para> <para> The class manages collections of UI
+            items and pages, and exposes methods for adding and organizing these elements either by grid coordinates or
+            absolute positions. It also supports navigation controls and auto-update functionality. </para> <para> Derived
+            classes must implement the <see cref="M:ModLib.Object.UICustomBase.Dispose"/> method to release resources appropriately. The class is not
+            thread-safe. </para></remarks>
+        </member>
+        <member name="T:ModLib.Object.UICustom`1">
+            <summary>
+            Provides a customizable user interface container for a specific UI type, supporting navigation and lifecycle
+            management.
+            </summary>
+            <remarks>The <c>UICustom&lt;T&gt;</c> class serves as a base for creating custom UI panels or windows
+            that encapsulate a specific <typeparamref name="T"/> UI instance. It manages the creation, navigation controls,
+            and disposal of the underlying UI, ensuring that only one active instance exists at a time. The most recently
+            created <c>UICustom&lt;T&gt;</c> is accessible via <see cref="P:ModLib.Object.UICustom`1.LastUICustom"/>.</remarks>
+            <typeparam name="T">The type of UI to be managed by this container. Must inherit from <see cref="T:UIBase"/>.</typeparam>
+        </member>
+        <member name="P:ModLib.Object.UICustom`1.LastUICustom">
+            <summary>
+            Gets the most recently created <see cref="T:ModLib.Object.UICustom`1"/> instance.
+            </summary>
+        </member>
+        <member name="P:ModLib.Object.UICustom`1.UI">
+            <summary>
+            Gets the UI component associated with this instance.
+            </summary>
+        </member>
+        <member name="M:ModLib.Object.UICustom`1.#ctor">
+            <summary>
+            Initializes a new instance of the UICustom class and sets up the custom UI, including
+            navigation buttons.
+            </summary>
+            <remarks>This constructor creates and displays a custom UI of the specified type, replacing
+            any previously active custom UI. It also adds navigation buttons for paging functionality and registers the
+            instance with the UI helper system.</remarks>
+        </member>
+        <member name="M:ModLib.Object.UICustom`1.DeleteLastUI">
+            <summary>
+            Releases resources held by the last custom UI element and removes its reference.
+            </summary>
+            <remarks>—Call this method to dispose of the most recently used custom UI element and set its
+            reference to <see langword="null"/>. If no custom UI element exists, the method has no effect.</remarks>
+        </member>
+        <member name="M:ModLib.Object.UICustom`1.Dispose">
+            <summary>
+            Releases all resources used by the current instance of the UICustom class.
+            </summary>
+            <remarks>Call this method when the UICustom instance is no longer needed to free associated
+            resources and perform necessary cleanup. After calling <see cref="M:ModLib.Object.UICustom`1.Dispose"/>, the instance should not be
+            used.</remarks>
+        </member>
+        <member name="T:ModLib.Object.UICustom1">
+            <summary>
+            Represents a customizable UI dialog with a title, configurable button text, and optional actions for OK and
+            Cancel buttons.
+            </summary>
+            <remarks><para> <see cref="T:ModLib.Object.UICustom1"/> provides a dialog interface that allows developers to specify
+            the dialog title, the text for the OK button, and actions to execute when the OK or Cancel buttons are clicked.
+            The Cancel button is displayed only if explicitly enabled. </para> <para> This class is typically used to prompt
+            users for confirmation or to display informational messages with optional user responses. The dialog's size
+            constraints are determined dynamically based on the current screen dimensions. </para></remarks>
+        </member>
+        <member name="P:ModLib.Object.UICustom1.UITypeName">
+            <summary>
+            Gets the display name of the UI type associated with this object.
+            </summary>
+        </member>
+        <member name="P:ModLib.Object.UICustom1.MinWidth">
+            <summary>
+            Gets the minimum width, in pixels, that the UI element can occupy.
+            </summary>
+        </member>
+        <member name="P:ModLib.Object.UICustom1.MaxWidth">
+            <summary>
+            Gets the maximum allowable width for the UI element, in pixels.
+            </summary>
+        </member>
+        <member name="P:ModLib.Object.UICustom1.MinHeight">
+            <summary>
+            Gets the minimum height, in pixels, that the UI element can occupy.
+            </summary>
+        </member>
+        <member name="P:ModLib.Object.UICustom1.MaxHeight">
+            <summary>
+            Gets the maximum vertical position, in pixels, that the UI element can occupy relative to the screen center.
+            </summary>
+        </member>
+        <member name="M:ModLib.Object.UICustom1.#ctor(System.String,System.String,System.Action,System.Boolean,System.Action)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ModLib.Object.UICustom1"/> class with the specified title, button text, and
+            actions for the OK and Cancel buttons.
+            </summary>
+            <remarks>Use this constructor to create a customizable dialog with optional OK and Cancel
+            actions. The Cancel button is only shown if <paramref name="showCancel"/> is <see
+            langword="true"/>.</remarks>
+            <param name="title">The title to display in the UI dialog. Cannot be <see langword="null"/>.</param>
+            <param name="btnText">The text to display on the OK button. If not specified, the default text is used.</param>
+            <param name="okAct">The action to execute when the OK button is clicked. If <see langword="null"/>, no action is performed.</param>
+            <param name="showCancel"><see langword="true"/> to display the Cancel button; otherwise, <see langword="false"/>.</param>
+            <param name="cancelAct">The action to execute when the Cancel button is clicked. If <see langword="null"/>, no action is performed.</param>
+        </member>
+        <member name="T:ModLib.Object.UICustom2">
+            <summary>
+            Represents a custom UI component for displaying text information with configurable title and button text.
+            </summary>
+            <remarks><para> <see cref="T:ModLib.Object.UICustom2"/> provides a specialized user interface element for presenting
+            text-based information, allowing customization of the title and button label. It derives from <see
+            cref="T:ModLib.Object.UICustom`1"/> with <see cref="T:UITextInfo"/> as the data type, and exposes properties for UI type
+            identification and layout constraints. </para> <para> The minimum and maximum width and height properties are
+            dynamically calculated based on the current screen size, ensuring responsive layout behavior. </para></remarks>
+        </member>
+        <member name="P:ModLib.Object.UICustom2.UITypeName">
+            <summary>
+            Gets the display name of the UI type associated with this object.
+            </summary>
+        </member>
+        <member name="P:ModLib.Object.UICustom2.MinWidth">
+            <summary>
+            Gets the minimum width, in pixels, that the UI element can occupy.
+            </summary>
+        </member>
+        <member name="P:ModLib.Object.UICustom2.MaxWidth">
+            <summary>
+            Gets the maximum allowable width for the UI element, in pixels.
+            </summary>
+        </member>
+        <member name="P:ModLib.Object.UICustom2.MinHeight">
+            <summary>
+            Gets the minimum height, in pixels, for the UI element.
+            </summary>
+        </member>
+        <member name="P:ModLib.Object.UICustom2.MaxHeight">
+            <summary>
+            Gets the maximum allowable height for the UI element, relative to the screen size.
+            </summary>
+        </member>
+        <member name="M:ModLib.Object.UICustom2.#ctor(System.String,System.String,System.Action)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ModLib.Object.UICustom2"/> class with the specified title, button text, and
+            action to execute when the OK button is pressed.
+            </summary>
+            <param name="title">The title to display in the UI dialog. Cannot be <see langword="null"/>.</param>
+            <param name="btnText">The text to display on the OK button. If not specified, the button will use a default label.</param>
+            <param name="okAct">An action to execute when the OK button is pressed. If <see langword="null"/>, no action is performed.</param>
         </member>
         <member name="T:ModLib.Example">
             <summary>

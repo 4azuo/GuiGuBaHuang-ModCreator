@@ -8,6 +8,7 @@
     <AssemblyName>ModCreator</AssemblyName>
     <RootNamespace>ModCreator</RootNamespace>
     <Version>1.0.0</Version>
+	<ApplicationIcon>Resources/app-icon.ico</ApplicationIcon>
     
     <!-- Disable WPF Designer -->
     <UseWpfDesigner>false</UseWpfDesigner>
@@ -57,6 +58,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\app-icon.ico" />
     <None Remove="Resources\embeded-settings.json" />
     <None Remove="Resources\EventTemplate.tmp" />
     <None Remove="Resources\EventTemplateContent.tmp" />
@@ -75,6 +77,10 @@
     <None Remove="Resources\VarTemplate.tmp" />
     <None Remove="Resources\VarTemplateContent.tmp" />
     <None Remove="Styles\Json.xshd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\app-icon.ico" />
   </ItemGroup>
 
   <ItemGroup>
