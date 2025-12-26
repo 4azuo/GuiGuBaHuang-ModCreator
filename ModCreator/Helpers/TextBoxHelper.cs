@@ -5,14 +5,14 @@ using System.Windows.Media;
 
 namespace ModCreator.Helpers
 {
-    public static class TextBoxBehaviors
+    public static class TextBoxHelper
     {
         // Placeholder attached property
         public static readonly DependencyProperty PlaceholderProperty =
             DependencyProperty.RegisterAttached(
                 "Placeholder",
                 typeof(string),
-                typeof(TextBoxBehaviors),
+                typeof(TextBoxHelper),
                 new PropertyMetadata(string.Empty));
 
         public static string GetPlaceholder(DependencyObject obj)
@@ -30,7 +30,7 @@ namespace ModCreator.Helpers
             DependencyProperty.RegisterAttached(
                 "EnableClearButton",
                 typeof(bool),
-                typeof(TextBoxBehaviors),
+                typeof(TextBoxHelper),
                 new PropertyMetadata(false, OnEnableClearButtonChanged));
 
         public static bool GetEnableClearButton(DependencyObject obj)

@@ -101,7 +101,7 @@ namespace ModCreator.Helpers
         /// <summary>
         /// Create a new project from template
         /// </summary>
-        public static ModProject CreateProject(string projectName, string targetDirectory, string description = "", string author = "")
+        public static ModProject CreateProject(string projectName, string targetDirectory, string description = "", string author = "", string projectId = null)
         {
             var templatePath = GetProjectTemplatePath();
             if (!Directory.Exists(templatePath))
@@ -109,8 +109,8 @@ namespace ModCreator.Helpers
                 throw new DirectoryNotFoundException($"Project template not found at: {templatePath}");
             }
 
-            // Generate project ID
-            var projectId = FileHelper.GenerateProjectId();
+            // Generate project ID if not provided
+            projectId = projectId ?? FileHelper.GenerateProjectId();
             var projectFolderName = $"ModProject_{projectId}";
             var projectPath = Path.Combine(targetDirectory, projectFolderName);
 

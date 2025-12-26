@@ -1,9 +1,11 @@
 using ModCreator.Businesses;
+using ModCreator.Commons;
 using ModCreator.Helpers;
 using ModCreator.Models;
 using ModCreator.WindowData;
 using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Controls;
@@ -41,7 +43,7 @@ namespace ModCreator.Windows
         }
 
         [SupportedOSPlatform("windows6.1")]
-        private void ProjectEditorWindow_Loaded(object sender, RoutedEventArgs e)
+        private async void ProjectEditorWindow_Loaded(object sender, RoutedEventArgs e)
         {
             // Now ProjectToEdit has been set by the caller
             if (ProjectToEdit != null && WindowData != null)
@@ -62,10 +64,58 @@ namespace ModCreator.Windows
 
                 // Initialize Business classes
                 InitializeBusinesses();
+                
+                // Load game resources asynchronously
+                await LoadGameResourcesAsync();
             }
 
             // Subscribe to Closed event to notify parent window
             Closed += ProjectEditorWindow_Closed;
+        }
+
+        private async System.Threading.Tasks.Task LoadGameResourcesAsync()
+        {
+            try
+            {
+                WindowData.StatusMessage = "Loading game resources...";
+                
+                var business = Businesses.ProjectEditorWindowTab3GameResourceBusiness.Instance;
+                var gameFolderPath = Constants.BaseGameResourcesDir;
+                
+                var (success, errors) = business.InitializeResourcesAsync();
+                if (!success)
+                {
+                    WindowData.StatusMessage = "Failed to initialize game resources.";
+                    return;
+                }
+                
+                // Load resources asynchronously
+                await WindowData.LoadGameResourcesAsync();
+                
+                // Calculate totals
+                int totalTextures = WindowData.Texture2DItems.Sum(i => CountItems(i));
+                int totalSprites = WindowData.SpriteItems.Sum(i => CountItems(i));
+                int totalTextAssets = WindowData.TextAssetItems.Sum(i => CountItems(i));
+                int totalAudioClips = WindowData.AudioClipItems.Sum(i => CountItems(i));
+                int totalOther = WindowData.OtherItems.Sum(i => CountItems(i));
+                int total = totalTextures + totalSprites + totalTextAssets + totalAudioClips + totalOther;
+                
+                WindowData.StatusMessage = $"Loaded {total} game resources (T2D:{totalTextures} Sprite:{totalSprites} Text:{totalTextAssets} Audio:{totalAudioClips} Other:{totalOther})";
+            }
+            catch (Exception ex)
+            {
+                WindowData.StatusMessage = $"Error loading game resources: {ex.Message}";
+                DebugHelper.Log($"Failed to load game resources: {ex}");
+            }
+        }
+        
+        private int CountItems(GameResourceItem item)
+        {
+            if (item.IsFolder)
+            {
+                return item.Children.Sum(child => CountItems(child));
+            }
+            return 1;
         }
 
         private void InitializeBusinesses()

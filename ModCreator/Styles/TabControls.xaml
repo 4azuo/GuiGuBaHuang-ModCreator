@@ -22,7 +22,7 @@
                                 Background="Transparent" 
                                 BorderThickness="0,0,0,3" 
                                 BorderBrush="Transparent"
-                                Padding="20,12"
+                                Padding="12,8"
                                 Margin="0,0,2,0">
                             <ContentPresenter x:Name="ContentSite"
                                             VerticalAlignment="Center"

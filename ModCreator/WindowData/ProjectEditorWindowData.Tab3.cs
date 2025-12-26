@@ -1,4 +1,5 @@
 using ModCreator.Attributes;
+using ModCreator.Enums;
 using ModCreator.Helpers;
 using ModCreator.Models;
 using System;
@@ -7,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace ModCreator.WindowData
@@ -34,6 +36,44 @@ namespace ModCreator.WindowData
         public bool HasSelectedImageFile => !string.IsNullOrEmpty(SelectedImageFile);
         public bool HasSelectedImageItem => SelectedImageItem != null;
 
+        // Game Resources - Separate collections per type
+        public ObservableCollection<GameResourceItem> Texture2DItems { get; set; } = [];
+        public ObservableCollection<GameResourceItem> SpriteItems { get; set; } = [];
+        public ObservableCollection<GameResourceItem> TextAssetItems { get; set; } = [];
+        public ObservableCollection<GameResourceItem> AudioClipItems { get; set; } = [];
+        public ObservableCollection<GameResourceItem> OtherItems { get; set; } = [];
+        
+        // Folder filter collections
+        public ObservableCollection<GameResourceFolderItem> Texture2DFolders { get; set; } = [];
+        public ObservableCollection<GameResourceFolderItem> SpriteFolders { get; set; } = [];
+        public ObservableCollection<GameResourceFolderItem> TextAssetFolders { get; set; } = [];
+        public ObservableCollection<GameResourceFolderItem> AudioClipFolders { get; set; } = [];
+        public ObservableCollection<GameResourceFolderItem> OtherFolders { get; set; } = [];
+        
+        [NotifyMethod(nameof(OnSelectedFoldersChanged))]
+        public string SelectedTexture2DFolders { get; set; } = string.Empty;
+        [NotifyMethod(nameof(OnSelectedFoldersChanged))]
+        public string SelectedSpriteFolders { get; set; } = string.Empty;
+        [NotifyMethod(nameof(OnSelectedFoldersChanged))]
+        public string SelectedTextAssetFolders { get; set; } = string.Empty;
+        [NotifyMethod(nameof(OnSelectedFoldersChanged))]
+        public string SelectedAudioClipFolders { get; set; } = string.Empty;
+        [NotifyMethod(nameof(OnSelectedFoldersChanged))]
+        public string SelectedOtherFolders { get; set; } = string.Empty;
+        
+        private List<GameResourceItem> _allTexture2DResources = [];
+        private List<GameResourceItem> _allSpriteResources = [];
+        private List<GameResourceItem> _allTextAssetResources = [];
+        private List<GameResourceItem> _allAudioClipResources = [];
+        private List<GameResourceItem> _allOtherResources = [];
+        private List<FileItem> _allImageItems = [];
+        
+        [NotifyMethod(nameof(OnGameResourceItemSelected))]
+        public GameResourceItem SelectedGameResourceItem { get; set; }
+        public bool HasSelectedGameResource => SelectedGameResourceItem != null && !SelectedGameResourceItem.IsFolder;
+        [NotifyMethod(nameof(OnGameResourceSearchTextChanged))]
+        public string GameResourceSearchText { get; set; } = string.Empty;
+
         public void OnImageItemSelected(object obj, PropertyInfo prop, object before = null, object after = null)
         {
             if (SelectedImageItem == null || SelectedImageItem.IsFolder)
@@ -59,7 +99,8 @@ namespace ModCreator.WindowData
                     .Where(f => ImageExtensions.Any(ext => ext.Extension == Path.GetExtension(f).ToLower()))
                     .Select(f => Path.GetRelativePath(imgDir, f)));
 
-                ImageItems.ReplaceWith(BuildImageFileTree(imgDir, imgDir));
+                _allImageItems = BuildImageFileTree(imgDir, imgDir);
+                FilterImageItems();
 
                 if (!string.IsNullOrEmpty(SelectedImageFile))
                 {
@@ -118,6 +159,325 @@ namespace ModCreator.WindowData
             }
 
             return items;
+        }
+
+        public void OnGameResourceItemSelected(object obj, PropertyInfo prop, object before = null, object after = null)
+        {
+            // Trigger property change notification for HasSelectedGameResource
+        }
+
+        public void OnGameResourceSearchTextChanged(object obj, PropertyInfo prop, object before = null, object after = null)
+        {
+            FilterImageItems();
+            _ = FilterGameResourcesAsync();
+        }
+
+        public void OnSelectedFoldersChanged(object obj, PropertyInfo prop, object before = null, object after = null)
+        {
+            // Re-filter resources when folder selection changes
+            _ = FilterGameResourcesAsync();
+        }
+
+        private void FilterImageItems()
+        {
+            if (_allImageItems == null || _allImageItems.Count == 0)
+            {
+                ImageItems.Clear();
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(GameResourceSearchText))
+            {
+                ImageItems.ReplaceWith(_allImageItems);
+            }
+            else
+            {
+                var filtered = FilterFileItems(_allImageItems, GameResourceSearchText);
+                ImageItems.ReplaceWith(filtered);
+            }
+        }
+
+        private List<FileItem> FilterFileItems(List<FileItem> items, string searchText)
+        {
+            var result = new List<FileItem>();
+            var lowerSearch = searchText.ToLower();
+
+            foreach (var item in items)
+            {
+                if (item.IsFolder)
+                {
+                    var filteredChildren = FilterFileItems(item.Children.ToList(), searchText);
+                    if (filteredChildren.Count > 0)
+                    {
+                        var folderCopy = new FileItem
+                        {
+                            Name = item.Name,
+                            FullPath = item.FullPath,
+                            RelativePath = item.RelativePath,
+                            IsFolder = true,
+                            Parent = item.Parent
+                        };
+                        foreach (var child in filteredChildren)
+                            folderCopy.Children.Add(child);
+                        result.Add(folderCopy);
+                    }
+                }
+                else if (item.Name.ToLower().Contains(lowerSearch))
+                {
+                    result.Add(item);
+                }
+            }
+
+            return result;
+        }
+
+        private async Task FilterGameResourcesAsync()
+        {
+            try
+            {
+                // Run filtering operations in parallel for better performance
+                await Task.WhenAll(
+                    UpdateFilteredItemsAsync(GameResourceType.Texture2D),
+                    UpdateFilteredItemsAsync(GameResourceType.Sprite),
+                    UpdateFilteredItemsAsync(GameResourceType.TextAsset),
+                    UpdateFilteredItemsAsync(GameResourceType.AudioClip),
+                    UpdateFilteredItemsAsync(GameResourceType.Other)
+                );
+            }
+            catch (Exception ex)
+            {
+                DebugHelper.Error($"Failed to filter game resources: {ex.Message}");
+            }
+        }
+
+        private async Task UpdateFilteredItemsAsync(GameResourceType resourceType)
+        {
+            await Task.Run(() =>
+            {
+                var business = Businesses.ProjectEditorWindowTab3GameResourceBusiness.Instance;
+                List<GameResourceItem> allResources;
+                string selectedFolders;
+                
+                switch (resourceType)
+                {
+                    case GameResourceType.Texture2D:
+                        allResources = _allTexture2DResources;
+                        selectedFolders = SelectedTexture2DFolders;
+                        break;
+                    case GameResourceType.Sprite:
+                        allResources = _allSpriteResources;
+                        selectedFolders = SelectedSpriteFolders;
+                        break;
+                    case GameResourceType.TextAsset:
+                        allResources = _allTextAssetResources;
+                        selectedFolders = SelectedTextAssetFolders;
+                        break;
+                    case GameResourceType.AudioClip:
+                        allResources = _allAudioClipResources;
+                        selectedFolders = SelectedAudioClipFolders;
+                        break;
+                    case GameResourceType.Other:
+                        allResources = _allOtherResources;
+                        selectedFolders = SelectedOtherFolders;
+                        break;
+                    default:
+                        return;
+                }
+
+                var filtered = allResources;
+
+                // Apply folder filter
+                if (!string.IsNullOrWhiteSpace(selectedFolders))
+                {
+                    var folderList = selectedFolders.Split(',').Select(f => f.Trim()).Where(f => !string.IsNullOrEmpty(f)).ToList();
+                    if (folderList.Any())
+                    {
+                        filtered = FilterByFolders(filtered, folderList);
+                    }
+                }
+
+                // Apply search filter
+                if (!string.IsNullOrWhiteSpace(GameResourceSearchText))
+                {
+                    filtered = business.SearchResources(filtered, GameResourceSearchText);
+                }
+
+                // Update UI collection on UI thread
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    switch (resourceType)
+                    {
+                        case GameResourceType.Texture2D:
+                            Texture2DItems.ReplaceWith(filtered);
+                            break;
+                        case GameResourceType.Sprite:
+                            SpriteItems.ReplaceWith(filtered);
+                            break;
+                        case GameResourceType.TextAsset:
+                            TextAssetItems.ReplaceWith(filtered);
+                            break;
+                        case GameResourceType.AudioClip:
+                            AudioClipItems.ReplaceWith(filtered);
+                            break;
+                        case GameResourceType.Other:
+                            OtherItems.ReplaceWith(filtered);
+                            break;
+                    }
+                });
+            });
+        }
+
+        private List<GameResourceFolderItem> ExtractFolders(List<GameResourceItem> items)
+        {
+            var folders = new HashSet<string>();
+            ExtractFoldersRecursive(items, folders);
+            
+            return folders.OrderBy(f => f).Select(f => new GameResourceFolderItem
+            {
+                FolderPath = f,
+                IsSelected = false
+            }).ToList();
+        }
+
+        private void ExtractFoldersRecursive(List<GameResourceItem> items, HashSet<string> folders)
+        {
+            foreach (var item in items)
+            {
+                if (item.IsFolder)
+                {
+                    var folderPath = GetItemPath(item);
+                    if (!string.IsNullOrEmpty(folderPath))
+                    {
+                        folders.Add(folderPath);
+                    }
+                    ExtractFoldersRecursive(item.Children.ToList(), folders);
+                }
+            }
+        }
+
+        private string GetItemPath(GameResourceItem item)
+        {
+            var parts = new List<string>();
+            var current = item;
+            
+            while (current != null)
+            {
+                parts.Insert(0, current.Name);
+                current = current.Parent;
+            }
+
+            return string.Join("/", parts);
+        }
+
+        private List<GameResourceItem> FilterByFolders(List<GameResourceItem> items, List<string> selectedFolders)
+        {
+            var result = new List<GameResourceItem>();
+
+            foreach (var item in items)
+            {
+                if (item.IsFolder)
+                {
+                    var itemPath = GetItemPath(item);
+                    
+                    // Check if this folder or any parent folder is in selected folders
+                    var isInSelectedFolder = selectedFolders.Any(folder => 
+                        itemPath.Equals(folder, StringComparison.OrdinalIgnoreCase) || 
+                        itemPath.StartsWith(folder + "/", StringComparison.OrdinalIgnoreCase));
+
+                    if (isInSelectedFolder)
+                    {
+                        // Include entire folder
+                        result.Add(item);
+                    }
+                    else
+                    {
+                        // Check if any child folders are in selected folders
+                        var filteredChildren = FilterByFolders(item.Children.ToList(), selectedFolders);
+                        if (filteredChildren.Any())
+                        {
+                            var folderCopy = new GameResourceItem
+                            {
+                                Name = item.Name,
+                                Type = item.Type,
+                                IsFolder = true,
+                                Asset = item.Asset,
+                                Parent = item.Parent
+                            };
+                            foreach (var child in filteredChildren)
+                            {
+                                folderCopy.Children.Add(child);
+                            }
+                            result.Add(folderCopy);
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public async Task LoadGameResourcesAsync()
+        {
+            var business = Businesses.ProjectEditorWindowTab3GameResourceBusiness.Instance;
+            
+            // Load each resource type independently and update UI as soon as it completes
+            var texture2DTask = LoadAndUpdateResourceTypeAsync(GameResourceType.Texture2D, business);
+            var spriteTask = LoadAndUpdateResourceTypeAsync(GameResourceType.Sprite, business);
+            var textAssetTask = LoadAndUpdateResourceTypeAsync(GameResourceType.TextAsset, business);
+            var audioClipTask = LoadAndUpdateResourceTypeAsync(GameResourceType.AudioClip, business);
+            var otherTask = LoadAndUpdateResourceTypeAsync(GameResourceType.Other, business);
+            
+            // Wait for all tasks to complete
+            await Task.WhenAll(texture2DTask, spriteTask, textAssetTask, audioClipTask, otherTask);
+        }
+
+        private async Task LoadAndUpdateResourceTypeAsync(GameResourceType resourceType, Businesses.ProjectEditorWindowTab3GameResourceBusiness business)
+        {
+            try
+            {
+                var resources = await business.LoadGameResourcesAsync(resourceType, false);
+                
+                // Extract unique folder paths for filtering
+                var folders = ExtractFolders(resources);
+                
+                // Update the corresponding collection immediately after loading
+                switch (resourceType)
+                {
+                    case GameResourceType.Texture2D:
+                        _allTexture2DResources = resources;
+                        Texture2DFolders.ReplaceWith(folders);
+                        await UpdateFilteredItemsAsync(resourceType);
+                        break;
+                    
+                    case GameResourceType.Sprite:
+                        _allSpriteResources = resources;
+                        SpriteFolders.ReplaceWith(folders);
+                        await UpdateFilteredItemsAsync(resourceType);
+                        break;
+                    
+                    case GameResourceType.TextAsset:
+                        _allTextAssetResources = resources;
+                        TextAssetFolders.ReplaceWith(folders);
+                        await UpdateFilteredItemsAsync(resourceType);
+                        break;
+                    
+                    case GameResourceType.AudioClip:
+                        _allAudioClipResources = resources;
+                        AudioClipFolders.ReplaceWith(folders);
+                        await UpdateFilteredItemsAsync(resourceType);
+                        break;
+                    
+                    case GameResourceType.Other:
+                        _allOtherResources = resources;
+                        OtherFolders.ReplaceWith(folders);
+                        await UpdateFilteredItemsAsync(resourceType);
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                DebugHelper.Error($"Failed to load {resourceType} resources: {ex.Message}");
+            }
         }
     }
 }

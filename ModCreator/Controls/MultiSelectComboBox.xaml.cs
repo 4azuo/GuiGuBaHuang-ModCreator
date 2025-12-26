@@ -1,4 +1,4 @@
-using ModCreator.Models;
+﻿using ModCreator.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,7 +14,7 @@ namespace ModCreator.Controls
         public event EventHandler DropDownOpened;
 
         public static readonly DependencyProperty ItemsSourceProperty =
-            DependencyProperty.Register("ItemsSource", typeof(IEnumerable<ModConfValue>), typeof(MultiSelectComboBox),
+            DependencyProperty.Register("ItemsSource", typeof(IEnumerable<dynamic>), typeof(MultiSelectComboBox),
                 new PropertyMetadata(null, OnItemsSourceChanged));
 
         public static readonly DependencyProperty SelectedValueProperty =
@@ -29,6 +29,10 @@ namespace ModCreator.Controls
             DependencyProperty.Register("IsReadOnly", typeof(bool), typeof(MultiSelectComboBox),
                 new PropertyMetadata(false));
 
+        public static readonly DependencyProperty IsEditableProperty =
+            DependencyProperty.Register("IsEditable", typeof(bool), typeof(MultiSelectComboBox),
+                new PropertyMetadata(false));
+
         private string _displayText = string.Empty;
         public string DisplayText
         {
@@ -39,7 +43,7 @@ namespace ModCreator.Controls
                 {
                     _displayText = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DisplayText)));
-                    
+
                     // If user manually types, update SelectedValue and clear selections
                     if (!_isUpdating && !string.IsNullOrEmpty(value))
                     {
@@ -58,9 +62,9 @@ namespace ModCreator.Controls
             }
         }
 
-        public IEnumerable<ModConfValue> ItemsSource
+        public IEnumerable<dynamic> ItemsSource
         {
-            get => (IEnumerable<ModConfValue>)GetValue(ItemsSourceProperty);
+            get => (IEnumerable<dynamic>)GetValue(ItemsSourceProperty);
             set => SetValue(ItemsSourceProperty, value);
         }
 
@@ -82,6 +86,12 @@ namespace ModCreator.Controls
             set => SetValue(IsReadOnlyProperty, value);
         }
 
+        public bool IsEditable
+        {
+            get => (bool)GetValue(IsEditableProperty) && !(bool)GetValue(IsReadOnlyProperty);
+            set => SetValue(IsEditableProperty, value);
+        }
+
         private bool _isUpdating = false;
 
         public MultiSelectComboBox()
@@ -93,7 +103,7 @@ namespace ModCreator.Controls
         {
             if (d is MultiSelectComboBox control)
             {
-                control.MainComboBox.ItemsSource = e.NewValue as IEnumerable<ModConfValue>;
+                control.MainComboBox.ItemsSource = e.NewValue as IEnumerable<dynamic>;
                 control.UpdateSelectionFromValue();
             }
         }
@@ -116,7 +126,7 @@ namespace ModCreator.Controls
             var separator = string.IsNullOrEmpty(Separator) ? "," : Separator;
             var selectedValues = string.IsNullOrEmpty(SelectedValue)
                 ? new HashSet<string>()
-                : new HashSet<string>(SelectedValue.Split(new[] { separator }, System.StringSplitOptions.RemoveEmptyEntries)
+                : new HashSet<string>(SelectedValue.Split(new string[] { separator }, System.StringSplitOptions.RemoveEmptyEntries)
                     .Select(v => v.Trim()));
 
             var selectedDisplayNames = new List<string>();

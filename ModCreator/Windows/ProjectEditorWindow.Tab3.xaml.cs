@@ -1,6 +1,7 @@
 using ModCreator.Helpers;
 using ModCreator.Models;
 using ModCreator.WindowData;
+using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.Versioning;
@@ -187,6 +188,14 @@ namespace ModCreator.Windows
             Directory.CreateDirectory(imgPath);
             System.Diagnostics.Process.Start("explorer.exe", imgPath);
             WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.OpenedModImgFolder", imgPath);
+        }
+
+        private void TreeView_GameResourceSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (e.NewValue is GameResourceItem resourceItem)
+            {
+                WindowData.SelectedGameResourceItem = resourceItem;
+            }
         }
     }
 }

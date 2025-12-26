@@ -32,7 +32,7 @@
     <!-- PlaceHolder TextBox -->
     <Style TargetType="TextBox" x:Key="PlaceHolderTextBox" BasedOn="{StaticResource {x:Type TextBox}}">
         <Setter Property="MinWidth" Value="150"/>
-        <Setter Property="helpers:TextBoxBehaviors.EnableClearButton" Value="True"/>
+        <Setter Property="helpers:TextBoxHelper.EnableClearButton" Value="True"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TextBox">
@@ -50,7 +50,7 @@
                                 <!-- Placeholder TextBlock -->
                                 <TextBlock x:Name="PlaceholderText"
                                           Grid.Column="0"
-                                          Text="{Binding Path=(helpers:TextBoxBehaviors.Placeholder), RelativeSource={RelativeSource TemplatedParent}}"
+                                          Text="{Binding Path=(helpers:TextBoxHelper.Placeholder), RelativeSource={RelativeSource TemplatedParent}}"
                                           Foreground="#80808080"
                                           FontStyle="Italic"
                                           Margin="9,0,5,0"
