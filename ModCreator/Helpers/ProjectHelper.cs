@@ -29,7 +29,7 @@ namespace ModCreator.Helpers
         /// </summary>
         public static string GetProjectTemplatePath()
         {
-            return Path.GetFullPath(Path.Combine(Constants.ResourcesDir, PROJECT_TEMPLATE_NAME));
+            return Path.GetFullPath(Path.Combine(Constants.ModCreatorDir, PROJECT_TEMPLATE_NAME));
         }
 
         /// <summary>
