@@ -53,6 +53,11 @@ namespace ModCreator.Windows
             Close();
         }
 
+        private void Search_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleSearchPanel();
+        }
+
         private void ToggleSearchPanel()
         {
             if (searchPanel.Visibility == Visibility.Collapsed)

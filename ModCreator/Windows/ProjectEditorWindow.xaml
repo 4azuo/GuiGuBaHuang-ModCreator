@@ -12,6 +12,7 @@
         <converter:BoolToIconConverter x:Key="BoolToIconConverter"/>
         <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <converter:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
+        <converter:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <converter:FilePathToImageConverter x:Key="FilePathToImageConverter"/>
         <converter:RootItemToVisibilityConverter x:Key="RootItemToVisibilityConverter"/>
         <ObjectDataProvider x:Key="EventModeEnum" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
@@ -227,7 +228,52 @@
                         </Grid>
                     </GroupBox>
                     <GroupBox Grid.Column="1" Grid.Row="1" Header="{x:Static helper:ProjectEditorWindowText.ImagePreview}" Margin="5,0,5,0">
-                        <Image Source="{Binding SelectedImagePath, Mode=OneWay}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Grid>
+                            <!-- Image preview for ModImg files (visible when neither game resource type is active) -->
+                            <Image Source="{Binding SelectedImagePath, Mode=OneWay}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsGameResourceImage}" Value="True">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsGameResourceAudio}" Value="True">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                            
+                            <!-- Image preview for game resource images -->
+                            <Image Source="{Binding SelectedGameResourceImagePath, Mode=OneWay}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsGameResourceImage, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            
+                            <!-- Audio player for game resource audio -->
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding IsGameResourceAudio, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <MediaElement x:Name="audioPlayer" LoadedBehavior="Manual" UnloadedBehavior="Stop" 
+                                              Source="{Binding SelectedGameResourceAudioPath, Mode=OneWay}" 
+                                              MediaOpened="AudioPlayer_MediaOpened"
+                                              MediaEnded="AudioPlayer_MediaEnded"
+                                              Width="0" Height="0"/>
+                                <TextBlock Text="🔊 Audio File" FontSize="24" Foreground="#FF666666" Margin="0,0,0,20"/>
+                                <TextBlock Text="{Binding SelectedGameResourceItem.Name, Mode=OneWay}" FontSize="14" Foreground="#FF888888" TextAlignment="Center" TextWrapping="Wrap" Margin="0,0,0,20"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button x:Name="btnPlayAudio" Content="▶ Play" Click="PlayAudio_Click" Width="80" Height="32" Margin="5"/>
+                                    <Button x:Name="btnPauseAudio" Content="⏸ Pause" Click="PauseAudio_Click" Width="80" Height="32" Margin="5" IsEnabled="False"/>
+                                    <Button x:Name="btnStopAudio" Content="⏹ Stop" Click="StopAudio_Click" Width="80" Height="32" Margin="5" IsEnabled="False"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
+                                    <TextBlock x:Name="txtCurrentTime" Text="00:00" VerticalAlignment="Center" Margin="5,0"/>
+                                    <Slider x:Name="audioSeekBar" Width="300" Minimum="0" Maximum="100" Value="0" 
+                                            ValueChanged="AudioSeekBar_ValueChanged" 
+                                            PreviewMouseDown="AudioSeekBar_PreviewMouseDown"
+                                            PreviewMouseUp="AudioSeekBar_PreviewMouseUp"
+                                            VerticalAlignment="Center" Margin="5,0"/>
+                                    <TextBlock x:Name="txtTotalTime" Text="00:00" VerticalAlignment="Center" Margin="5,0"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
                     </GroupBox>
                     <GroupBox Grid.Column="2" Grid.Row="1" Header="Game Resources" Margin="5,0,0,0">
                         <TabControl>

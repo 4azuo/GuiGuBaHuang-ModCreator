@@ -19,10 +19,19 @@
         
         <!-- Header -->
         <Border Grid.Row="0" Background="#FF2E5090" Padding="15">
-            <StackPanel>
-                <TextBlock Text="Reference Documentation" FontSize="18" FontWeight="Bold" Foreground="White"/>
-                <TextBlock Text="{Binding FileName, Mode=OneWay}" FontSize="12" Foreground="#FFCCCCCC" Margin="0,5,0,0"/>
-            </StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Reference Documentation" FontSize="18" FontWeight="Bold" Foreground="White"/>
+                    <TextBlock Text="{Binding FileName, Mode=OneWay}" FontSize="12" Foreground="#FFCCCCCC" Margin="0,5,0,0"/>
+                </StackPanel>
+                <Button Grid.Column="1" Content="🔍 Search" Click="Search_Click" 
+                        Style="{StaticResource HeaderButton}" Width="100" Height="32" 
+                        VerticalAlignment="Center" ToolTip="Open search panel (Ctrl+F)"/>
+            </Grid>
         </Border>
 
         <!-- Search Panel -->

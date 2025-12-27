@@ -73,6 +73,12 @@ namespace ModCreator.WindowData
         public bool HasSelectedGameResource => SelectedGameResourceItem != null && !SelectedGameResourceItem.IsFolder;
         [NotifyMethod(nameof(OnGameResourceSearchTextChanged))]
         public string GameResourceSearchText { get; set; } = string.Empty;
+        
+        // Preview properties for game resources
+        public BitmapImage SelectedGameResourceImagePath { get; set; }
+        public string SelectedGameResourceAudioPath { get; set; }
+        public bool IsGameResourceImage { get; set; }
+        public bool IsGameResourceAudio { get; set; }
 
         public void OnImageItemSelected(object obj, PropertyInfo prop, object before = null, object after = null)
         {
@@ -163,7 +169,47 @@ namespace ModCreator.WindowData
 
         public void OnGameResourceItemSelected(object obj, PropertyInfo prop, object before = null, object after = null)
         {
+            // Reset preview properties
+            SelectedGameResourceImagePath = null;
+            SelectedGameResourceAudioPath = null;
+            IsGameResourceImage = false;
+            IsGameResourceAudio = false;
+            
             // Trigger property change notification for HasSelectedGameResource
+            if (SelectedGameResourceItem == null || SelectedGameResourceItem.IsFolder)
+                return;
+            
+            // Get the file path from Asset property
+            var filePath = SelectedGameResourceItem.Asset as string;
+            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
+                return;
+            
+            var extension = Path.GetExtension(filePath).ToLower();
+            
+            // Check if it's an image
+            var imageExtensions = new[] { ".png", ".jpg", ".jpeg", ".bmp", ".gif", ".tif", ".tiff", ".ico" };
+            if (imageExtensions.Contains(extension))
+            {
+                try
+                {
+                    SelectedGameResourceImagePath = BitmapHelper.LoadFromFile(filePath);
+                    IsGameResourceImage = true;
+                }
+                catch (Exception ex)
+                {
+                    DebugHelper.Error($"Failed to load image: {ex.Message}");
+                }
+            }
+            // Check if it's an audio file
+            else if (SelectedGameResourceItem.Type == GameResourceType.AudioClip)
+            {
+                var audioExtensions = new[] { ".wav", ".mp3", ".ogg", ".wma", ".aac", ".flac" };
+                if (audioExtensions.Contains(extension))
+                {
+                    SelectedGameResourceAudioPath = filePath;
+                    IsGameResourceAudio = true;
+                }
+            }
         }
 
         public void OnGameResourceSearchTextChanged(object obj, PropertyInfo prop, object before = null, object after = null)

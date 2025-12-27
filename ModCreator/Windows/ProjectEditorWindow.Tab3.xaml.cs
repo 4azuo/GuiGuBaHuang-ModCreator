@@ -6,13 +6,19 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Versioning;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Forms;
+using System.Windows.Input;
+using System.Windows.Threading;
 using MessageBox = System.Windows.MessageBox;
 
 namespace ModCreator.Windows
 {
     public partial class ProjectEditorWindow : CWindow<ProjectEditorWindowData>
     {
+        private DispatcherTimer _audioTimer;
+        private bool _isAudioSeeking = false;
+        
         private void TreeView_ImageSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (e.NewValue is FileItem fileItem)
@@ -192,10 +198,112 @@ namespace ModCreator.Windows
 
         private void TreeView_GameResourceSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
+            // Stop any playing audio when selection changes
+            StopAudioPlayback();
+            
             if (e.NewValue is GameResourceItem resourceItem)
             {
                 WindowData.SelectedGameResourceItem = resourceItem;
             }
         }
+        
+        #region Audio Playback
+        
+        private void AudioPlayer_MediaOpened(object sender, RoutedEventArgs e)
+        {
+            if (audioPlayer.NaturalDuration.HasTimeSpan)
+            {
+                var duration = audioPlayer.NaturalDuration.TimeSpan;
+                audioSeekBar.Maximum = duration.TotalSeconds;
+                txtTotalTime.Text = FormatTime(duration);
+                
+                // Initialize audio timer for updating seek bar
+                if (_audioTimer == null)
+                {
+                    _audioTimer = new DispatcherTimer();
+                    _audioTimer.Interval = TimeSpan.FromMilliseconds(100);
+                    _audioTimer.Tick += AudioTimer_Tick;
+                }
+            }
+        }
+        
+        private void AudioPlayer_MediaEnded(object sender, RoutedEventArgs e)
+        {
+            StopAudioPlayback();
+        }
+        
+        private void AudioTimer_Tick(object sender, EventArgs e)
+        {
+            if (audioPlayer.NaturalDuration.HasTimeSpan && !_isAudioSeeking)
+            {
+                audioSeekBar.Value = audioPlayer.Position.TotalSeconds;
+                txtCurrentTime.Text = FormatTime(audioPlayer.Position);
+            }
+        }
+        
+        private void PlayAudio_Click(object sender, RoutedEventArgs e)
+        {
+            audioPlayer.Play();
+            _audioTimer?.Start();
+            btnPlayAudio.IsEnabled = false;
+            btnPauseAudio.IsEnabled = true;
+            btnStopAudio.IsEnabled = true;
+        }
+        
+        private void PauseAudio_Click(object sender, RoutedEventArgs e)
+        {
+            audioPlayer.Pause();
+            _audioTimer?.Stop();
+            btnPlayAudio.IsEnabled = true;
+            btnPauseAudio.IsEnabled = false;
+            btnStopAudio.IsEnabled = true;
+        }
+        
+        private void StopAudio_Click(object sender, RoutedEventArgs e)
+        {
+            StopAudioPlayback();
+        }
+        
+        private void StopAudioPlayback()
+        {
+            audioPlayer.Stop();
+            _audioTimer?.Stop();
+            audioSeekBar.Value = 0;
+            txtCurrentTime.Text = "00:00";
+            btnPlayAudio.IsEnabled = true;
+            btnPauseAudio.IsEnabled = false;
+            btnStopAudio.IsEnabled = false;
+        }
+        
+        private void AudioSeekBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (_isAudioSeeking && audioPlayer.NaturalDuration.HasTimeSpan)
+            {
+                var position = TimeSpan.FromSeconds(audioSeekBar.Value);
+                audioPlayer.Position = position;
+                txtCurrentTime.Text = FormatTime(position);
+            }
+        }
+        
+        private void AudioSeekBar_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            _isAudioSeeking = true;
+        }
+        
+        private void AudioSeekBar_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            _isAudioSeeking = false;
+            if (audioPlayer.NaturalDuration.HasTimeSpan)
+            {
+                audioPlayer.Position = TimeSpan.FromSeconds(audioSeekBar.Value);
+            }
+        }
+        
+        private string FormatTime(TimeSpan time)
+        {
+            return $"{(int)time.TotalMinutes:D2}:{time.Seconds:D2}";
+        }
+        
+        #endregion
     }
 }
