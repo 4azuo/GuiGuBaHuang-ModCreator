@@ -443,7 +443,7 @@
     ]
   },
   {
-    "Name": "ItemGrades",
+    "Name": "Grades",
     "Values": [
       {
         "DisplayName": "1: Grade 1",
@@ -483,6 +483,467 @@
       },
       {
         "DisplayName": "10: Grade 10",
+        "Value": "10"
+      }
+    ]
+  },
+  {
+    "Name": "BattleUIHide",
+    "Values": [
+      {
+        "DisplayName": "0: Visible in Battle UI",
+        "Value": "0"
+      },
+      {
+        "DisplayName": "1: Hidden in Battle UI",
+        "Value": "1"
+      }
+    ]
+  },
+  {
+    "Name": "Consume",
+    "Values": [
+      {
+        "DisplayName": "0: Not consumed on use",
+        "Value": "0"
+      },
+      {
+        "DisplayName": "1: Consumed on use",
+        "Value": "1"
+      }
+    ]
+  },
+  {
+    "Name": "OperUse",
+    "Values": [
+      {
+        "DisplayName": "0: Cannot be used",
+        "Value": "0"
+      },
+      {
+        "DisplayName": "1: Can be used",
+        "Value": "1"
+      }
+    ]
+  },
+  {
+    "Name": "OperEquip",
+    "Values": [
+      {
+        "DisplayName": "0: Cannot be equipped",
+        "Value": "0"
+      },
+      {
+        "DisplayName": "1: Can be equipped",
+        "Value": "1"
+      }
+    ]
+  },
+  {
+    "Name": "AutoUse",
+    "Values": [
+      {
+        "DisplayName": "0: Manual use",
+        "Value": "0"
+      },
+      {
+        "DisplayName": "1: Auto use",
+        "Value": "1"
+      }
+    ]
+  },
+  {
+    "Name": "UseIgnoreGrade",
+    "Values": [
+      {
+        "DisplayName": "0: Respect grade requirement",
+        "Value": "0"
+      },
+      {
+        "DisplayName": "1: Ignore grade requirement",
+        "Value": "1"
+      }
+    ]
+  },
+  {
+    "Name": "NoUseTogether",
+    "Values": [
+      {
+        "DisplayName": "0: Can use together",
+        "Value": "0"
+      },
+      {
+        "DisplayName": "1: Cannot use together",
+        "Value": "1"
+      }
+    ]
+  },
+  {
+    "Name": "MultiUse",
+    "Values": [
+      {
+        "DisplayName": "0: Single use only",
+        "Value": "0"
+      },
+      {
+        "DisplayName": "1: Can be used multiple times",
+        "Value": "1"
+      }
+    ]
+  },
+  {
+    "Name": "Lasting",
+    "Values": [
+      {
+        "DisplayName": "0: Temporary effect",
+        "Value": "0"
+      },
+      {
+        "DisplayName": "1: Lasting effect",
+        "Value": "1"
+      }
+    ]
+  },
+  {
+    "Name": "IsUse",
+    "Values": [
+      {
+        "DisplayName": "0: Cannot be used",
+        "Value": "0"
+      },
+      {
+        "DisplayName": "1: Can be used",
+        "Value": "1"
+      }
+    ]
+  },
+  {
+    "Name": "IsGive",
+    "Values": [
+      {
+        "DisplayName": "0: Cannot be given",
+        "Value": "0"
+      },
+      {
+        "DisplayName": "1: Can be given",
+        "Value": "1"
+      }
+    ]
+  },
+  {
+    "Name": "BasType",
+    "Values": [
+      {
+        "DisplayName": "All Any",
+        "Value": "basAllAny"
+      },
+      {
+        "DisplayName": "Blade",
+        "Value": "basBlade"
+      },
+      {
+        "DisplayName": "Spear",
+        "Value": "basSpear"
+      },
+      {
+        "DisplayName": "Sword",
+        "Value": "basSword"
+      },
+      {
+        "DisplayName": "Fist",
+        "Value": "basFist"
+      },
+      {
+        "DisplayName": "Palm",
+        "Value": "basPalm"
+      },
+      {
+        "DisplayName": "Finger",
+        "Value": "basFinger"
+      },
+      {
+        "DisplayName": "Fire",
+        "Value": "basFire"
+      },
+      {
+        "DisplayName": "Froze",
+        "Value": "basFroze"
+      },
+      {
+        "DisplayName": "Thunder",
+        "Value": "basThunder"
+      },
+      {
+        "DisplayName": "Wind",
+        "Value": "basWind"
+      },
+      {
+        "DisplayName": "Earth",
+        "Value": "basEarth"
+      },
+      {
+        "DisplayName": "Wood",
+        "Value": "basWood"
+      }
+    ]
+  },
+  {
+    "Name": "Hide",
+    "Values": [
+      {
+        "DisplayName": "0: Visible",
+        "Value": "0"
+      },
+      {
+        "DisplayName": "1: Hidden",
+        "Value": "1"
+      }
+    ]
+  },
+  {
+    "Name": "PlayerShow",
+    "Values": [
+      {
+        "DisplayName": "0: Not shown to player",
+        "Value": "0"
+      },
+      {
+        "DisplayName": "1: Shown to player",
+        "Value": "1"
+      }
+    ]
+  },
+  {
+    "Name": "NpcShow",
+    "Values": [
+      {
+        "DisplayName": "0: Not shown to NPC",
+        "Value": "0"
+      },
+      {
+        "DisplayName": "1: Shown to NPC",
+        "Value": "1"
+      }
+    ]
+  },
+  {
+    "Name": "IsOverlay",
+    "Values": [
+      {
+        "DisplayName": "0: Cannot stack",
+        "Value": "0"
+      },
+      {
+        "DisplayName": "1: Can stack",
+        "Value": "1"
+      }
+    ]
+  },
+  {
+    "Name": "Drop",
+    "Values": [
+      {
+        "DisplayName": "0: Cannot drop",
+        "Value": "0"
+      },
+      {
+        "DisplayName": "1: Can drop",
+        "Value": "1"
+      }
+    ]
+  },
+  {
+    "Name": "DieDrop",
+    "Values": [
+      {
+        "DisplayName": "0: No drop on death",
+        "Value": "0"
+      },
+      {
+        "DisplayName": "1: Drop on death",
+        "Value": "1"
+      }
+    ]
+  },
+  {
+    "Name": "Auction",
+    "Values": [
+      {
+        "DisplayName": "0: Cannot auction",
+        "Value": "0"
+      },
+      {
+        "DisplayName": "1: Can auction",
+        "Value": "1"
+      }
+    ]
+  },
+  {
+    "Name": "IsMultiDrop",
+    "Values": [
+      {
+        "DisplayName": "0: Single drop only",
+        "Value": "0"
+      },
+      {
+        "DisplayName": "1: Can drop multiple",
+        "Value": "1"
+      }
+    ]
+  },
+  {
+    "Name": "CostHide",
+    "Values": [
+      {
+        "DisplayName": "0: Show cost",
+        "Value": "0"
+      },
+      {
+        "DisplayName": "1: Hide cost",
+        "Value": "1"
+      }
+    ]
+  },
+  {
+    "Name": "PillEffectType",
+    "Values": [
+      {
+        "DisplayName": "101: Use Item",
+        "Value": "101"
+      },
+      {
+        "DisplayName": "102: Cast Item",
+        "Value": "102"
+      },
+      {
+        "DisplayName": "201: Normal Item",
+        "Value": "201"
+      },
+      {
+        "DisplayName": "301: Breakthrough Item",
+        "Value": "301"
+      },
+      {
+        "DisplayName": "302: Escape Item",
+        "Value": "302"
+      },
+      {
+        "DisplayName": "401: Hobby Item",
+        "Value": "401"
+      },
+      {
+        "DisplayName": "501: Battle Debuff Item",
+        "Value": "501"
+      }
+    ]
+  },
+  {
+    "Name": "HerbalEffectTypes",
+    "Values": [
+      {
+        "DisplayName": "1: Type1",
+        "Value": "1"
+      },
+      {
+        "DisplayName": "2: Type2",
+        "Value": "2"
+      },
+      {
+        "DisplayName": "3: ArtifactShapeMaterial",
+        "Value": "3"
+      },
+      {
+        "DisplayName": "4: ArtifactSprite",
+        "Value": "4"
+      }
+    ]
+  },
+  {
+    "Name": "HobbyTypes",
+    "Values": [
+      {
+        "DisplayName": "201: Hobby 201",
+        "Value": "201"
+      },
+      {
+        "DisplayName": "202: Hobby 202",
+        "Value": "202"
+      },
+      {
+        "DisplayName": "203: Hobby 203",
+        "Value": "203"
+      },
+      {
+        "DisplayName": "204: Hobby 204",
+        "Value": "204"
+      },
+      {
+        "DisplayName": "205: Hobby 205",
+        "Value": "205"
+      },
+      {
+        "DisplayName": "209: Hobby 209",
+        "Value": "209"
+      },
+      {
+        "DisplayName": "210: Hobby 210",
+        "Value": "210"
+      },
+      {
+        "DisplayName": "211: Hobby 211",
+        "Value": "211"
+      },
+      {
+        "DisplayName": "212: Hobby 212",
+        "Value": "212"
+      },
+      {
+        "DisplayName": "213: Hobby 213",
+        "Value": "213"
+      }
+    ]
+  },
+  {
+    "Name": "Areas",
+    "Values": [
+      {
+        "DisplayName": "1: Bai Yuan",
+        "Value": "1"
+      },
+      {
+        "DisplayName": "2: Yong Ning",
+        "Value": "2"
+      },
+      {
+        "DisplayName": "3: Lei Ze",
+        "Value": "3"
+      },
+      {
+        "DisplayName": "4: Hua Feng",
+        "Value": "4"
+      },
+      {
+        "DisplayName": "5: Hundred Thousand Hills",
+        "Value": "5"
+      },
+      {
+        "DisplayName": "6: Yun Mo",
+        "Value": "6"
+      },
+      {
+        "DisplayName": "7: Everfrost",
+        "Value": "7"
+      },
+      {
+        "DisplayName": "8: Mu Xian",
+        "Value": "8"
+      },
+      {
+        "DisplayName": "9: Wayward Desert",
+        "Value": "9"
+      },
+      {
+        "DisplayName": "10: Chi You",
         "Value": "10"
       }
     ]

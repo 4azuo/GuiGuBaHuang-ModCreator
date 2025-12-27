@@ -97,9 +97,9 @@
           "DramaDialogue.npcLeft",
           "DramaDialogue.npcRight",
           "DramaDialogue.speaker",
-          "DramaDialogue.backgroud",
-          "DramaDialogue.soundsBg",
-          "DramaDialogue.soundsEffect",
+          "DramaDialogue.backgroud::@texture/fortuious@",
+          "DramaDialogue.soundsBg::@sounds/bg@",
+          "DramaDialogue.soundsEffect::@sounds/effect@",
           "DramaDialogue.title",
           "DramaDialogue.dialogue::[LocalText.key]",
           "DramaDialogue.openFunction",
@@ -170,7 +170,7 @@
           "ItemPill.operUse",
           "ItemPill.operEquip",
           "ItemPill.autoUse",
-          "ItemPill.effectValue",
+          "ItemPill.effectValue::[RoleEffect.id]",
           "ItemPill.basType",
           "ItemPill.basRequire",
           "ItemPill.grade",
@@ -186,6 +186,24 @@
           "ItemPill.battleUIHide",
           "ItemPill.consume"
         ]
+      },
+      {
+        "FileName": "RoleEffect.json",
+        "FrozenColumns": 1,
+        "Elements": [
+          "RoleEffect.id",
+          "RoleEffect1.effectType",
+          "RoleEffect1.value"
+        ]
+      },
+      {
+        "FileName": "RoleEffect.json",
+        "FrozenColumns": 1,
+        "Elements": [
+          "RoleEffect.id",
+          "RoleEffect2.effectType[Disabled]",
+          "RoleEffect2.value[RefDocs:=ModRoleEffectType3.json]"
+        ]
       }
     ]
   },
@@ -198,10 +216,10 @@
         "FrozenColumns": 1,
         "Elements": [
           "ItemHorse.id",
-          "ItemHorse.effectValue",
+          "ItemHorse.effectValue::[RoleEffect.id]",
           "ItemHorse.feature",
-          "ItemHorse.model",
-          "ItemHorse.mapMoveSounds",
+          "ItemHorse.model::@unknown@",
+          "ItemHorse.mapMoveSounds::@unknown@",
           "ItemHorse.desc::[LocalText.key]",
           "ItemHorse.grade"
         ]
@@ -213,6 +231,24 @@
           "LocalText.id",
           "LocalText.key::item_horse_desc_{ItemHorse.id}",
           "LocalText.en"
+        ]
+      },
+      {
+        "FileName": "RoleEffect.json",
+        "FrozenColumns": 1,
+        "Elements": [
+          "RoleEffect.id",
+          "RoleEffect1.effectType",
+          "RoleEffect1.value"
+        ]
+      },
+      {
+        "FileName": "RoleEffect.json",
+        "FrozenColumns": 1,
+        "Elements": [
+          "RoleEffect.id",
+          "RoleEffect2.effectType[Disabled]",
+          "RoleEffect2.value[RefDocs:=ModRoleEffectType3.json]"
         ]
       }
     ]
@@ -227,7 +263,25 @@
         "Elements": [
           "ItemHerbal.id",
           "ItemHerbal.effectType",
-          "ItemHerbal.effectValue"
+          "ItemHerbal.effectValue::[RoleEffect.id]"
+        ]
+      },
+      {
+        "FileName": "RoleEffect.json",
+        "FrozenColumns": 1,
+        "Elements": [
+          "RoleEffect.id",
+          "RoleEffect1.effectType",
+          "RoleEffect1.value"
+        ]
+      },
+      {
+        "FileName": "RoleEffect.json",
+        "FrozenColumns": 1,
+        "Elements": [
+          "RoleEffect.id",
+          "RoleEffect2.effectType[Disabled]",
+          "RoleEffect2.value[RefDocs:=ModRoleEffectType3.json]"
         ]
       }
     ]
@@ -258,10 +312,28 @@
         "FrozenColumns": 1,
         "Elements": [
           "ItemHobby.id",
-          "ItemHobby.effectValue",
+          "ItemHobby.effectValue::[RoleEffect.id]",
           "ItemHobby.hobbyID",
           "ItemHobby.level",
           "ItemHobby.lasting"
+        ]
+      },
+      {
+        "FileName": "RoleEffect.json",
+        "FrozenColumns": 1,
+        "Elements": [
+          "RoleEffect.id",
+          "RoleEffect1.effectType",
+          "RoleEffect1.value"
+        ]
+      },
+      {
+        "FileName": "RoleEffect.json",
+        "FrozenColumns": 1,
+        "Elements": [
+          "RoleEffect.id",
+          "RoleEffect2.effectType[Disabled]",
+          "RoleEffect2.value[RefDocs:=ModRoleEffectType3.json]"
         ]
       }
     ]
@@ -283,79 +355,6 @@
     ]
   },
   {
-    "Name": "Item Lotus Seed",
-    "Description": "Create lotus seed items with class properties",
-    "Files": [
-      {
-        "FileName": "ItemLotusSeed.json",
-        "FrozenColumns": 1,
-        "Elements": [
-          "ItemLotusSeed.id",
-          "ItemLotusSeed.className",
-          "ItemLotusSeed.useType",
-          "ItemLotusSeed.isUse",
-          "ItemLotusSeed.addLuck",
-          "ItemLotusSeed.effectValue",
-          "ItemLotusSeed.isGive",
-          "ItemLotusSeed.addProp",
-          "ItemLotusSeed.weight"
-        ]
-      }
-    ]
-  },
-  {
-    "Name": "Item Chest Drops",
-    "Description": "Create chest drop configurations",
-    "Files": [
-      {
-        "FileName": "ItemChestDrops.json",
-        "FrozenColumns": 1,
-        "Elements": [
-          "ItemChestDrops.id",
-          "ItemChestDrops.dropID",
-          "ItemChestDrops.itemID",
-          "ItemChestDrops.number",
-          "ItemChestDrops.weight"
-        ]
-      }
-    ]
-  },
-  {
-    "Name": "Item Treasure Map",
-    "Description": "Create treasure map items with locations",
-    "Files": [
-      {
-        "FileName": "ItemTreasureMap.json",
-        "FrozenColumns": 1,
-        "Elements": [
-          "ItemTreasureMap.id",
-          "ItemTreasureMap.eventID",
-          "ItemTreasureMap.pointType",
-          "ItemTreasureMap.pointValues",
-          "ItemTreasureMap.cost"
-        ]
-      }
-    ]
-  },
-  {
-    "Name": "Item Map Search",
-    "Description": "Create map search items for exploration",
-    "Files": [
-      {
-        "FileName": "ItemMapSearch.json",
-        "FrozenColumns": 1,
-        "Elements": [
-          "ItemMapSearch.id",
-          "ItemMapSearch.areaID",
-          "ItemMapSearch.range",
-          "ItemMapSearch.type",
-          "ItemMapSearch.value",
-          "ItemMapSearch.searchEventID"
-        ]
-      }
-    ]
-  },
-  {
     "Name": "Item Transfer",
     "Description": "Create transfer items for teleportation",
     "Files": [
@@ -364,39 +363,8 @@
         "FrozenColumns": 1,
         "Elements": [
           "ItemTransfer.id",
-          "ItemTransfer.effectType",
+          "ItemTransfer.effectType[Disabled]",
           "ItemTransfer.area"
-        ]
-      }
-    ]
-  },
-  {
-    "Name": "Item Gloom",
-    "Description": "Create gloom items with drama triggers",
-    "Files": [
-      {
-        "FileName": "ItemGloom.json",
-        "FrozenColumns": 1,
-        "Elements": [
-          "ItemGloom.id",
-          "ItemGloom.condition",
-          "ItemGloom.function",
-          "ItemGloom.failFunction"
-        ]
-      }
-    ]
-  },
-  {
-    "Name": "Item Fate",
-    "Description": "Create fate items for grade modification",
-    "Files": [
-      {
-        "FileName": "ItemFate.json",
-        "FrozenColumns": 1,
-        "Elements": [
-          "ItemFate.id",
-          "ItemFate.modifyGrade",
-          "ItemFate.requireGrade"
         ]
       }
     ]
@@ -425,7 +393,7 @@
         "FrozenColumns": 1,
         "Elements": [
           "ItemSoulDevourSword.id",
-          "ItemSoulDevourSword.level",
+          "ItemSoulDevourSword.level[RefDocs:=ItemSoulDevourSword.json]",
           "ItemSoulDevourSword.needExp"
         ]
       }

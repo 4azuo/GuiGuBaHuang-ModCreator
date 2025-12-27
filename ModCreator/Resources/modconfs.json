@@ -530,12 +530,13 @@
   {
     "FileName": "DramaOptions.json",
     "Name": "DramaOptions.costHide",
-    "Type": "textbox",
+    "Type": "combo",
     "Label": "Cost Hide",
-    "Description": "Hide cost flag",
+    "Description": "Hide cost flag (1=yes, 0=no)",
     "VarType": "String",
     "Shown": true,
     "Required": false,
+    "Options": [ "CostHide" ],
     "Value": "0"
   },
   {
@@ -602,7 +603,7 @@
     "VarType": "Int32",
     "Shown": true,
     "Required": true,
-    "Options": [ "ItemGrades" ],
+    "Options": [ "Grades" ],
     "Value": "1"
   },
   {
@@ -642,12 +643,13 @@
   {
     "FileName": "ItemSkill.json",
     "Name": "ItemSkill.auction",
-    "Type": "textbox",
+    "Type": "combo",
     "Label": "Auction",
     "Description": "Auction price",
     "VarType": "Int32",
     "Shown": true,
     "Required": false,
+    "Options": [ "Auction" ],
     "Value": "0"
   },
   {
@@ -698,44 +700,48 @@
   {
     "FileName": "ItemPill.json",
     "Name": "ItemPill.effectType",
-    "Type": "textbox",
+    "Type": "combo",
     "Label": "Effect Type",
     "Description": "Type of effect",
     "VarType": "Int32",
     "Shown": true,
-    "Required": true
+    "Required": true,
+    "Options": [ "PillEffectType" ]
   },
   {
     "FileName": "ItemPill.json",
     "Name": "ItemPill.operUse",
-    "Type": "textbox",
+    "Type": "combo",
     "Label": "Oper Use",
     "Description": "Can be used (1=yes, 0=no)",
     "VarType": "Int32",
     "Shown": true,
     "Required": false,
+    "Options": [ "OperUse" ],
     "Value": "1"
   },
   {
     "FileName": "ItemPill.json",
     "Name": "ItemPill.operEquip",
-    "Type": "textbox",
+    "Type": "combo",
     "Label": "Oper Equip",
     "Description": "Can be equipped (1=yes, 0=no)",
     "VarType": "Int32",
     "Shown": true,
     "Required": false,
+    "Options": [ "OperEquip" ],
     "Value": "1"
   },
   {
     "FileName": "ItemPill.json",
     "Name": "ItemPill.autoUse",
-    "Type": "textbox",
+    "Type": "combo",
     "Label": "Auto Use",
     "Description": "Auto use flag (1=yes, 0=no)",
     "VarType": "Int32",
     "Shown": true,
     "Required": false,
+    "Options": [ "AutoUse" ],
     "Value": "0"
   },
   {
@@ -751,12 +757,13 @@
   {
     "FileName": "ItemPill.json",
     "Name": "ItemPill.basType",
-    "Type": "textbox",
+    "Type": "combo",
     "Label": "Base Type",
     "Description": "Base type identifier",
     "VarType": "Int32",
     "Shown": true,
     "Required": false,
+    "Options": [ "BasType" ],
     "Value": "0"
   },
   {
@@ -779,7 +786,7 @@
     "VarType": "Int32",
     "Shown": true,
     "Required": true,
-    "Options": [ "ItemGrades" ],
+    "Options": [ "Grades" ],
     "Value": "1"
   },
   {
@@ -796,12 +803,13 @@
   {
     "FileName": "ItemPill.json",
     "Name": "ItemPill.useIgnoreGrade",
-    "Type": "textbox",
+    "Type": "combo",
     "Label": "Use Ignore Grade",
     "Description": "Ignore grade requirement (1=yes, 0=no)",
     "VarType": "Int32",
     "Shown": true,
     "Required": false,
+    "Options": [ "UseIgnoreGrade" ],
     "Value": "0"
   },
   {
@@ -862,12 +870,13 @@
   {
     "FileName": "ItemPill.json",
     "Name": "ItemPill.noUseTogether",
-    "Type": "textbox",
+    "Type": "combo",
     "Label": "No Use Together",
     "Description": "Cannot use together flag (1=yes, 0=no)",
     "VarType": "Int32",
     "Shown": true,
     "Required": false,
+    "Options": [ "NoUseTogether" ],
     "Value": "0"
   },
   {
@@ -884,23 +893,25 @@
   {
     "FileName": "ItemPill.json",
     "Name": "ItemPill.battleUIHide",
-    "Type": "textbox",
+    "Type": "combo",
     "Label": "Battle UI Hide",
     "Description": "Hide in battle UI (1=yes, 0=no)",
     "VarType": "Int32",
     "Shown": true,
     "Required": false,
+    "Options": [ "BattleUIHide" ],
     "Value": "0"
   },
   {
     "FileName": "ItemPill.json",
     "Name": "ItemPill.consume",
-    "Type": "textbox",
+    "Type": "combo",
     "Label": "Consume",
     "Description": "Consume on use (1=yes, 0=no)",
     "VarType": "Int32",
     "Shown": true,
     "Required": false,
+    "Options": [ "Consume" ],
     "Value": "1"
   },
   {
@@ -976,7 +987,7 @@
     "VarType": "Int32",
     "Shown": true,
     "Required": true,
-    "Options": [ "ItemGrades" ],
+    "Options": [ "Grades" ],
     "Value": "1"
   },
   {
@@ -994,12 +1005,14 @@
   {
     "FileName": "ItemHerbal.json",
     "Name": "ItemHerbal.effectType",
-    "Type": "textbox",
+    "Type": "combo",
     "Label": "Effect Type",
     "Description": "Type of effect",
     "VarType": "Int32",
     "Shown": true,
-    "Required": true
+    "Required": true,
+    "Options": [ "HerbalEffectTypes" ],
+    "Value": "1"
   },
   {
     "FileName": "ItemHerbal.json",
@@ -1047,23 +1060,25 @@
   {
     "FileName": "ItemFunction.json",
     "Name": "ItemFunction.consume",
-    "Type": "textbox",
+    "Type": "combo",
     "Label": "Consume",
     "Description": "Consume on use (1=yes, 0=no)",
     "VarType": "Int32",
     "Shown": true,
     "Required": false,
+    "Options": [ "Consume" ],
     "Value": "1"
   },
   {
     "FileName": "ItemFunction.json",
     "Name": "ItemFunction.multiUse",
-    "Type": "textbox",
+    "Type": "combo",
     "Label": "Multi Use",
     "Description": "Can be used multiple times (1=yes, 0=no)",
     "VarType": "Int32",
     "Shown": true,
     "Required": false,
+    "Options": [ "MultiUse" ],
     "Value": "0"
   },
   {
@@ -1091,12 +1106,13 @@
   {
     "FileName": "ItemHobby.json",
     "Name": "ItemHobby.hobbyID",
-    "Type": "textbox",
+    "Type": "combo",
     "Label": "Hobby ID",
     "Description": "Hobby type identifier",
     "VarType": "Int32",
     "Shown": true,
-    "Required": true
+    "Required": true,
+    "Options": [ "HobbyTypes" ]
   },
   {
     "FileName": "ItemHobby.json",
@@ -1113,12 +1129,13 @@
   {
     "FileName": "ItemHobby.json",
     "Name": "ItemHobby.lasting",
-    "Type": "textbox",
+    "Type": "combo",
     "Label": "Lasting",
     "Description": "Lasting effect flag (1=yes, 0=no)",
     "VarType": "Int32",
     "Shown": true,
     "Required": false,
+    "Options": [ "Lasting" ],
     "Value": "1"
   },
   {
@@ -1141,6 +1158,32 @@
     "Description": "Effects (format: stat_value|stat_value)",
     "VarType": "String",
     "Shown": true,
+    "Required": true,
+    "Separator": "_",
+    "SubProperties": [
+      "ItemRarityMaterials.effect.property",
+      "ItemRarityMaterials.effect.value"
+    ]
+  },
+  {
+    "FileName": "RoleEffect.json",
+    "Name": "ItemRarityMaterials.effect.property",
+    "Type": "combo",
+    "Label": "Property",
+    "Description": "Property name (e.g., luck, atk, def)",
+    "VarType": "String",
+    "Shown": true,
+    "Required": true,
+    "Options": [ "EffectProperties" ]
+  },
+  {
+    "FileName": "RoleEffect.json",
+    "Name": "ItemRarityMaterials.effect.value",
+    "Type": "textbox",
+    "Label": "Value",
+    "Description": "Value for the effect",
+    "VarType": "String",
+    "Shown": true,
     "Required": true
   },
   {
@@ -1152,7 +1195,7 @@
     "VarType": "Int32",
     "Shown": true,
     "Required": true,
-    "Options": [ "ItemGrades" ],
+    "Options": [ "Grades" ],
     "Value": "1"
   },
   {
@@ -1165,278 +1208,6 @@
     "Shown": true,
     "Required": false,
     "Value": "50"
-  },
-  {
-    "FileName": "ItemLotusSeed.json",
-    "Name": "ItemLotusSeed.id",
-    "Type": "textbox",
-    "Label": "Lotus Seed ID",
-    "Description": "Unique identifier for the lotus seed",
-    "VarType": "Int32",
-    "Shown": true,
-    "Required": true,
-    "Unique": true,
-    "ModEventParam": true
-  },
-  {
-    "FileName": "ItemLotusSeed.json",
-    "Name": "ItemLotusSeed.className",
-    "Type": "textbox",
-    "Label": "Class Name",
-    "Description": "Class identifier",
-    "VarType": "Int32",
-    "Shown": true,
-    "Required": true
-  },
-  {
-    "FileName": "ItemLotusSeed.json",
-    "Name": "ItemLotusSeed.useType",
-    "Type": "textbox",
-    "Label": "Use Type",
-    "Description": "Usage type",
-    "VarType": "Int32",
-    "Shown": true,
-    "Required": false,
-    "Value": "1"
-  },
-  {
-    "FileName": "ItemLotusSeed.json",
-    "Name": "ItemLotusSeed.isUse",
-    "Type": "textbox",
-    "Label": "Is Use",
-    "Description": "Can be used (1=yes, 0=no)",
-    "VarType": "Int32",
-    "Shown": true,
-    "Required": false,
-    "Value": "1"
-  },
-  {
-    "FileName": "ItemLotusSeed.json",
-    "Name": "ItemLotusSeed.addLuck",
-    "Type": "textbox",
-    "Label": "Add Luck",
-    "Description": "Luck value to add",
-    "VarType": "Int32",
-    "Shown": true,
-    "Required": false,
-    "Value": "0"
-  },
-  {
-    "FileName": "ItemLotusSeed.json",
-    "Name": "ItemLotusSeed.effectValue",
-    "Type": "textbox",
-    "Label": "Effect Value",
-    "Description": "Effect value",
-    "VarType": "Int32",
-    "Shown": true,
-    "Required": false,
-    "Value": "0"
-  },
-  {
-    "FileName": "ItemLotusSeed.json",
-    "Name": "ItemLotusSeed.isGive",
-    "Type": "textbox",
-    "Label": "Is Give",
-    "Description": "Can be given (1=yes, 0=no)",
-    "VarType": "Int32",
-    "Shown": true,
-    "Required": false,
-    "Value": "0"
-  },
-  {
-    "FileName": "ItemLotusSeed.json",
-    "Name": "ItemLotusSeed.addProp",
-    "Type": "textbox",
-    "Label": "Add Prop",
-    "Description": "Additional property ID",
-    "VarType": "Int32",
-    "Shown": true,
-    "Required": false,
-    "Value": "0"
-  },
-  {
-    "FileName": "ItemLotusSeed.json",
-    "Name": "ItemLotusSeed.weight",
-    "Type": "textbox",
-    "Label": "Weight",
-    "Description": "Weight for random selection",
-    "VarType": "Int32",
-    "Shown": true,
-    "Required": false,
-    "Value": "0"
-  },
-  {
-    "FileName": "ItemChestDrops.json",
-    "Name": "ItemChestDrops.id",
-    "Type": "textbox",
-    "Label": "Drop Entry ID",
-    "Description": "Unique identifier for the drop entry",
-    "VarType": "Int32",
-    "Shown": true,
-    "Required": true,
-    "Unique": true,
-    "ModEventParam": true
-  },
-  {
-    "FileName": "ItemChestDrops.json",
-    "Name": "ItemChestDrops.dropID",
-    "Type": "textbox",
-    "Label": "Drop ID",
-    "Description": "Drop group identifier",
-    "VarType": "Int32",
-    "Shown": true,
-    "Required": true
-  },
-  {
-    "FileName": "ItemChestDrops.json",
-    "Name": "ItemChestDrops.itemID",
-    "Type": "textbox",
-    "Label": "Item ID",
-    "Description": "Item identifier to drop",
-    "VarType": "Int32",
-    "Shown": true,
-    "Required": true
-  },
-  {
-    "FileName": "ItemChestDrops.json",
-    "Name": "ItemChestDrops.number",
-    "Type": "textbox",
-    "Label": "Number",
-    "Description": "Number of items to drop",
-    "VarType": "Int32",
-    "Shown": true,
-    "Required": false,
-    "Value": "1"
-  },
-  {
-    "FileName": "ItemChestDrops.json",
-    "Name": "ItemChestDrops.weight",
-    "Type": "textbox",
-    "Label": "Weight",
-    "Description": "Drop weight for random selection",
-    "VarType": "Int32",
-    "Shown": true,
-    "Required": false,
-    "Value": "1000"
-  },
-  {
-    "FileName": "ItemTreasureMap.json",
-    "Name": "ItemTreasureMap.id",
-    "Type": "textbox",
-    "Label": "Treasure Map ID",
-    "Description": "Unique identifier for the treasure map",
-    "VarType": "Int32",
-    "Shown": true,
-    "Required": true,
-    "Unique": true,
-    "ModEventParam": true
-  },
-  {
-    "FileName": "ItemTreasureMap.json",
-    "Name": "ItemTreasureMap.eventID",
-    "Type": "textbox",
-    "Label": "Event ID",
-    "Description": "Event identifier for treasure location",
-    "VarType": "Int32",
-    "Shown": true,
-    "Required": true
-  },
-  {
-    "FileName": "ItemTreasureMap.json",
-    "Name": "ItemTreasureMap.pointType",
-    "Type": "textbox",
-    "Label": "Point Type",
-    "Description": "Type of point marker",
-    "VarType": "Int32",
-    "Shown": true,
-    "Required": false,
-    "Value": "1"
-  },
-  {
-    "FileName": "ItemTreasureMap.json",
-    "Name": "ItemTreasureMap.pointValues",
-    "Type": "textbox",
-    "Label": "Point Values",
-    "Description": "Point coordinates (format: x_y_z)",
-    "VarType": "String",
-    "Shown": true,
-    "Required": true
-  },
-  {
-    "FileName": "ItemTreasureMap.json",
-    "Name": "ItemTreasureMap.cost",
-    "Type": "textbox",
-    "Label": "Cost",
-    "Description": "Cost to use map (format: type_itemID)",
-    "VarType": "String",
-    "Shown": true,
-    "Required": false,
-    "Value": "0"
-  },
-  {
-    "FileName": "ItemMapSearch.json",
-    "Name": "ItemMapSearch.id",
-    "Type": "textbox",
-    "Label": "Map Search ID",
-    "Description": "Unique identifier for the map search item",
-    "VarType": "Int32",
-    "Shown": true,
-    "Required": true,
-    "Unique": true,
-    "ModEventParam": true
-  },
-  {
-    "FileName": "ItemMapSearch.json",
-    "Name": "ItemMapSearch.areaID",
-    "Type": "textbox",
-    "Label": "Area ID",
-    "Description": "Area identifiers (separated by |)",
-    "VarType": "String",
-    "Shown": true,
-    "Required": true
-  },
-  {
-    "FileName": "ItemMapSearch.json",
-    "Name": "ItemMapSearch.range",
-    "Type": "textbox",
-    "Label": "Range",
-    "Description": "Search range",
-    "VarType": "Int32",
-    "Shown": true,
-    "Required": false,
-    "Value": "40"
-  },
-  {
-    "FileName": "ItemMapSearch.json",
-    "Name": "ItemMapSearch.type",
-    "Type": "textbox",
-    "Label": "Type",
-    "Description": "Search type",
-    "VarType": "Int32",
-    "Shown": true,
-    "Required": false,
-    "Value": "1"
-  },
-  {
-    "FileName": "ItemMapSearch.json",
-    "Name": "ItemMapSearch.value",
-    "Type": "textbox",
-    "Label": "Value",
-    "Description": "Search values (separated by |)",
-    "VarType": "String",
-    "Shown": true,
-    "Required": true
-  },
-  {
-    "FileName": "ItemMapSearch.json",
-    "Name": "ItemMapSearch.searchEventID",
-    "Type": "textbox",
-    "Label": "Search Event ID",
-    "Description": "Event IDs for search (separated by |)",
-    "VarType": "String",
-    "Shown": true,
-    "Required": false,
-    "Value": "0"
   },
   {
     "FileName": "ItemTransfer.json",
@@ -1464,90 +1235,13 @@
   {
     "FileName": "ItemTransfer.json",
     "Name": "ItemTransfer.area",
-    "Type": "textbox",
+    "Type": "multicombo",
     "Label": "Area",
     "Description": "Target area identifiers (separated by |)",
     "VarType": "String",
     "Shown": true,
-    "Required": true
-  },
-  {
-    "FileName": "ItemGloom.json",
-    "Name": "ItemGloom.id",
-    "Type": "textbox",
-    "Label": "Gloom ID",
-    "Description": "Unique identifier for the gloom item",
-    "VarType": "Int32",
-    "Shown": true,
     "Required": true,
-    "Unique": true,
-    "ModEventParam": true
-  },
-  {
-    "FileName": "ItemGloom.json",
-    "Name": "ItemGloom.condition",
-    "Type": "textbox",
-    "Label": "Condition",
-    "Description": "Condition for the function to execute",
-    "VarType": "String",
-    "Shown": true,
-    "Required": false,
-    "Value": "0"
-  },
-  {
-    "FileName": "ItemGloom.json",
-    "Name": "ItemGloom.function",
-    "Type": "textbox",
-    "Label": "Function",
-    "Description": "Function to execute on success",
-    "VarType": "String",
-    "Shown": true,
-    "Required": true
-  },
-  {
-    "FileName": "ItemGloom.json",
-    "Name": "ItemGloom.failFunction",
-    "Type": "textbox",
-    "Label": "Fail Function",
-    "Description": "Function to execute on failure",
-    "VarType": "String",
-    "Shown": true,
-    "Required": false,
-    "Value": "0"
-  },
-  {
-    "FileName": "ItemFate.json",
-    "Name": "ItemFate.id",
-    "Type": "textbox",
-    "Label": "Fate ID",
-    "Description": "Unique identifier for the fate item",
-    "VarType": "Int32",
-    "Shown": true,
-    "Required": true,
-    "Unique": true,
-    "ModEventParam": true
-  },
-  {
-    "FileName": "ItemFate.json",
-    "Name": "ItemFate.modifyGrade",
-    "Type": "textbox",
-    "Label": "Modify Grade",
-    "Description": "Grades that can be modified (separated by |)",
-    "VarType": "String",
-    "Shown": true,
-    "Required": true
-  },
-  {
-    "FileName": "ItemFate.json",
-    "Name": "ItemFate.requireGrade",
-    "Type": "combo",
-    "Label": "Require Grade",
-    "Description": "Required grade to use this item",
-    "VarType": "Int32",
-    "Shown": true,
-    "Required": true,
-    "Options": [ "ItemGrades" ],
-    "Value": "1"
+    "Options": [ "Areas" ]
   },
   {
     "FileName": "ItemPillSpRequire.json",
@@ -1570,7 +1264,7 @@
     "VarType": "Int32",
     "Shown": true,
     "Required": true,
-    "Options": [ "ItemGrades" ],
+    "Options": [ "Grades" ],
     "Value": "1"
   },
   {
@@ -1598,14 +1292,12 @@
   {
     "FileName": "ItemSoulDevourSword.json",
     "Name": "ItemSoulDevourSword.level",
-    "Type": "combo",
+    "Type": "textbox",
     "Label": "Level",
     "Description": "Soul devour sword level",
     "VarType": "Int32",
     "Shown": true,
-    "Required": true,
-    "Options": [ "Levels" ],
-    "Value": "1"
+    "Required": true
   },
   {
     "FileName": "ItemSoulDevourSword.json",
@@ -1638,5 +1330,199 @@
     "VarType": "String",
     "Shown": true,
     "Required": true
+  },
+  {
+    "FileName": "ItemProps.json",
+    "Name": "ItemProps.id",
+    "Type": "textbox",
+    "Label": "Item ID",
+    "Description": "Unique identifier for the item",
+    "VarType": "String",
+    "Shown": true,
+    "Required": true,
+    "Unique": true,
+    "ModEventParam": true
+  },
+  {
+    "FileName": "ItemProps.json",
+    "Name": "ItemProps.name",
+    "Type": "textbox",
+    "Label": "Name",
+    "Description": "Item name key (links to LocalText)",
+    "VarType": "String",
+    "Shown": true,
+    "Required": true
+  },
+  {
+    "FileName": "ItemProps.json",
+    "Name": "ItemProps.type",
+    "Type": "textbox",
+    "Label": "Type",
+    "Description": "Item type identifier",
+    "VarType": "String",
+    "Shown": true,
+    "Required": true,
+    "Value": "0"
+  },
+  {
+    "FileName": "ItemProps.json",
+    "Name": "ItemProps.className",
+    "Type": "textbox",
+    "Label": "Class Name",
+    "Description": "Class identifier",
+    "VarType": "String",
+    "Shown": true,
+    "Required": false,
+    "Value": "0"
+  },
+  {
+    "FileName": "ItemProps.json",
+    "Name": "ItemProps.hide",
+    "Type": "combo",
+    "Label": "Hide",
+    "Description": "Hide item (1=yes, 0=no)",
+    "VarType": "String",
+    "Shown": true,
+    "Required": false,
+    "Options": [ "Hide" ],
+    "Value": "0"
+  },
+  {
+    "FileName": "ItemProps.json",
+    "Name": "ItemProps.playerShow",
+    "Type": "combo",
+    "Label": "Player Show",
+    "Description": "Show to player (1=yes, 0=no)",
+    "VarType": "String",
+    "Shown": true,
+    "Required": false,
+    "Options": [ "PlayerShow" ],
+    "Value": "1"
+  },
+  {
+    "FileName": "ItemProps.json",
+    "Name": "ItemProps.npcShow",
+    "Type": "combo",
+    "Label": "NPC Show",
+    "Description": "Show to NPC (1=yes, 0=no)",
+    "VarType": "String",
+    "Shown": true,
+    "Required": false,
+    "Options": [ "NpcShow" ],
+    "Value": "1"
+  },
+  {
+    "FileName": "ItemProps.json",
+    "Name": "ItemProps.icon",
+    "Type": "textbox",
+    "Label": "Icon",
+    "Description": "Icon identifier",
+    "VarType": "String",
+    "Shown": true,
+    "Required": true
+  },
+  {
+    "FileName": "ItemProps.json",
+    "Name": "ItemProps.level",
+    "Type": "combo",
+    "Label": "Level",
+    "Description": "Item level",
+    "VarType": "String",
+    "Shown": true,
+    "Required": true,
+    "Options": [ "Levels" ],
+    "Value": "1"
+  },
+  {
+    "FileName": "ItemProps.json",
+    "Name": "ItemProps.desc",
+    "Type": "textbox",
+    "Label": "Description",
+    "Description": "Item description key (links to LocalText)",
+    "VarType": "String",
+    "Shown": true,
+    "Required": true
+  },
+  {
+    "FileName": "ItemProps.json",
+    "Name": "ItemProps.isOverlay",
+    "Type": "combo",
+    "Label": "Is Overlay",
+    "Description": "Can stack items (1=yes, 0=no)",
+    "VarType": "String",
+    "Shown": true,
+    "Required": false,
+    "Options": [ "IsOverlay" ],
+    "Value": "1"
+  },
+  {
+    "FileName": "ItemProps.json",
+    "Name": "ItemProps.drop",
+    "Type": "combo",
+    "Label": "Drop",
+    "Description": "Can drop (1=yes, 0=no)",
+    "VarType": "String",
+    "Shown": true,
+    "Required": false,
+    "Options": [ "Drop" ],
+    "Value": "1"
+  },
+  {
+    "FileName": "ItemProps.json",
+    "Name": "ItemProps.dieDrop",
+    "Type": "combo",
+    "Label": "Die Drop",
+    "Description": "Drop on death (1=yes, 0=no)",
+    "VarType": "String",
+    "Shown": true,
+    "Required": false,
+    "Options": [ "DieDrop" ],
+    "Value": "1"
+  },
+  {
+    "FileName": "ItemProps.json",
+    "Name": "ItemProps.auction",
+    "Type": "combo",
+    "Label": "Auction",
+    "Description": "Can auction (1=yes, 0=no)",
+    "VarType": "String",
+    "Shown": true,
+    "Required": false,
+    "Options": [ "Auction" ],
+    "Value": "0"
+  },
+  {
+    "FileName": "ItemProps.json",
+    "Name": "ItemProps.sale",
+    "Type": "textbox",
+    "Label": "Sale",
+    "Description": "Sale price",
+    "VarType": "String",
+    "Shown": true,
+    "Required": false,
+    "Value": "-1"
+  },
+  {
+    "FileName": "ItemProps.json",
+    "Name": "ItemProps.worth",
+    "Type": "textbox",
+    "Label": "Worth",
+    "Description": "Item worth value",
+    "VarType": "String",
+    "Shown": true,
+    "Required": false,
+    "Value": "0"
+  },
+  {
+    "FileName": "ItemProps.json",
+    "Name": "ItemProps.isMultiDrop",
+    "Type": "combo",
+    "Label": "Is Multi Drop",
+    "Description": "Can drop multiple times (1=yes, 0=no)",
+    "VarType": "String",
+    "Shown": true,
+    "Required": false,
+    "Options": [ "IsMultiDrop" ],
+    "Value": "1"
   }
 ]
