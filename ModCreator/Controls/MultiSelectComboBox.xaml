@@ -9,76 +9,110 @@
         <converter:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <converter:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
+
         <ControlTemplate x:Key="MultiSelectComboBoxTemplate" TargetType="ComboBox">
             <Grid>
                 <ToggleButton x:Name="ToggleButton"
-                              Focusable="False"
-                              IsEnabled="{Binding ElementName=Root, Path=IsReadOnly, Converter={StaticResource InverseBooleanConverter}}"
-                              IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                              ClickMode="Press">
+                                Focusable="False"
+                                IsEnabled="{Binding ElementName=Root, Path=IsReadOnly, Converter={StaticResource InverseBooleanConverter}}"
+                                IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                ClickMode="Press" 
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}">
                     <ToggleButton.Template>
                         <ControlTemplate TargetType="ToggleButton">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition Width="20"/>
-                                </Grid.ColumnDefinitions>
-                                <Border x:Name="Border" Grid.ColumnSpan="2"
-                                        BorderThickness="1"
-                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                        Background="{TemplateBinding Background}"/>
-                                <Path x:Name="Arrow" Grid.Column="1"
-                                      Fill="{TemplateBinding Foreground}"
-                                      HorizontalAlignment="Center"
-                                      VerticalAlignment="Center"
-                                      Data="M 0 0 L 4 4 L 8 0 Z"/>
-                            </Grid>
+                            <Border Name="Border" 
+                                        Background="{TemplateBinding Background}" 
+                                        BorderBrush="{TemplateBinding BorderBrush}" 
+                                        BorderThickness="{TemplateBinding BorderThickness}" 
+                                        CornerRadius="3">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="20"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Path Grid.Column="1" 
+                                            HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center" 
+                                            Data="M 0 0 L 4 4 L 8 0 Z" 
+                                            Fill="#FF666666"/>
+                                </Grid>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource PrimaryColor}"/>
+                                </Trigger>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource PrimaryColor}"/>
+                                </Trigger>
+                                <DataTrigger Binding="{Binding ElementName=Root, Path=IsReadOnly}" Value="True">
+                                    <Setter TargetName="Border" Property="Background" Value="#FFF0F0F0"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ElementName=Root, Path=IsEditable}" Value="False">
+                                    <Setter TargetName="Border" Property="Background" Value="#FFF0F0F0"/>
+                                </DataTrigger>
+                            </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </ToggleButton.Template>
                 </ToggleButton>
-                
+
                 <TextBox x:Name="PART_EditableTextBox"
-                         Text="{Binding ElementName=Root, Path=DisplayText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         IsReadOnly="{Binding ElementName=Root, Path=IsEditable, Converter={StaticResource InverseBooleanConverter}}"
-                         Background="Transparent"
-                         BorderThickness="0"
-                         Margin="3,3,23,3"
-                         VerticalContentAlignment="Center"
-                         Visibility="{Binding ElementName=Root, Path=IsEditable, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                
+                            Text="{Binding ElementName=Root, Path=DisplayText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            IsReadOnly="{Binding ElementName=Root, Path=IsEditable, Converter={StaticResource InverseBooleanConverter}}"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Margin="4,0,24,0"
+                            VerticalContentAlignment="Center"
+                            FontSize="12"
+                            Visibility="{Binding ElementName=Root, Path=IsEditable, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
                 <TextBlock Text="{Binding ElementName=Root, Path=DisplayText}"
-                           VerticalAlignment="Center"
-                           Margin="3,3,23,3"
-                           IsHitTestVisible="False"
-                           Visibility="{Binding ElementName=Root, Path=IsEditable, Converter={StaticResource InverseBoolToVisibilityConverter}}"/>
-                
+                            VerticalAlignment="Center"
+                            Margin="4,0,24,0"
+                            FontSize="12"
+                            IsHitTestVisible="False"
+                            Visibility="{Binding ElementName=Root, Path=IsEditable, Converter={StaticResource InverseBoolToVisibilityConverter}}"/>
+
                 <Popup x:Name="PART_Popup"
-                       Placement="Bottom"
-                       IsOpen="{TemplateBinding IsDropDownOpen}"
-                       AllowsTransparency="True"
-                       Focusable="False"
-                       PopupAnimation="Slide">
+                        Placement="Bottom"
+                        IsOpen="{TemplateBinding IsDropDownOpen}"
+                        AllowsTransparency="True"
+                        Focusable="False"
+                        PopupAnimation="Slide">
                     <Grid x:Name="DropDown"
-                          SnapsToDevicePixels="True"
-                          MinWidth="{TemplateBinding ActualWidth}"
-                          MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                            SnapsToDevicePixels="True"
+                            MinWidth="{TemplateBinding ActualWidth}"
+                            MaxHeight="{TemplateBinding MaxDropDownHeight}">
                         <Border x:Name="DropDownBorder"
-                                BorderThickness="1"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                Background="{TemplateBinding Background}">
-                            <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                    Background="White"
+                                    BorderThickness="1"
+                                    BorderBrush="#FFCCCCCC"
+                                    CornerRadius="3">
+                            <ScrollViewer Margin="4,2,4,2" SnapsToDevicePixels="True">
                                 <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained"/>
                             </ScrollViewer>
                         </Border>
                     </Grid>
                 </Popup>
             </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter TargetName="ToggleButton" Property="Background" Value="#FFF0F0F0"/>
+                    <Setter TargetName="PART_EditableTextBox" Property="Foreground" Value="#FF666666"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
         </ControlTemplate>
     </UserControl.Resources>
     
     <ComboBox x:Name="MainComboBox"
               Template="{StaticResource MultiSelectComboBoxTemplate}"
-              BorderThickness="1"
+              Height="30"
+              Padding="4,0"
+              BorderBrush="#FFCCCCCC"
+              BorderThickness="{Binding ElementName=Root, Path=BorderThickness}"
+              Background="{Binding ElementName=Root, Path=Background}"
+              FontSize="12"
               VerticalContentAlignment="Center"
               DropDownOpened="MainComboBox_DropDownOpened"
               IsEnabled="{Binding ElementName=Root, Path=IsEnabled}">
@@ -86,6 +120,9 @@
             <DataTemplate>
                 <CheckBox Content="{Binding DisplayName}" 
                           IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                          Height="28"
+                          Padding="4,0"
+                          VerticalContentAlignment="Center"
                           Click="CheckBox_Click"/>
             </DataTemplate>
         </ComboBox.ItemTemplate>
