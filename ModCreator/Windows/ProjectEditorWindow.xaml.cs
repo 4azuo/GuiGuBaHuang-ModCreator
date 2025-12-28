@@ -77,7 +77,7 @@ namespace ModCreator.Windows
                 WindowData.IsLoadingGameResources = true;
                 WindowData.StatusMessage = "Loading game resources...";
                 
-                var business = Businesses.ProjectEditorWindowTab3GameResourceBusiness.Instance;
+                var business = ProjectEditorWindowTab3GameResourceBusiness.Instance;
                 var gameFolderPath = Constants.BaseGameResourcesDir;
                 
                 var (success, errors) = business.InitializeResourcesAsync();

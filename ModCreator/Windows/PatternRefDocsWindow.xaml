@@ -7,7 +7,7 @@
         xmlns:localData="clr-namespace:ModCreator.WindowData"
         xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
         mc:Ignorable="d"
-        Title="Reference Documentation" Height="700" Width="900" WindowStartupLocation="CenterOwner"
+        Title="Reference Documentation" Height="900" Width="900" WindowStartupLocation="CenterOwner"
         Icon="/Resources/app-icon.png" FontFamily="Segoe UI">
     <Grid>
         <Grid.RowDefinitions>

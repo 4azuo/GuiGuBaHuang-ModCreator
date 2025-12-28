@@ -12,7 +12,7 @@ namespace ModCreator.Windows
         public GameResourceType ResourceType { get; set; }
         public string SelectedResourcePath { get; private set; }
 
-        public override void OnLoad()
+        public override async void OnLoad()
         {
             base.OnLoad();
 

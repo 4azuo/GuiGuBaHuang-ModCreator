@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
@@ -45,6 +46,9 @@ namespace ModCreator.WindowData
         public bool IsCustomResource { get; set; }
         public bool IsResourceImage { get; set; }
         public bool IsResourceAudio { get; set; }
+        
+        // Loading state for game resources
+        public bool IsLoadingGameResources { get; set; }
 
         public override void OnLoad()
         {
@@ -54,17 +58,8 @@ namespace ModCreator.WindowData
             // Load custom resources from Tab3 ImageItems
             CustomResourceItems = FilterCustomResourcesByFolder(Editor.WindowData.ImageItems, ResourceFolder);
 
-            // Load game resources from Tab3
-            var itemSources = ResourceType switch
-            {
-                GameResourceType.Texture2D => Editor.WindowData.Texture2DItems,
-                GameResourceType.Sprite => Editor.WindowData.SpriteItems,
-                GameResourceType.TextAsset => Editor.WindowData.TextAssetItems,
-                GameResourceType.AudioClip => Editor.WindowData.AudioClipItems,
-                GameResourceType.Other => Editor.WindowData.OtherItems,
-                _ => new ObservableCollection<GameResourceItem>()
-            };
-            GameResourceItems = FilterGameResourcesByFolder(itemSources, ResourceFolder);
+            // Load game resources
+            LoadGameResourcesAsync();
 
             // Set status message
             StatusMessage = "Ready";
@@ -153,6 +148,41 @@ namespace ModCreator.WindowData
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Load game resources asynchronously
+        /// </summary>
+        public async Task LoadGameResourcesAsync()
+        {
+            try
+            {
+                IsLoadingGameResources = true;
+
+                while (Editor.WindowData.IsLoadingGameResources)
+                    await Task.Delay(1000);
+
+                // Load game resources from Tab3
+                var itemSources = ResourceType switch
+                {
+                    GameResourceType.Texture2D => Editor.WindowData.Texture2DItems,
+                    GameResourceType.Sprite => Editor.WindowData.SpriteItems,
+                    GameResourceType.TextAsset => Editor.WindowData.TextAssetItems,
+                    GameResourceType.AudioClip => Editor.WindowData.AudioClipItems,
+                    GameResourceType.Other => Editor.WindowData.OtherItems,
+                    _ => []
+                };
+                GameResourceItems = FilterGameResourcesByFolder(itemSources, ResourceFolder);
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Error loading game resources: {ex.Message}";
+                DebugHelper.Log($"Failed to load game resources: {ex}");
+            }
+            finally
+            {
+                IsLoadingGameResources = false;
+            }
         }
 
         public void OnGameResourceItemSelected(object obj, PropertyInfo prop, object before = null, object after = null)
