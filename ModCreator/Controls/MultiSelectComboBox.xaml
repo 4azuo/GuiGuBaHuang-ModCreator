@@ -58,7 +58,7 @@
                 </ToggleButton>
 
                 <TextBox x:Name="PART_EditableTextBox"
-                            Text="{Binding ElementName=Root, Path=DisplayText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Text="{Binding ElementName=Root, Path=DisplayText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                             IsReadOnly="{Binding ElementName=Root, Path=IsEditable, Converter={StaticResource InverseBooleanConverter}}"
                             Background="Transparent"
                             BorderThickness="0"

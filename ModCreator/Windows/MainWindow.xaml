@@ -47,14 +47,14 @@
             <!-- Projects List -->
             <GroupBox Grid.Column="0" Header="{x:Static helper:MainWindowText.ProjectList}">
                 <Grid>
-                    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
                     <!-- Toolbar -->
                     <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
                         <Button Content="{x:Static helper:MainWindowText.CreateNewProject}" Style="{StaticResource PrimaryButton}" Click="CreateProject_Click" Foreground="White"/>
                         <Button Content="{x:Static helper:MainWindowText.RefreshList}" Style="{StaticResource ActionButton}" Click="RefreshProjects_Click"/>
                         <Button Content="Check Duplicate IDs" Style="{StaticResource ActionButton}" Click="CheckDuplicateIds_Click" Background="#FFFF9800" Foreground="White" Margin="40,0"/>
                         <TextBlock Grid.Column="0" Text="{x:Static helper:MainWindowText.SearchIcon}" FontSize="16" VerticalAlignment="Center" Margin="20,0,10,0"/>
-                        <TextBox Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="300" Margin="5" VerticalContentAlignment="Center" Style="{StaticResource SearchTextBox}" helper:TextBoxHelper.Placeholder="{x:Static helper:MainWindowText.SearchPlaceholder}"/>
+                        <TextBox Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Width="300" Margin="5" VerticalContentAlignment="Center" Style="{StaticResource SearchTextBox}" helper:TextBoxHelper.Placeholder="{x:Static helper:MainWindowText.SearchPlaceholder}"/>
                     </StackPanel>
                     <!-- Project List -->
                     <DataGrid Grid.Row="1" ItemsSource="{Binding FilteredProjects, Mode=OneWay}" SelectedItem="{Binding SelectedProject, Mode=TwoWay}" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" CanUserResizeRows="False" RowHeight="40" ColumnHeaderHeight="48" AlternatingRowBackground="#FFF5F5F5" MouseDoubleClick="ProjectList_DoubleClick" CellStyle="{StaticResource ProjectGridCellStyle}" ColumnHeaderStyle="{StaticResource ProjectGridHeaderStyle}">
@@ -128,6 +128,18 @@
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
                     </DataGrid>
+                    <!-- ModLib Installation Note -->
+                    <Border Grid.Row="2" Background="#FFF9F9F9" BorderBrush="#FF2E5090" BorderThickness="1" CornerRadius="3" Padding="10" Margin="0,10,0,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="ℹ️" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <TextBlock TextWrapping="Wrap" VerticalAlignment="Center">
+                                <Run Text="Note: " FontWeight="Bold" Foreground="#FF2E5090"/>
+                                <Run Text="To ensure the best support for mods created by this tool, please install " Foreground="#FF333333"/>
+                                <Run Text="📦 ModLib (Project ID: 3385996759)" FontWeight="Bold" Foreground="#FF2E5090"/>
+                                <Run Text=" into your game first. Mods created with this tool depend on ModLib framework for full functionality." Foreground="#FF333333"/>
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
                 </Grid>
             </GroupBox>
             <!-- Project Details & Actions -->

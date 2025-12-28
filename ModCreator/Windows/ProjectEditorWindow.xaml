@@ -34,7 +34,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0">
-                    <TextBox Text="{Binding Project.ProjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="20" FontWeight="Bold" Foreground="White" Background="Transparent" BorderBrush="White" BorderThickness="0,0,0,1" Padding="5,2" CaretBrush="White"/>
+                    <TextBox Text="{Binding Project.ProjectName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" FontSize="20" FontWeight="Bold" Foreground="White" Background="Transparent" BorderBrush="White" BorderThickness="0,0,0,1" Padding="5,2" CaretBrush="White"/>
                     <TextBlock FontSize="12" Foreground="#FFCCCCCC" Margin="0,5,0,0">
                         <Run Text="{x:Static helper:ProjectEditorWindowText.ProjectIdLabel}"/> <Run Text="{Binding Project.ProjectId, Mode=OneWay}" FontWeight="SemiBold"/>
                     </TextBlock>
@@ -92,9 +92,9 @@
                         <TextBlock Grid.Column="0" Grid.Row="2" Text="{x:Static helper:ProjectEditorWindowText.ProjectDetailsPath}" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource LabelText}" Margin="0,0,15,0"/>
                         <TextBox Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="5" Text="{Binding Project.ProjectPath}" IsReadOnly="True" Background="#FFF5F5F5" BorderBrush="#FFCCCCCC" BorderThickness="1" Height="32" VerticalContentAlignment="Center" FontSize="13" Padding="8,0"/>
                         <TextBlock Grid.Column="0" Grid.Row="6" Text="{x:Static helper:ProjectEditorWindowText.ProjectDetailsDescription}" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource LabelText}" Margin="0,8,15,0"/>
-                        <TextBox Grid.Column="2" Grid.Row="6" Grid.ColumnSpan="5" Text="{Binding Project.Description, UpdateSourceTrigger=PropertyChanged}" Height="100" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" BorderBrush="#FFCCCCCC" BorderThickness="1" FontSize="13" Padding="8" VerticalContentAlignment="Top"/>
+                        <TextBox Grid.Column="2" Grid.Row="6" Grid.ColumnSpan="5" Text="{Binding Project.Description, UpdateSourceTrigger=LostFocus}" Height="100" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" BorderBrush="#FFCCCCCC" BorderThickness="1" FontSize="13" Padding="8" VerticalContentAlignment="Top"/>
                         <TextBlock Grid.Column="0" Grid.Row="4" Text="{x:Static helper:ProjectEditorWindowText.ProjectDetailsAuthor}" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource LabelText}" Margin="0,0,15,0"/>
-                        <TextBox Grid.Column="2" Grid.Row="4" Grid.ColumnSpan="5" Text="{Binding Project.Author, UpdateSourceTrigger=PropertyChanged}" Height="32" VerticalContentAlignment="Center" BorderBrush="#FFCCCCCC" BorderThickness="1" FontSize="13" Padding="8,0"/>
+                        <TextBox Grid.Column="2" Grid.Row="4" Grid.ColumnSpan="5" Text="{Binding Project.Author, UpdateSourceTrigger=LostFocus}" Height="32" VerticalContentAlignment="Center" BorderBrush="#FFCCCCCC" BorderThickness="1" FontSize="13" Padding="8,0"/>
                         <TextBlock Grid.Column="0" Grid.Row="8" Text="{x:Static helper:ProjectEditorWindowText.HeaderCreated}" FontWeight="SemiBold" FontSize="13" Style="{StaticResource LabelText}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                         <TextBox Grid.Column="2" Grid.Row="8" Text="{Binding Project.CreatedDate, StringFormat=\{0:yyyy-MM-dd HH:mm:ss\}}" IsReadOnly="True" Background="#FFF5F5F5" BorderBrush="#FFCCCCCC" BorderThickness="1" Height="32" VerticalContentAlignment="Center" FontSize="13" Padding="8,0"/>
                         <TextBlock Grid.Column="4" Grid.Row="8" Text="{x:Static helper:ProjectEditorWindowText.HeaderModified}" FontWeight="SemiBold" FontSize="13" Style="{StaticResource LabelText}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
@@ -210,7 +210,7 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" x:Name="txtGameResourceSearch" Text="{Binding GameResourceSearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SearchTextBox}" helper:TextBoxHelper.Placeholder="Search resources..." Margin="0,0,0,10"/>
+                    <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" x:Name="txtGameResourceSearch" Text="{Binding GameResourceSearchText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Style="{StaticResource SearchTextBox}" helper:TextBoxHelper.Placeholder="Search resources..." Margin="0,0,0,10"/>
                     <GroupBox Grid.Column="0" Grid.Row="1" Header="{x:Static helper:ProjectEditorWindowText.ImageFiles}" Margin="0,0,5,0">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -376,8 +376,8 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTextColumn Header="{x:Static helper:ProjectEditorWindowText.VariableName}" Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="200" MinWidth="100"/>
-                            <DataGridComboBoxColumn Width="150" MinWidth="100" SelectedValueBinding="{Binding Type, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                            <DataGridTextColumn Header="{x:Static helper:ProjectEditorWindowText.VariableName}" Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Width="200" MinWidth="100"/>
+                            <DataGridComboBoxColumn Width="150" MinWidth="100" SelectedValueBinding="{Binding Type, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
                                 <DataGridComboBoxColumn.Header>
                                     <TextBlock Text="{x:Static helper:ProjectEditorWindowText.VariableType}" ToolTip="{x:Static helper:ProjectEditorWindowText.VariableTypeTooltip}"/>
                                 </DataGridComboBoxColumn.Header>
@@ -400,8 +400,8 @@
                                     </Style>
                                 </DataGridComboBoxColumn.EditingElementStyle>
                             </DataGridComboBoxColumn>
-                            <DataGridTextColumn Header="{x:Static helper:ProjectEditorWindowText.VariableValue}" Binding="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="250" MinWidth="150"/>
-                            <DataGridTextColumn Header="{x:Static helper:ProjectEditorWindowText.VariableDescription}" Binding="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="*" MinWidth="200"/>
+                            <DataGridTextColumn Header="{x:Static helper:ProjectEditorWindowText.VariableValue}" Binding="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Width="250" MinWidth="150"/>
+                            <DataGridTextColumn Header="{x:Static helper:ProjectEditorWindowText.VariableDescription}" Binding="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Width="*" MinWidth="200"/>
                             <DataGridTemplateColumn Header="{x:Static helper:ProjectEditorWindowText.HeaderActions}" Width="110">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -497,7 +497,7 @@
                                                     <TextBlock Grid.Column="0" Text="{x:Static helper:ProjectEditorWindowText.Mode}" VerticalAlignment="Center" Margin="0,0,10,0"/>
                                                     <ComboBox Grid.Column="1" x:Name="cmbEventMode" ItemsSource="{Binding Source={StaticResource EventModeEnum}}" SelectedItem="{Binding SelectedModEvent.EventMode, Mode=TwoWay}" Height="28" SelectionChanged="EventMode_SelectionChanged"/>
                                                     <TextBlock Grid.Column="2" x:Name="txtOrderIndexLabel" Text="{x:Static helper:ProjectEditorWindowText.OrderIndex}" VerticalAlignment="Center" Margin="10,0,10,0"/>
-                                                    <TextBox Grid.Column="3" x:Name="txtOrderIndex" Text="{Binding SelectedModEvent.OrderIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="28" VerticalContentAlignment="Center" PreviewTextInput="NumberOnly_PreviewTextInput"/>
+                                                    <TextBox Grid.Column="3" x:Name="txtOrderIndex" Text="{Binding SelectedModEvent.OrderIndex, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Height="28" VerticalContentAlignment="Center" PreviewTextInput="NumberOnly_PreviewTextInput"/>
                                                     <TextBlock Grid.Column="4" x:Name="txtCacheTypeLabel" Text="{x:Static helper:ProjectEditorWindowText.CacheType}" VerticalAlignment="Center" Margin="10,0,10,0"/>
                                                     <ComboBox Grid.Column="5" x:Name="cmbCacheType" ItemsSource="{Binding CacheTypes}" SelectedItem="{Binding SelectedModEvent.CacheType, Mode=TwoWay}" Height="28"/>
                                                     <TextBlock Grid.Column="6" x:Name="txtWorkOnLabel" Text="{x:Static helper:ProjectEditorWindowText.WorkOn}" VerticalAlignment="Center" Margin="10,0,10,0"/>

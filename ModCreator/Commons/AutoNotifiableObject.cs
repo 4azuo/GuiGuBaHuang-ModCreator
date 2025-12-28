@@ -1,5 +1,4 @@
 using ModCreator.Attributes;
-using ModCreator.Helpers;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -15,6 +14,8 @@ namespace ModCreator.Commons
     public abstract class AutoNotifiableObject : INotifyPropertyChanged, IDisposable
     {
         public const int AUTO_NOTIFY_PERIOD = 200;
+        public const int AUTO_NOTIFY_AMOUNT = 8;
+        private int AutoNotifyIndex = 0;
 
         public static readonly JsonSerializerSettings JsonSettings = new()
         {
@@ -28,8 +29,6 @@ namespace ModCreator.Commons
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public AutoNotifiableObject ParentObject { get; set; }
-
         [JsonIgnore, IgnoredProperty]
         public DispatcherTimer AutoUpdateTimer { get; } = new(TimeSpan.FromMilliseconds(AUTO_NOTIFY_PERIOD), DispatcherPriority.Background, (s, e) => { }, Application.Current.Dispatcher);
 
@@ -38,6 +37,9 @@ namespace ModCreator.Commons
 
         [JsonIgnore, IgnoredProperty]
         public Dictionary<PropertyInfo, object> PropertyOldValues { get; } = [];
+
+        [JsonIgnore, IgnoredProperty]
+        public Dictionary<PropertyInfo, dynamic> UpdatingProperties { get; } = [];
 
         [JsonIgnore, IgnoredProperty]
         public bool IsPaused { get; private set; } = false;
@@ -81,14 +83,40 @@ namespace ModCreator.Commons
             }
             if (!ListPassiveNotifyProperties[GetType()].Contains(prop))
             {
-                NotifyPassives(postprocess, prop);
+                NotifyPassives(prop);
             }
         }
 
-        public void NotifyPassives(bool postprocess = true, PropertyInfo triggerProp = null)
+        public void NotifyUpdates()
+        {
+            var now = DateTime.Now;
+            foreach (var prop in UpdatingProperties.Keys.ToArray())
+            {
+                dynamic updatedValue;
+                if (UpdatingProperties.TryGetValue(prop, out updatedValue) && (now - updatedValue.Timestamp).TotalMilliseconds > AUTO_NOTIFY_PERIOD)
+                {
+                    OnPropertyChanged(prop, updatedValue.OldValue, updatedValue.NewValue);
+                    UpdatingProperties.Remove(prop);
+                }
+            }
+        }
+
+        public void NotifyPassives(PropertyInfo triggerProp = null)
         {
             foreach (var prop in ListPassiveNotifyProperties[GetType()])
             {
+                if (prop == triggerProp)
+                    continue;
+                OnPropertyChanged(prop, PropertyOldValues.ContainsKey(prop) ? PropertyOldValues[prop] : null, prop.GetValue(this));
+            }
+        }
+
+        private void NotifyPassivesLimit(PropertyInfo triggerProp = null)
+        {
+            var passives = ListPassiveNotifyProperties[GetType()];
+            for (int i = 0; i < AUTO_NOTIFY_AMOUNT; i++)
+            {
+                var prop = passives[AutoNotifyIndex++ % passives.Length];
                 if (prop == triggerProp)
                     continue;
                 OnPropertyChanged(prop, PropertyOldValues.ContainsKey(prop) ? PropertyOldValues[prop] : null, prop.GetValue(this));
@@ -164,6 +192,7 @@ namespace ModCreator.Commons
 
         private void AutoUpdateTimer_Tick(object sender, EventArgs e)
         {
+            NotifyUpdates();
             NotifyPassives();
         }
 

@@ -55,7 +55,22 @@ namespace ModCreator.Attributes
         public void OnExit()
         {
             if (_instance == null || _property == null) return;
-            _instance.OnPropertyChanged(_property, _oldValue, _newValue);
+            if (AutoNotifiableObject.ListPassiveNotifyProperties[_instance.GetType()].Contains(_property))
+            {
+                _instance.OnPropertyChanged(_property, _oldValue, _newValue);
+            }
+            else
+            {
+                if (_instance.UpdatingProperties.ContainsKey(_property))
+                {
+                    var lastUpdate = _instance.UpdatingProperties[_property];
+                    _instance.UpdatingProperties[_property] = new { lastUpdate.OldValue, NewValue = _newValue, Timestamp = DateTime.Now };
+                }
+                else
+                {
+                    _instance.UpdatingProperties[_property] = new { OldValue = _oldValue, NewValue = _newValue, Timestamp = DateTime.Now };
+                }
+            }
         }
 
         public void OnException(Exception exception)

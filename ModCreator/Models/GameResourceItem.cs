@@ -8,8 +8,7 @@ namespace ModCreator.Models
     /// <summary>
     /// Game resource item for TreeView display
     /// </summary>
-    [SetterAspect]
-    public class GameResourceItem : AutoNotifiableObject
+    public class GameResourceItem
     {
         /// <summary>
         /// Display name
