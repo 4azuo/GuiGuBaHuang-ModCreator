@@ -18,7 +18,6 @@ namespace ModCreator.Windows
         private GlobalVariablesDragDropBusiness _globalVariablesDragDropBusiness;
         private Tab4CodeGenerationBusiness _tab4CodeGenerationBusiness;
 
-        [SupportedOSPlatform("windows6.1")]
         private void SetupVariablesSourceBinding()
         {
             var editor = this.FindName("txtVariablesSource") as ICSharpCode.AvalonEdit.TextEditor;
@@ -31,7 +30,6 @@ namespace ModCreator.Windows
             LoadVariablesSourceFile();
         }
 
-        [SupportedOSPlatform("windows6.1")]
         private void LoadVariablesSourceFile()
         {
             if (WindowData?.Project == null) return;

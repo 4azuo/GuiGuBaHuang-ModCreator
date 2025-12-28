@@ -3,9 +3,7 @@ using ModCreator.Models;
 using ModCreator.WindowData;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace ModCreator.Windows
@@ -22,28 +20,25 @@ namespace ModCreator.Windows
         public bool ShowOptionalValueSection { get; set; } = false;
         public string OptionalValue { get; set; }
 
-        public override ModEventItemSelectWindowData InitData(CancelEventArgs e)
+        public override void OnLoad()
         {
-            var data = new ModEventItemSelectWindowData();
+            base.OnLoad();
 
-            Loaded += (s, ev) =>
-            {
-                _windowCount++;
-                var offset = (_windowCount - 1) * OffsetIncrement;
-                Left += offset;
-                Top += offset;
+            _windowCount++;
+            var offset = (_windowCount - 1) * OffsetIncrement;
+            Left += offset;
+            Top += offset;
 
-                data.ShowOptionalValueSection = ShowOptionalValueSection;
-                data.OptionalValue = OptionalValue;
-                data.Initialize(ItemType, ReturnType, SelectedItemName, ParameterValues);
-            };
+            WindowData.ShowOptionalValueSection = ShowOptionalValueSection;
+            WindowData.OptionalValue = OptionalValue;
+            WindowData.Initialize(ItemType, ReturnType, SelectedItemName, ParameterValues);
+        }
 
-            Closed += (s, e) =>
-            {
-                _windowCount--;
-                if (_windowCount < 0) _windowCount = 0;
-            };
-            return data;
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+            _windowCount--;
+            if (_windowCount < 0) _windowCount = 0;
         }
 
         private void OK_Click(object sender, RoutedEventArgs e)

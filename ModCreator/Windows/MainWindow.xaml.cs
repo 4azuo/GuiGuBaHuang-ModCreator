@@ -1,22 +1,23 @@
 using ModCreator.Helpers;
-using ModCreator.Models;
 using ModCreator.WindowData;
 using ModCreator.Windows;
 using System;
-using System.ComponentModel;
-using System.Runtime.Versioning;
+using System.Security.Principal;
 using System.Windows;
 using System.Windows.Forms;
 using MessageBox = System.Windows.MessageBox;
 
 namespace ModCreator
 {
-    public partial class MainWindow : Windows.CWindow<MainWindowData>
+    public partial class MainWindow : CWindow<MainWindowData>
     {
-        public override MainWindowData InitData(CancelEventArgs e)
+        public override void OnLoad()
         {
-            var data = new MainWindowData();
-            
+            base.OnLoad();
+
+            // Check if running as administrator
+            CheckAdminPrivileges();
+
             // Load workplace path
             var savedPath = Properties.Settings.Default.WorkplacePath;
             if (string.IsNullOrWhiteSpace(savedPath))
@@ -32,12 +33,65 @@ namespace ModCreator
                 Properties.Settings.Default.WorkplacePath = savedPath;
                 Properties.Settings.Default.Save();
             }
-            
-            data.WorkplacePath = savedPath;
-            data.OnLoad();
-            data.StatusMessage = MessageHelper.Get("Messages.Info.Ready");
-            
-            return data;
+
+            WindowData.WorkplacePath = savedPath;
+            WindowData.StatusMessage = MessageHelper.Get("Messages.Info.Ready");
+        }
+
+        private void CheckAdminPrivileges()
+        {
+            try
+            {
+                using (WindowsIdentity identity = WindowsIdentity.GetCurrent())
+                {
+                    WindowsPrincipal principal = new WindowsPrincipal(identity);
+                    bool isAdmin = principal.IsInRole(WindowsBuiltInRole.Administrator);
+
+                    if (!isAdmin)
+                    {
+                        var result = MessageBox.Show(
+                            "ModCreator is not running with Administrator privileges.\n\n" +
+                            "Some features may not work correctly without admin rights.\n\n" +
+                            "Would you like to restart as Administrator?",
+                            "Administrator Privileges Required",
+                            MessageBoxButton.YesNo,
+                            MessageBoxImage.Warning);
+
+                        if (result == MessageBoxResult.Yes)
+                        {
+                            RestartAsAdmin();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                DebugHelper.Log($"Failed to check admin privileges: {ex.Message}");
+            }
+        }
+
+        private void RestartAsAdmin()
+        {
+            try
+            {
+                var startInfo = new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName,
+                    UseShellExecute = true,
+                    Verb = "runas"
+                };
+
+                System.Diagnostics.Process.Start(startInfo);
+                System.Windows.Application.Current.Shutdown();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Failed to restart as Administrator: {ex.Message}",
+                    "Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
         }
 
         #region Event Handlers
@@ -183,7 +237,6 @@ namespace ModCreator
             WindowData.StatusMessage = MessageHelper.Get("Messages.Success.CopyingToModExportData");
         }
 
-        [SupportedOSPlatform("windows6.1")]
         private void Publish_Click(object sender, RoutedEventArgs e)
         {
             if (WindowData.SelectedProject == null) return;
@@ -201,7 +254,6 @@ namespace ModCreator
             }
         }
 
-        [SupportedOSPlatform("windows6.1")]
         private void BrowseWorkplace_Click(object sender, RoutedEventArgs e)
         {
             using (var dialog = new FolderBrowserDialog())

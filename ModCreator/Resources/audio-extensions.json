@@ -1,0 +1,32 @@
+[
+  {
+    "Name": "WAV",
+    "Extension": ".wav",
+    "Desc": "Waveform Audio File Format - Uncompressed audio, high quality"
+  },
+  {
+    "Name": "MP3",
+    "Extension": ".mp3",
+    "Desc": "MPEG Audio Layer 3 - Lossy compression, widely supported"
+  },
+  {
+    "Name": "OGG",
+    "Extension": ".ogg",
+    "Desc": "Ogg Vorbis - Open-source lossy audio compression"
+  },
+  {
+    "Name": "WMA",
+    "Extension": ".wma",
+    "Desc": "Windows Media Audio - Microsoft's proprietary audio format"
+  },
+  {
+    "Name": "AAC",
+    "Extension": ".aac",
+    "Desc": "Advanced Audio Coding - High-quality lossy compression"
+  },
+  {
+    "Name": "FLAC",
+    "Extension": ".flac",
+    "Desc": "Free Lossless Audio Codec - Lossless compression for archival"
+  }
+]

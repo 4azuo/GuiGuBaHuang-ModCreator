@@ -31,10 +31,25 @@ namespace ModCreator.Windows
         public T WindowData { get; private set; }
 
         /// <summary>
+        /// Event: Called when window is loaded
+        /// </summary>
+        public virtual void OnLoad() { }
+
+        /// <summary>
+        /// Event: Called when window is closing
+        /// </summary>
+        public virtual void OnDestroy() { }
+
+        /// <summary>
         /// Override only when you need custom initialization logic.
         /// Base implementation creates new T() and calls WindowData.New() automatically.
         /// </summary>
-        public virtual T InitData(CancelEventArgs e) { return new T(); }
+        public virtual T InitData(CancelEventArgs e)
+        {
+            var data = new T();
+            data.New();
+            return data;
+        }
 
         /// <summary>
         /// Handles the event triggered when a window is closing.
@@ -70,12 +85,14 @@ namespace ModCreator.Windows
             
             Loaded += (s, e) =>
             {
+                OnLoad();
                 WindowData.InitWindow(this, initDataFlg);
                 DataContext = WindowData;
             };
 
             Closing += (s, e) =>
             {
+                OnDestroy();
                 ClosingWindow(s, e);
             };
         }

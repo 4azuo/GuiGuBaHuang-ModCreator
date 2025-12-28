@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace ModCreator.Helpers
 {
@@ -23,15 +24,50 @@ namespace ModCreator.Helpers
         }
 
         /// <summary>
-        /// Attempts to delete the specified folder and its contents, retrying multiple times if necessary.
+        /// Removes the read-only attribute from all files and subdirectories within the specified directory, including
+        /// its subdirectories.
         /// </summary>
-        public static bool DeleteFolderSafe(string path, int retry = 5, int delayMs = 200)
+        /// <remarks>This method recursively traverses the specified directory and sets the attributes of
+        /// all contained files and subdirectories to <see cref="FileAttributes.Normal"/>, effectively clearing the
+        /// read-only flag. Other file attributes may also be reset as a result.</remarks>
+        /// <param name="dir">The path to the root directory whose files and subdirectories will have the read-only attribute removed.
+        /// Must not be null or empty.</param>
+        public static void RemoveReadonly(string dir)
+        {
+            foreach (var file in Directory.GetFiles(dir, "*", SearchOption.AllDirectories))
+                File.SetAttributes(file, FileAttributes.Normal);
+
+            foreach (var sub in Directory.GetDirectories(dir, "*", SearchOption.AllDirectories))
+                File.SetAttributes(sub, FileAttributes.Normal);
+        }
+
+        /// <summary>
+        /// Attempts to delete the specified folder and its contents, retrying multiple times if necessary.
+        /// Moves folder to Downloads first to avoid OneDrive sync issues.
+        /// </summary>
+        public static bool DeleteFolderSafe(string path, int retry = 5, int delayMs = 1000)
         {
             if (string.IsNullOrWhiteSpace(path))
                 return false;
 
             if (!Directory.Exists(path))
                 return true;
+
+            try
+            {
+                // Move to Downloads folder to avoid OneDrive sync issues
+                var downloadsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+                var tempName = $"_deleting_{Path.GetFileName(path)}_{Guid.NewGuid().ToString("N")}";
+                var tempPath = Path.Combine(downloadsPath, tempName);
+
+                Directory.Move(path, tempPath);
+                path = tempPath;
+            }
+            catch (Exception ex)
+            {
+                DebugHelper.Log($"Failed to move folder to Downloads: {ex.Message}");
+                // If move fails, try to delete in place
+            }
 
             for (int i = 0; i < retry; i++)
             {

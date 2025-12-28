@@ -211,13 +211,11 @@ namespace ModCreator.Windows
             _modEventFileManagementBusiness?.OpenModEventFolder();
         }
 
-        [SupportedOSPlatform("windows6.1")]
         private void ToggleCodeMode_Click(object sender, RoutedEventArgs e)
         {
             _modEventFileManagementBusiness?.SwitchToCodeMode();
         }
 
-        [SupportedOSPlatform("windows6.1")]
         private void SetupEventSourceEditorBinding()
         {
             var editor = this.FindName("txtEventSourceEditor") as ICSharpCode.AvalonEdit.TextEditor;
@@ -257,7 +255,6 @@ namespace ModCreator.Windows
         }
 
         // Event mode selection changed
-        [SupportedOSPlatform("windows6.1")]
         private void EventMode_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!(sender is ComboBox comboBox) || WindowData?.SelectedModEvent == null) return;
@@ -271,7 +268,6 @@ namespace ModCreator.Windows
         }
 
         // Event editor search/replace handlers
-        [SupportedOSPlatform("windows6.1")]
         private void ReplaceInEventEditor_Click(object sender, RoutedEventArgs e)
         {
             var replacePanel = this.FindName("eventReplacePanel") as Border;
@@ -283,7 +279,6 @@ namespace ModCreator.Windows
                 (this.FindName("txtEventFindText") as TextBox)?.Focus();
         }
 
-        [SupportedOSPlatform("windows6.1")]
         private void TxtEventFindText_TextChanged(object sender, TextChangedEventArgs e)
         {
             var txtFind = sender as TextBox;
@@ -301,7 +296,6 @@ namespace ModCreator.Windows
             }
         }
 
-        [SupportedOSPlatform("windows6.1")]
         private void TxtEventFindText_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == System.Windows.Input.Key.Enter)
@@ -311,7 +305,6 @@ namespace ModCreator.Windows
             }
         }
 
-        [SupportedOSPlatform("windows6.1")]
         private void EventFindNext_Click(object sender, RoutedEventArgs e)
         {
             var editor = this.FindName("txtEventSourceEditor") as ICSharpCode.AvalonEdit.TextEditor;
@@ -337,7 +330,6 @@ namespace ModCreator.Windows
             }
         }
 
-        [SupportedOSPlatform("windows6.1")]
         private void EventReplaceOne_Click(object sender, RoutedEventArgs e)
         {
             var editor = this.FindName("txtEventSourceEditor") as ICSharpCode.AvalonEdit.TextEditor;
@@ -359,7 +351,6 @@ namespace ModCreator.Windows
             EventFindNext_Click(sender, e);
         }
 
-        [SupportedOSPlatform("windows6.1")]
         private void EventReplaceAll_Click(object sender, RoutedEventArgs e)
         {
             var editor = this.FindName("txtEventSourceEditor") as ICSharpCode.AvalonEdit.TextEditor;

@@ -31,22 +31,22 @@ namespace ModCreator.Windows
         /// </summary>
         public event EventHandler ProjectUpdated;
 
-        [SupportedOSPlatform("windows6.1")]
-        public override ProjectEditorWindowData InitData(CancelEventArgs e)
+        public override void OnLoad()
         {
-            var data = new ProjectEditorWindowData();
-            data.New();
-            
-            Loaded += ProjectEditorWindow_Loaded;
-            
-            return data;
+            base.OnLoad();
+            ProjectEditorWindow_Loaded();
         }
 
-        [SupportedOSPlatform("windows6.1")]
-        private async void ProjectEditorWindow_Loaded(object sender, RoutedEventArgs e)
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+            ProjectEditorWindow_Closed();
+        }
+
+        private async void ProjectEditorWindow_Loaded()
         {
             // Now ProjectToEdit has been set by the caller
-            if (ProjectToEdit != null && WindowData != null)
+            if (ProjectToEdit != null)
             {
                 WindowData.Project = ProjectToEdit;
 
@@ -68,15 +68,13 @@ namespace ModCreator.Windows
                 // Load game resources asynchronously
                 await LoadGameResourcesAsync();
             }
-
-            // Subscribe to Closed event to notify parent window
-            Closed += ProjectEditorWindow_Closed;
         }
 
         private async System.Threading.Tasks.Task LoadGameResourcesAsync()
         {
             try
             {
+                WindowData.IsLoadingGameResources = true;
                 WindowData.StatusMessage = "Loading game resources...";
                 
                 var business = Businesses.ProjectEditorWindowTab3GameResourceBusiness.Instance;
@@ -86,6 +84,7 @@ namespace ModCreator.Windows
                 if (!success)
                 {
                     WindowData.StatusMessage = "Failed to initialize game resources.";
+                    WindowData.IsLoadingGameResources = false;
                     return;
                 }
                 
@@ -106,6 +105,10 @@ namespace ModCreator.Windows
             {
                 WindowData.StatusMessage = $"Error loading game resources: {ex.Message}";
                 DebugHelper.Log($"Failed to load game resources: {ex}");
+            }
+            finally
+            {
+                WindowData.IsLoadingGameResources = false;
             }
         }
         
@@ -132,6 +135,12 @@ namespace ModCreator.Windows
             if (tvActions != null && WindowData != null)
             {
                 _actionsDragDropBusiness = new ActionsDragDropBusiness(tvActions, WindowData);
+            }
+
+            // Initialize ImageFiles Drag/Drop Business
+            if (WindowData != null)
+            {
+                _imageFilesDragDropBusiness = new ImageFilesDragDropBusiness(WindowData);
             }
 
             // Initialize ModEventFile Management Business
@@ -207,7 +216,7 @@ namespace ModCreator.Windows
             }
         }
 
-        private void ProjectEditorWindow_Closed(object sender, EventArgs e)
+        private void ProjectEditorWindow_Closed()
         {
             // Dispose auto-save timer
             if (_autoSaveTimer != null)
@@ -221,7 +230,6 @@ namespace ModCreator.Windows
             ProjectUpdated?.Invoke(this, EventArgs.Empty);
         }
 
-        [SupportedOSPlatform("windows6.1")]
         private void Window_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             // Get current tab
@@ -351,7 +359,6 @@ namespace ModCreator.Windows
             Close();
         }
 
-        [SupportedOSPlatform("windows6.1")]
         private void RefreshTab_Click(object sender, RoutedEventArgs e)
         {
             var tabControl = this.FindName("tabControl") as System.Windows.Controls.TabControl;
@@ -365,7 +372,7 @@ namespace ModCreator.Windows
             switch (tabControl.SelectedIndex)
             {
                 case 1: WindowData.LoadConfFiles(); WindowData.StatusMessage = MessageHelper.Get("Messages.Success.RefreshedConfFiles"); break;
-                case 2: WindowData.LoadImageFiles(); WindowData.StatusMessage = MessageHelper.Get("Messages.Success.RefreshedImageFiles"); break;
+                case 2: WindowData.LoadCustomResourceFiles(); WindowData.StatusMessage = MessageHelper.Get("Messages.Success.RefreshedImageFiles"); break;
                 case 3: WindowData.LoadGlobalVariables(); WindowData.StatusMessage = MessageHelper.Get("Messages.Success.RefreshedGlobalVariables"); break;
                 case 4: WindowData.LoadModEventFiles(); WindowData.StatusMessage = MessageHelper.Get("Messages.Success.RefreshedModEventFiles"); break;
                 default: WindowData.ReloadProjectData(); WindowData.StatusMessage = MessageHelper.Get("Messages.Info.Ready"); break;

@@ -23,5 +23,20 @@
     "Name": "GIF",
     "Extension": ".gif",
     "Desc": "Graphics Interchange Format - Supports animation and transparency"
+  },
+  {
+    "Name": "TIF",
+    "Extension": ".tif",
+    "Desc": "Tagged Image File Format - Lossless compression, widely used in professional photography"
+  },
+  {
+    "Name": "TIFF",
+    "Extension": ".tiff",
+    "Desc": "Tagged Image File Format - Lossless compression, widely used in professional photography"
+  },
+  {
+    "Name": "ICO",
+    "Extension": ".ico",
+    "Desc": "Icon File Format - Used for application icons"
   }
 ]

@@ -13,22 +13,18 @@ namespace ModCreator.Windows
         // Business logic handler
         private PatternSelectorWindowCodeGenerationBusiness _codeGenerationBusiness;
 
-        public override PatternSelectorWindowData InitData(System.ComponentModel.CancelEventArgs e)
+        public override void OnLoad()
         {
-            var data = base.InitData(e);
+            base.OnLoad();
 
             // Initialize business
-            _codeGenerationBusiness = new PatternSelectorWindowCodeGenerationBusiness(data, this);
+            _codeGenerationBusiness = new PatternSelectorWindowCodeGenerationBusiness(WindowData, this);
 
-            Loaded += (s, ev) =>
+            var projectEditorWindow = Owner as ProjectEditorWindow;
+            if (projectEditorWindow.WindowData.Project != null)
             {
-                var projectEditorWindow = Owner as ProjectEditorWindow;
-                if (projectEditorWindow.WindowData.Project != null)
-                {
-                    data.ProjectPath = projectEditorWindow.WindowData.Project.ProjectPath;
-                }
-            };
-            return data;
+                WindowData.ProjectPath = projectEditorWindow.WindowData.Project.ProjectPath;
+            }
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)
@@ -103,6 +99,36 @@ namespace ModCreator.Windows
                     {
                         MessageBox.Show($"Reference documentation file not found:\n{filePath}", "File Not Found", MessageBoxButton.OK, MessageBoxImage.Warning);
                     }
+                }
+            }
+        }
+
+        private void SelectResource_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is System.Windows.Controls.Button button && button.Tag is RowElementBinding binding)
+            {
+                // Extract ResourceType from ResourceFolder (format: Type:Folder/Folder or just Type)
+                var resourceFolder = binding.Element.ResourceFolder;
+                var parts = resourceFolder.Split(':');
+                var resourceTypeString = parts[0];
+                var folder = parts[1];
+
+                // Parse string to GameResourceType enum
+                if (!Enum.TryParse<Enums.GameResourceType>(resourceTypeString, true, out var resourceType))
+                {
+                    resourceType = Enums.GameResourceType.Other;
+                }
+
+                var resourceWindow = new PatternResSelectWindow
+                {
+                    Owner = this,
+                    ResourceType = resourceType,
+                    ResourceFolder = folder
+                };
+
+                if (resourceWindow.ShowDialog() == true)
+                {
+                    binding.XValue = resourceWindow.SelectedResourcePath;
                 }
             }
         }

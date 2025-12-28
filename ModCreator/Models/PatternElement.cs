@@ -21,8 +21,21 @@ namespace ModCreator.Models
                         return "combo";
                     if (ElementFormat.StartsWith("#") && ElementFormat.EndsWith("#"))
                         return "multicombo";
+                    if (ElementFormat.StartsWith("@") && ElementFormat.EndsWith("@"))
+                        return "resource";
                 }
                 return DefaultType;
+            }
+        }
+        public string ResourceFolder
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(ElementFormat) && ElementFormat.StartsWith("@") && ElementFormat.EndsWith("@"))
+                {
+                    return ElementFormat.Trim('@');
+                }
+                return string.Empty;
             }
         }
         public string Label { get; set; }

@@ -18,23 +18,14 @@ namespace ModCreator.WindowData
         public ObservableCollection<string> ImageFiles { get; set; } = [];
         public ObservableCollection<FileItem> ImageItems { get; set; } = [];
         public List<ImageExtension> ImageExtensions { get; set; } = ResourceHelper.ReadEmbeddedResource<List<ImageExtension>>("ModCreator.Resources.image-extensions.json");
-        public string SelectedImageFile { get; set; }
-        [NotifyMethod(nameof(OnImageItemSelected))]
-        public FileItem SelectedImageItem { get; set; }
-        public BitmapImage SelectedImagePath
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(SelectedImageFile) || Project == null)
-                    return null;
-
-                var filePath = Path.Combine(Project.ProjectPath, "ModProject", "ModImg", SelectedImageFile);
-                return BitmapHelper.LoadFromFile(filePath);
-            }
-        }
-
-        public bool HasSelectedImageFile => !string.IsNullOrEmpty(SelectedImageFile);
-        public bool HasSelectedImageItem => SelectedImageItem != null;
+        public List<AudioExtension> AudioExtensions { get; set; } = ResourceHelper.ReadEmbeddedResource<List<AudioExtension>>("ModCreator.Resources.audio-extensions.json");
+        [NotifyMethod(nameof(OnCustomResourceItemSelected))]
+        public FileItem SelectedCustomResourceItem { get; set; }
+        // Image folder filter
+        public ObservableCollection<GameResourceFolderItem> ImageFolders { get; set; } = [];
+        [NotifyMethod(nameof(OnSelectedImageFoldersChanged))]
+        public string SelectedImageFolders { get; set; } = string.Empty;
+        public bool HasSelectedCustomResourceItem => SelectedCustomResourceItem != null;
 
         // Game Resources - Separate collections per type
         public ObservableCollection<GameResourceItem> Texture2DItems { get; set; } = [];
@@ -75,57 +66,39 @@ namespace ModCreator.WindowData
         public string GameResourceSearchText { get; set; } = string.Empty;
         
         // Preview properties for game resources
-        public BitmapImage SelectedGameResourceImagePath { get; set; }
-        public string SelectedGameResourceAudioPath { get; set; }
-        public bool IsGameResourceImage { get; set; }
-        public bool IsGameResourceAudio { get; set; }
+        public BitmapImage SelectedResourceImagePath { get; set; }
+        public string SelectedResourceAudioPath { get; set; }
+        public bool IsCustomResource { get; set; }
+        public bool IsResourceImage { get; set; }
+        public bool IsResourceAudio { get; set; }
+        
+        // Loading state for game resources
+        public bool IsLoadingGameResources { get; set; }
 
-        public void OnImageItemSelected(object obj, PropertyInfo prop, object before = null, object after = null)
-        {
-            if (SelectedImageItem == null || SelectedImageItem.IsFolder)
-            {
-                SelectedImageFile = null;
-                return;
-            }
-
-            SelectedImageFile = SelectedImageItem.RelativePath;
-        }
-
-        public void LoadImageFiles()
+        public void LoadCustomResourceFiles()
         {
             if (Project == null) return;
+            ResetResourcePreviews();
 
             var imgDir = Path.Combine(Project.ProjectPath, "ModProject", "ModImg");
             if (Directory.Exists(imgDir))
             {
-                if (ImageExtensions.Count == 0)
-                    throw new InvalidOperationException("ImageExtensions not loaded. Cannot load image files.");
-
                 ImageFiles.ReplaceWith(Directory.EnumerateFiles(imgDir, "*", SearchOption.AllDirectories)
-                    .Where(f => ImageExtensions.Any(ext => ext.Extension == Path.GetExtension(f).ToLower()))
+                    .Where(f => ImageExtensions.Any(ext => ext.Extension == Path.GetExtension(f).ToLower()) ||
+                                AudioExtensions.Any(ext => ext.Extension == Path.GetExtension(f).ToLower()))
                     .Select(f => Path.GetRelativePath(imgDir, f)));
 
-                _allImageItems = BuildImageFileTree(imgDir, imgDir);
-                FilterImageItems();
-
-                if (!string.IsNullOrEmpty(SelectedImageFile))
-                {
-                    var fullPath = Path.Combine(imgDir, SelectedImageFile);
-                    if (!File.Exists(fullPath))
-                    {
-                        SelectedImageFile = null;
-                        SelectedImageItem = null;
-                    }
-                }
-            }
-            else
-            {
-                SelectedImageFile = null;
-                SelectedImageItem = null;
+                _allImageItems = BuildCustomResourceFileTree(imgDir, imgDir);
+                
+                // Extract and populate image folders
+                var folders = ExtractCustomResourceFolders(_allImageItems);
+                ImageFolders.ReplaceWith(folders);
+                
+                FilterCustomResources();
             }
         }
 
-        private List<FileItem> BuildImageFileTree(string rootPath, string currentPath, FileItem parent = null)
+        private List<FileItem> BuildCustomResourceFileTree(string rootPath, string currentPath, FileItem parent = null)
         {
             var items = new List<FileItem>();
 
@@ -141,7 +114,7 @@ namespace ModCreator.WindowData
                     Parent = parent
                 };
 
-                var children = BuildImageFileTree(rootPath, dir, folderItem);
+                var children = BuildCustomResourceFileTree(rootPath, dir, folderItem);
                 foreach (var child in children)
                     folderItem.Children.Add(child);
 
@@ -149,7 +122,8 @@ namespace ModCreator.WindowData
             }
 
             var imageFiles = Directory.GetFiles(currentPath)
-                .Where(f => ImageExtensions.Any(ext => ext.Extension == Path.GetExtension(f).ToLower()))
+                .Where(f => ImageExtensions.Any(ext => ext.Extension == Path.GetExtension(f).ToLower()) ||
+                            AudioExtensions.Any(ext => ext.Extension == Path.GetExtension(f).ToLower()))
                 .OrderBy(f => f);
 
             foreach (var file in imageFiles)
@@ -167,14 +141,47 @@ namespace ModCreator.WindowData
             return items;
         }
 
+        public void ResetResourcePreviews()
+        {
+            SelectedResourceImagePath = null;
+            SelectedResourceAudioPath = null;
+            IsResourceImage = false;
+            IsResourceAudio = false;
+        }
+
+        public void OnCustomResourceItemSelected(object obj, PropertyInfo prop, object before = null, object after = null)
+        {
+            // Reset preview properties
+            ResetResourcePreviews();
+
+            if (SelectedCustomResourceItem == null || SelectedCustomResourceItem.IsFolder)
+                return;
+
+            var filePath = Path.Combine(Project.ProjectPath, "ModProject", "ModImg", SelectedCustomResourceItem.RelativePath);
+            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
+                return;
+
+            var extension = Path.GetExtension(filePath).ToLower();
+
+            // Check if it's an image
+            if (ImageExtensions.Any(ext => ext.Extension == extension))
+            {
+                SelectedResourceImagePath = BitmapHelper.LoadFromFile(filePath);
+                IsResourceImage = true;
+            }
+            // Check if it's an audio file
+            else if (AudioExtensions.Any(ext => ext.Extension == extension))
+            {
+                SelectedResourceAudioPath = filePath;
+                IsResourceAudio = true;
+            }
+        }
+
         public void OnGameResourceItemSelected(object obj, PropertyInfo prop, object before = null, object after = null)
         {
             // Reset preview properties
-            SelectedGameResourceImagePath = null;
-            SelectedGameResourceAudioPath = null;
-            IsGameResourceImage = false;
-            IsGameResourceAudio = false;
-            
+            ResetResourcePreviews();
+
             // Trigger property change notification for HasSelectedGameResource
             if (SelectedGameResourceItem == null || SelectedGameResourceItem.IsFolder)
                 return;
@@ -185,46 +192,40 @@ namespace ModCreator.WindowData
                 return;
             
             var extension = Path.GetExtension(filePath).ToLower();
-            
+
             // Check if it's an image
-            var imageExtensions = new[] { ".png", ".jpg", ".jpeg", ".bmp", ".gif", ".tif", ".tiff", ".ico" };
-            if (imageExtensions.Contains(extension))
+            if (ImageExtensions.Any(ext => ext.Extension == extension))
             {
-                try
-                {
-                    SelectedGameResourceImagePath = BitmapHelper.LoadFromFile(filePath);
-                    IsGameResourceImage = true;
-                }
-                catch (Exception ex)
-                {
-                    DebugHelper.Error($"Failed to load image: {ex.Message}");
-                }
+                SelectedResourceImagePath = BitmapHelper.LoadFromFile(filePath);
+                IsResourceImage = true;
             }
             // Check if it's an audio file
-            else if (SelectedGameResourceItem.Type == GameResourceType.AudioClip)
+            else if (AudioExtensions.Any(ext => ext.Extension == extension))
             {
-                var audioExtensions = new[] { ".wav", ".mp3", ".ogg", ".wma", ".aac", ".flac" };
-                if (audioExtensions.Contains(extension))
-                {
-                    SelectedGameResourceAudioPath = filePath;
-                    IsGameResourceAudio = true;
-                }
+                SelectedResourceAudioPath = filePath;
+                IsResourceAudio = true;
             }
         }
 
         public void OnGameResourceSearchTextChanged(object obj, PropertyInfo prop, object before = null, object after = null)
         {
-            FilterImageItems();
-            _ = FilterGameResourcesAsync();
+            FilterCustomResources();
+            FilterGameResourcesAsync();
         }
 
         public void OnSelectedFoldersChanged(object obj, PropertyInfo prop, object before = null, object after = null)
         {
             // Re-filter resources when folder selection changes
-            _ = FilterGameResourcesAsync();
+            FilterGameResourcesAsync();
         }
 
-        private void FilterImageItems()
+        public void OnSelectedImageFoldersChanged(object obj, PropertyInfo prop, object before = null, object after = null)
+        {
+            // Re-filter image items when folder selection changes
+            FilterCustomResources();
+        }
+
+        private void FilterCustomResources()
         {
             if (_allImageItems == null || _allImageItems.Count == 0)
             {
@@ -232,15 +233,25 @@ namespace ModCreator.WindowData
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(GameResourceSearchText))
+            var filtered = _allImageItems;
+
+            // Apply folder filter
+            if (!string.IsNullOrWhiteSpace(SelectedImageFolders))
             {
-                ImageItems.ReplaceWith(_allImageItems);
+                var folderList = SelectedImageFolders.Split(',').Select(f => f.Trim()).Where(f => !string.IsNullOrEmpty(f)).ToList();
+                if (folderList.Any())
+                {
+                    filtered = FilterImageItemsByFolders(filtered, folderList);
+                }
             }
-            else
+
+            // Apply search filter
+            if (!string.IsNullOrWhiteSpace(GameResourceSearchText))
             {
-                var filtered = FilterFileItems(_allImageItems, GameResourceSearchText);
-                ImageItems.ReplaceWith(filtered);
+                filtered = FilterFileItems(filtered, GameResourceSearchText);
             }
+
+            ImageItems.ReplaceWith(filtered);
         }
 
         private List<FileItem> FilterFileItems(List<FileItem> items, string searchText)
@@ -271,6 +282,77 @@ namespace ModCreator.WindowData
                 else if (item.Name.ToLower().Contains(lowerSearch))
                 {
                     result.Add(item);
+                }
+            }
+
+            return result;
+        }
+
+        private List<GameResourceFolderItem> ExtractCustomResourceFolders(List<FileItem> items)
+        {
+            var folders = new HashSet<string>();
+            ExtractImageFoldersRecursive(items, folders, string.Empty);
+            
+            return folders.OrderBy(f => f).Select(f => new GameResourceFolderItem
+            {
+                FolderPath = f,
+                IsSelected = false
+            }).ToList();
+        }
+
+        private void ExtractImageFoldersRecursive(List<FileItem> items, HashSet<string> folders, string currentPath)
+        {
+            foreach (var item in items)
+            {
+                if (item.IsFolder)
+                {
+                    var folderPath = string.IsNullOrEmpty(currentPath) ? item.Name : $"{currentPath}/{item.Name}";
+                    folders.Add(folderPath);
+                    ExtractImageFoldersRecursive(item.Children.ToList(), folders, folderPath);
+                }
+            }
+        }
+
+        private List<FileItem> FilterImageItemsByFolders(List<FileItem> items, List<string> folders)
+        {
+            var result = new List<FileItem>();
+
+            foreach (var item in items)
+            {
+                if (item.IsFolder)
+                {
+                    // Check if this folder or any parent folder matches
+                    var folderPath = item.RelativePath.Replace("\\", "/");
+                    var matches = folders.Any(f => folderPath.StartsWith(f, StringComparison.OrdinalIgnoreCase) || f.StartsWith(folderPath, StringComparison.OrdinalIgnoreCase));
+                    
+                    if (matches)
+                    {
+                        var filteredChildren = FilterImageItemsByFolders(item.Children.ToList(), folders);
+                        if (filteredChildren.Count > 0)
+                        {
+                            var folderCopy = new FileItem
+                            {
+                                Name = item.Name,
+                                FullPath = item.FullPath,
+                                RelativePath = item.RelativePath,
+                                IsFolder = true,
+                                Parent = item.Parent
+                            };
+                            foreach (var child in filteredChildren)
+                                folderCopy.Children.Add(child);
+                            result.Add(folderCopy);
+                        }
+                    }
+                }
+                else
+                {
+                    // Check if file is in any of the selected folders
+                    var filePath = item.RelativePath.Replace("\\", "/");
+                    var matches = folders.Any(f => filePath.StartsWith(f, StringComparison.OrdinalIgnoreCase));
+                    if (matches)
+                    {
+                        result.Add(item);
+                    }
                 }
             }
 

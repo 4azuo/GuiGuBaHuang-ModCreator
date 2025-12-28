@@ -18,7 +18,6 @@ namespace ModCreator.Helpers
         /// </summary>
         /// <param name="editor">TextEditor instance</param>
         /// <param name="resourceName">Resource name (e.g., "ModCreator.Styles.Json.xshd")</param>
-        [SupportedOSPlatform("windows6.1")]
         public static void LoadSyntaxHighlighting(TextEditor editor, string resourceName)
         {
             if (editor == null)
@@ -57,7 +56,6 @@ namespace ModCreator.Helpers
         /// Load JSON syntax highlighting
         /// </summary>
         /// <param name="editor">TextEditor instance</param>
-        [SupportedOSPlatform("windows6.1")]
         public static void LoadJsonSyntaxHighlighting(TextEditor editor)
         {
             LoadSyntaxHighlighting(editor, "ModCreator.Styles.Json.xshd");
@@ -67,7 +65,6 @@ namespace ModCreator.Helpers
         /// Load C# syntax highlighting
         /// </summary>
         /// <param name="editor">TextEditor instance</param>
-        [SupportedOSPlatform("windows6.1")]
         public static void LoadCSharpSyntaxHighlighting(TextEditor editor)
         {
             if (editor == null)
@@ -88,7 +85,6 @@ namespace ModCreator.Helpers
         /// Clear syntax highlighting
         /// </summary>
         /// <param name="editor">TextEditor instance</param>
-        [SupportedOSPlatform("windows6.1")]
         public static void ClearSyntaxHighlighting(TextEditor editor)
         {
             if (editor == null)

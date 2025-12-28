@@ -16,7 +16,6 @@ namespace ModCreator.Windows
 {
     public partial class ProjectEditorWindow : CWindow<ProjectEditorWindowData>
     {
-        [SupportedOSPlatform("windows6.1")]
         private void SetupAvalonEditBinding()
         {
             var editor = this.FindName("txtJsonEditor") as ICSharpCode.AvalonEdit.TextEditor;
@@ -203,7 +202,6 @@ namespace ModCreator.Windows
             MessageBox.Show(MessageHelper.GetFormat("Messages.Success.ConfigurationRenamed", oldFileName, newFileName), MessageHelper.Get("Messages.Success.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        [SupportedOSPlatform("windows6.1")]
         private void ReplaceInEditor_Click(object sender, RoutedEventArgs e)
         {
             var replacePanel = this.FindName("replacePanel") as Border;
@@ -220,7 +218,6 @@ namespace ModCreator.Windows
             }
         }
 
-        [SupportedOSPlatform("windows6.1")]
         private void TxtFindText_TextChanged(object sender, TextChangedEventArgs e)
         {
             var txtFindText = sender as TextBox;
@@ -243,7 +240,6 @@ namespace ModCreator.Windows
             catch { }
         }
 
-        [SupportedOSPlatform("windows6.1")]
         private void TxtFindText_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == System.Windows.Input.Key.Enter)
@@ -253,7 +249,6 @@ namespace ModCreator.Windows
             }
         }
 
-        [SupportedOSPlatform("windows6.1")]
         private void FindNext_Click(object sender, RoutedEventArgs e)
         {
             var editor = this.FindName("txtJsonEditor") as ICSharpCode.AvalonEdit.TextEditor;
@@ -278,7 +273,6 @@ namespace ModCreator.Windows
             }
         }
 
-        [SupportedOSPlatform("windows6.1")]
         private void ReplaceOne_Click(object sender, RoutedEventArgs e)
         {
             var editor = this.FindName("txtJsonEditor") as ICSharpCode.AvalonEdit.TextEditor;
@@ -300,7 +294,6 @@ namespace ModCreator.Windows
             FindNext_Click(sender, e);
         }
 
-        [SupportedOSPlatform("windows6.1")]
         private void ReplaceAll_Click(object sender, RoutedEventArgs e)
         {
             var editor = this.FindName("txtJsonEditor") as ICSharpCode.AvalonEdit.TextEditor;
@@ -385,7 +378,6 @@ namespace ModCreator.Windows
             WindowData.StatusMessage = MessageHelper.GetFormat("Messages.Success.OpenedModConfFolder", confPath);
         }
 
-        [SupportedOSPlatform("windows6.1")]
         private void ToggleFilterLocalText_Click(object sender, RoutedEventArgs e)
         {
             WindowData.FilterLocalText = !WindowData.FilterLocalText;

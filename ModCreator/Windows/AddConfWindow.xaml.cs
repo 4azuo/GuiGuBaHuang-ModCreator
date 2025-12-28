@@ -1,16 +1,14 @@
 using ModCreator.WindowData;
-using System.ComponentModel;
 using System.Windows;
 
 namespace ModCreator.Windows
 {
     public partial class AddConfWindow : CWindow<AddConfWindowData>
     {
-        public override AddConfWindowData InitData(CancelEventArgs e)
+        public override void OnLoad()
         {
-            var data = new AddConfWindowData();
-            data.LoadConfigurations();
-            return data;
+            base.OnLoad();
+            WindowData.LoadConfigurations();
         }
 
         private void Add_Click(object sender, RoutedEventArgs e)

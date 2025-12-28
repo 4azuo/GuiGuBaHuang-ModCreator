@@ -58,6 +58,7 @@ namespace ModCreator.WindowData
 
         public override void OnLoad()
         {
+            base.OnLoad();
             LoadProjects();
         }
 
@@ -310,9 +311,9 @@ namespace ModCreator.WindowData
             var targetFolder = Path.Combine(Constants.GameFolderPath, "ModExportData", $"Mod_{SelectedProject.ProjectId}");
                 
             if (Directory.Exists(targetFolder))
-                Directory.Delete(targetFolder, true);
+                FileHelper.DeleteFolderSafe(targetFolder);
 
-            Helpers.FileHelper.CopyDirectory(sourceFolder, targetFolder);
+            FileHelper.CopyDirectory(sourceFolder, targetFolder);
                 
             StatusMessage = MessageHelper.GetFormat("Messages.Success.CopiedToModExportData", targetFolder);
             System.Windows.MessageBox.Show(

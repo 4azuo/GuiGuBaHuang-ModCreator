@@ -17,6 +17,16 @@ namespace ModCreator.Models
         public string Name { get; set; }
 
         /// <summary>
+        /// Full path in game (like "Assets/Texture/...")
+        /// </summary>
+        public string PathInGame { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Extracted file path (for images)
+        /// </summary>
+        public string FilePath { get; set; } = string.Empty;
+
+        /// <summary>
         /// Resource type
         /// </summary>
         public GameResourceType Type { get; set; }

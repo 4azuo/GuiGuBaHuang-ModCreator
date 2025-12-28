@@ -1,0 +1,104 @@
+<local:CWindow x:Class="ModCreator.Windows.PatternResSelectWindow" x:TypeArguments="localData:PatternResSelectWindowData"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:ModCreator.Windows"
+        xmlns:localData="clr-namespace:ModCreator.WindowData"
+        xmlns:converter="clr-namespace:ModCreator.Converters"
+        xmlns:control="clr-namespace:ModCreator.Controls"
+        Title="Select Resource" Height="700" Width="1200" 
+        WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </Window.Resources>
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="300"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Select Resource - " 
+                       FontSize="18" 
+                       FontWeight="Bold"
+                       Foreground="Black"/>
+            <TextBlock Text="{Binding ResourceType, Mode=OneWay}" 
+                       FontSize="18" 
+                       FontWeight="Bold"
+                       Foreground="#4FC3F7"
+                       Margin="5,0,0,0"/>
+            <TextBlock Text=" / " 
+                       FontSize="18" 
+                       FontWeight="Bold"
+                       Foreground="Gray"
+                       Margin="5,0,5,0"
+                       Visibility="{Binding HasResourceFolder, Converter={StaticResource BoolToVisibilityConverter}}"/>
+            <TextBlock Text="{Binding ResourceFolder, Mode=OneWay}" 
+                       FontSize="18" 
+                       FontWeight="Bold"
+                       Foreground="#81C784"
+                       Visibility="{Binding HasResourceFolder, Converter={StaticResource BoolToVisibilityConverter}}"/>
+        </StackPanel>
+        
+        <!-- Custom Resources (ModImg) -->
+        <GroupBox Grid.Row="1" Grid.Column="0" Header="Custom Resources" Margin="0,0,5,0">
+            <TreeView Name="tvCustomResources" 
+                      ItemsSource="{Binding CustomResourceItems, Mode=OneWay}" 
+                      SelectedItemChanged="TreeView_CustomResourceSelectedItemChanged"
+                      Style="{StaticResource FileBrowserTreeView}"/>
+        </GroupBox>
+        
+        <!-- Preview Panel -->
+        <GroupBox Grid.Row="1" Grid.Column="1" Header="Preview" Margin="5,0,5,0">
+            <Grid>
+                <!-- Image preview for custom resources -->
+                <Image Source="{Binding SelectedResourceImagePath, Mode=OneWay}" 
+                       Stretch="Uniform" 
+                       HorizontalAlignment="Center" 
+                       VerticalAlignment="Center"
+                       Visibility="{Binding IsResourceImage, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+                <!-- Audio player for game resources -->
+                <control:AudioPlayerControl x:Name="audioPlayerControl"
+                                            Source="{Binding SelectedResourceAudioPath, Mode=OneWay}"
+                                            FileName="{Binding SelectedResourceAudioPath, Mode=OneWay}"
+                                            Visibility="{Binding IsResourceAudio, Converter={StaticResource BoolToVisibilityConverter}}"/>
+            </Grid>
+        </GroupBox>
+        
+        <!-- Game Resources -->
+        <GroupBox Grid.Row="1" Grid.Column="2" Header="Game Resources" Margin="5,0,0,0">
+            <TreeView Name="tvGameResources" 
+                      ItemsSource="{Binding GameResourceItems, Mode=OneWay}" 
+                      SelectedItemChanged="TreeView_GameResourceSelectedItemChanged" 
+                      Style="{StaticResource FileBrowserTreeView}"/>
+        </GroupBox>
+        
+        <!-- Buttons -->
+        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
+                    Margin="0,10,0,0" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right">
+            <TextBlock Text="{Binding StatusMessage, Mode=OneWay}" 
+                       VerticalAlignment="Center" 
+                       Foreground="White" 
+                       Margin="0,0,20,0"/>
+            <Button Content="Select" 
+                    Click="Select_Click" 
+                    Width="100" 
+                    Height="32"
+                    Margin="0,0,10,0"
+                    IsEnabled="{Binding HasSelectedResource, Mode=OneWay}"/>
+            <Button Content="Cancel" 
+                    Click="Cancel_Click" 
+                    Width="100"
+                    Height="32"/>
+        </StackPanel>
+    </Grid>
+</local:CWindow>

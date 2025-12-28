@@ -62,7 +62,7 @@ namespace ModCreator.WindowData
             if (Project == null) return;
 
             LoadConfFiles();
-            LoadImageFiles();
+            LoadCustomResourceFiles();
             LoadGlobalVariables();
             LoadModEventFiles();
 

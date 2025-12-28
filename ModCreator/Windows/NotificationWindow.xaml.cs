@@ -19,12 +19,6 @@ namespace ModCreator.Windows
             Close();
         }
 
-        public override NotificationWindowData InitData(CancelEventArgs e)
-        {
-            var data = base.InitData(e);
-            return data;
-        }
-
         public static void ShowInfo(Window owner, string title, string message)
         {
             var data = new NotificationWindowData

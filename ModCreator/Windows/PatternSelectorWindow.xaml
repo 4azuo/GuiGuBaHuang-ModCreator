@@ -10,6 +10,7 @@
         <converter:TextBoxVisibilityConverter x:Key="TextBoxVisibilityConverter"/>
         <converter:ComboBoxVisibilityConverter x:Key="ComboBoxVisibilityConverter"/>
         <converter:MultiComboBoxVisibilityConverter x:Key="MultiComboBoxVisibilityConverter"/>
+        <converter:ResourceVisibilityConverter x:Key="ResourceVisibilityConverter"/>
         <converter:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <converter:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
     </Window.Resources>
@@ -136,6 +137,14 @@
                                                                                     <TextBox Text="{Binding XValue, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Element.Type, Converter={StaticResource TextBoxVisibilityConverter}}" IsReadOnly="{Binding Element.IsReadOnly}" IsEnabled="{Binding Element.IsDisabled, Converter={StaticResource InverseBooleanConverter}}"/>
                                                                                     <ComboBox ItemsSource="{Binding Element.Options}" SelectedValue="{Binding XValue, Mode=TwoWay}" SelectedValuePath="XValue" DisplayMemberPath="DisplayName" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Element.Type, Converter={StaticResource ComboBoxVisibilityConverter}}" DropDownOpened="ComboBox_DropDownOpened" Tag="{Binding}" IsEditable="{Binding Element.IsReadOnly, Converter={StaticResource InverseBooleanConverter}}" IsReadOnly="{Binding Element.IsReadOnly}" IsEnabled="{Binding Element.IsDisabled, Converter={StaticResource InverseBooleanConverter}}"/>
                                                                                     <controls:MultiSelectComboBox ItemsSource="{Binding Element.Options}" SelectedValue="{Binding XValue, Mode=TwoWay}" Separator="{Binding Element.Separator}" Visibility="{Binding Element.Type, Converter={StaticResource MultiComboBoxVisibilityConverter}}" Tag="{Binding}" DropDownOpened="MultiSelectComboBox_DropDownOpened" IsReadOnly="{Binding Element.IsReadOnly}" IsEnabled="{Binding Element.IsDisabled, Converter={StaticResource InverseBooleanConverter}}" IsEditable="True" BorderThickness="0"/>
+                                                                                    <Grid Visibility="{Binding Element.Type, Converter={StaticResource ResourceVisibilityConverter}}">
+                                                                                        <Grid.ColumnDefinitions>
+                                                                                            <ColumnDefinition Width="*"/>
+                                                                                            <ColumnDefinition Width="Auto"/>
+                                                                                        </Grid.ColumnDefinitions>
+                                                                                        <TextBox Grid.Column="0" Text="{Binding XValue, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" IsEnabled="{Binding Element.IsDisabled, Converter={StaticResource InverseBooleanConverter}}"/>
+                                                                                        <Button Grid.Column="1" Content="..." Click="SelectResource_Click" Tag="{Binding}" Width="25" Height="25" Margin="2,0,0,0" Padding="0" FontSize="12" IsEnabled="{Binding Element.IsDisabled, Converter={StaticResource InverseBooleanConverter}}"/>
+                                                                                    </Grid>
                                                                                 </Grid>
                                                                             </Border>
                                                                         </DataTemplate>
@@ -189,6 +198,14 @@
                                                                                     <TextBox Text="{Binding XValue, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Element.Type, Converter={StaticResource TextBoxVisibilityConverter}}" IsReadOnly="{Binding Element.IsReadOnly}" IsEnabled="{Binding Element.IsDisabled, Converter={StaticResource InverseBooleanConverter}}"/>
                                                                                     <ComboBox ItemsSource="{Binding Element.Options}" SelectedValue="{Binding XValue, Mode=TwoWay}" SelectedValuePath="Value" DisplayMemberPath="DisplayName" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" Visibility="{Binding Element.Type, Converter={StaticResource ComboBoxVisibilityConverter}}" DropDownOpened="ComboBox_DropDownOpened" Tag="{Binding}" IsEditable="{Binding Element.IsReadOnly, Converter={StaticResource InverseBooleanConverter}}" IsReadOnly="{Binding Element.IsReadOnly}" IsEnabled="{Binding Element.IsDisabled, Converter={StaticResource InverseBooleanConverter}}"/>
                                                                                     <controls:MultiSelectComboBox ItemsSource="{Binding Element.Options}" SelectedValue="{Binding XValue, Mode=TwoWay}" Separator="{Binding Element.Separator}" Visibility="{Binding Element.Type, Converter={StaticResource MultiComboBoxVisibilityConverter}}" Tag="{Binding}" DropDownOpened="MultiSelectComboBox_DropDownOpened" IsReadOnly="{Binding Element.IsReadOnly}" IsEnabled="{Binding Element.IsDisabled, Converter={StaticResource InverseBooleanConverter}}" IsEditable="True" BorderThickness="0"/>
+                                                                                    <Grid Visibility="{Binding Element.Type, Converter={StaticResource ResourceVisibilityConverter}}">
+                                                                                        <Grid.ColumnDefinitions>
+                                                                                            <ColumnDefinition Width="*"/>
+                                                                                            <ColumnDefinition Width="Auto"/>
+                                                                                        </Grid.ColumnDefinitions>
+                                                                                        <TextBox Grid.Column="0" Text="{Binding XValue, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Padding="0" VerticalContentAlignment="Center" IsEnabled="{Binding Element.IsDisabled, Converter={StaticResource InverseBooleanConverter}}"/>
+                                                                                        <Button Grid.Column="1" Content="..." Click="SelectResource_Click" Tag="{Binding}" Width="25" Height="25" Margin="2,0,0,0" Padding="0" FontSize="12" IsEnabled="{Binding Element.IsDisabled, Converter={StaticResource InverseBooleanConverter}}"/>
+                                                                                    </Grid>
                                                                                 </Grid>
                                                                             </Border>
                                                                         </DataTemplate>

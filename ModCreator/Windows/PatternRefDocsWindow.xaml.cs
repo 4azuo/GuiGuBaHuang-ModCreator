@@ -13,30 +13,24 @@ namespace ModCreator.Windows
         public string FilePath { get; set; }
         private int _lastSearchOffset = 0;
 
-        public override PatternRefDocsWindowData InitData(CancelEventArgs e)
+        public override void OnLoad()
         {
-            var data = base.InitData(e);
+            base.OnLoad();
+            WindowData.FilePath = FilePath;
 
-            Loaded += (s, ev) =>
+            // Setup JSON syntax highlighting
+            AvalonHelper.LoadJsonSyntaxHighlighting(txtEditor);
+
+            // Load file content
+            if (!string.IsNullOrEmpty(WindowData.FilePath) && File.Exists(WindowData.FilePath))
             {
-                data.FilePath = FilePath;
+                WindowData.FileName = Path.GetFileName(WindowData.FilePath);
+                WindowData.FileContent = File.ReadAllText(WindowData.FilePath);
+                txtEditor.Text = WindowData.FileContent;
+            }
 
-                // Setup JSON syntax highlighting
-                AvalonHelper.LoadJsonSyntaxHighlighting(txtEditor);
-
-                // Load file content
-                if (!string.IsNullOrEmpty(data.FilePath) && File.Exists(data.FilePath))
-                {
-                    data.FileName = Path.GetFileName(data.FilePath);
-                    data.FileContent = File.ReadAllText(data.FilePath);
-                    txtEditor.Text = data.FileContent;
-                }
-
-                // Setup Ctrl+F shortcut
-                PreviewKeyDown += Window_PreviewKeyDown;
-            };
-
-            return data;
+            // Setup Ctrl+F shortcut
+            PreviewKeyDown += Window_PreviewKeyDown;
         }
 
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
