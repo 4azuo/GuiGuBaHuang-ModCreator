@@ -45,19 +45,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Exclude template project from compilation but include as content to copy -->
-    <Compile Remove="Resources\ModProject_0hKMNX\**" />
-    <EmbeddedResource Remove="Resources\ModProject_0hKMNX\**" />
-    <Page Remove="Resources\ModProject_0hKMNX\**" />
-    
-    <!-- Copy template project to output directory -->
-    <None Include="Resources\ModProject_0hKMNX\**\*.*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Resources\ModProject_0hKMNX\%(RecursiveDir)%(FileName)%(Extension)</Link>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="Resources\app-icon.ico" />
     <None Remove="Resources\audio-extensions.json" />
     <None Remove="Resources\embeded-settings.json" />
@@ -128,13 +115,13 @@
 
   <ItemGroup>
     <Reference Include="ModLib">
-      <HintPath>Resources\ModProject_0hKMNX\ModProject\ModCode\ModMain\CodeArtifacts\ModLib.dll</HintPath>
+      <HintPath>..\ModProject_0hKMNX\ModProject\ModCode\ModMain\CodeArtifacts\ModLib.dll</HintPath>
     </Reference>
   </ItemGroup>
 
   <Target Name="CopyModLibDll" AfterTargets="Build">
     <Message Text="Copying ModLib DLL files to template project..." Importance="high" />
-    <Exec Command="xcopy &quot;$(ProjectDir)..\..\3385996759\debug\Mod_flQrxq\ModCode\dll\*.*&quot; &quot;$(ProjectDir)Resources\ModProject_0hKMNX\ModProject\ModCode\ModMain\CodeArtifacts\&quot; /y /i" />
+    <Exec Command="xcopy &quot;$(ProjectDir)..\..\3385996759\debug\Mod_flQrxq\ModCode\dll\*.*&quot; &quot;$(ProjectDir)..\ModProject_0hKMNX\ModProject\ModCode\ModMain\CodeArtifacts\&quot; /y /i" />
   </Target>
 
 </Project>

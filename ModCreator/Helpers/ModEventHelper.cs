@@ -93,10 +93,10 @@ namespace ModCreator.Helpers
         {
             try
             {
-                var modLibPath = Path.Combine(Constants.ResourcesDir, "ModProject_0hKMNX", "ModProject", "ModCode", "ModMain", "CodeArtifacts", "ModLib.dll");
+                var modLibPath = Path.Combine(ProjectHelper.GetProjectTemplatePath(), "ModProject", "ModCode", "ModMain", "CodeArtifacts", "ModLib.dll");
                 if (!File.Exists(modLibPath))
                     return;
-                var dll = Path.Combine(Constants.ResourcesDir, "ModProject_0hKMNX", "ModProject", "ModCode", "ModMain", "dll", "Assembly-CSharp.dll");
+                var dll = Path.Combine(ProjectHelper.GetProjectTemplatePath(), "ModProject", "ModCode", "ModMain", "dll", "Assembly-CSharp.dll");
                 if (!File.Exists(dll))
                     return;
 
