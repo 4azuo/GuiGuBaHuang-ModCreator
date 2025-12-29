@@ -114,6 +114,8 @@ namespace ModCreator.Commons
         private void NotifyPassivesLimit(PropertyInfo triggerProp = null)
         {
             var passives = ListPassiveNotifyProperties[GetType()];
+            if (passives.Length == 0)
+                return;
             for (int i = 0; i < AUTO_NOTIFY_AMOUNT; i++)
             {
                 var prop = passives[AutoNotifyIndex++ % passives.Length];
@@ -193,7 +195,7 @@ namespace ModCreator.Commons
         private void AutoUpdateTimer_Tick(object sender, EventArgs e)
         {
             NotifyUpdates();
-            NotifyPassives();
+            NotifyPassivesLimit();
         }
 
         private void PrepareNotifyProperties()
