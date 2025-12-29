@@ -167,7 +167,7 @@ namespace ModCreator.WindowData
                 {
                     GameResourceType.Texture2D => Editor.WindowData.Texture2DItems,
                     GameResourceType.Sprite => Editor.WindowData.SpriteItems,
-                    GameResourceType.TextAsset => Editor.WindowData.TextAssetItems,
+                    //GameResourceType.TextAsset => Editor.WindowData.TextAssetItems,
                     GameResourceType.AudioClip => Editor.WindowData.AudioClipItems,
                     GameResourceType.Other => Editor.WindowData.OtherItems,
                     _ => []

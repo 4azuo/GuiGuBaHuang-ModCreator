@@ -4,8 +4,7 @@ using System.Collections.Generic;
 
 namespace ModCreator.Models
 {
-    [SetterAspect]
-    public class PatternFile : AutoNotifiableObject
+    public class PatternFile
     {
         public string FileName { get; set; }
         public List<string> Elements { get; set; } = [];

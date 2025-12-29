@@ -28,6 +28,22 @@ if (-not (Test-Path $projectFile)) {
     exit 1
 }
 
+# Clean project
+Write-Host "Cleaning project ($Configuration)..." -ForegroundColor Yellow
+Write-Host ""
+
+& dotnet clean $projectFile -c $Configuration
+
+if ($LASTEXITCODE -ne 0) {
+    Write-Host ""
+    Write-Host "CLEAN FAILED!" -ForegroundColor Red
+    exit 1
+}
+
+Write-Host ""
+Write-Host "Clean completed successfully" -ForegroundColor Green
+Write-Host ""
+
 # Build project
 Write-Host "Building project ($Configuration)..." -ForegroundColor Yellow
 Write-Host ""

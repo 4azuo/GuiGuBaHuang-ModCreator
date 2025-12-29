@@ -285,7 +285,7 @@
                                                     VirtualizingPanel.ScrollUnit="Pixel"/>
                                     </Grid>
                                 </TabItem>
-                                <TabItem Header="TextAsset">
+                                <!-- <TabItem Header="TextAsset">
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
@@ -301,7 +301,7 @@
                                                     VirtualizingPanel.VirtualizationMode="Recycling"
                                                     VirtualizingPanel.ScrollUnit="Pixel"/>
                                     </Grid>
-                                </TabItem>
+                                </TabItem> -->
                                 <TabItem Header="AudioClip">
                                     <Grid>
                                         <Grid.RowDefinitions>

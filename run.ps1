@@ -41,39 +41,43 @@ if ($existingProcesses) {
     Write-Host ""
 }
 
-# Check if build script exists
-# Ensure build.ps1 exists before continuing
-if (-not (Test-Path $buildScript)) {
-    Write-Host "ERROR: Build script not found: $buildScript" -ForegroundColor Red
-    exit 1
-}
-
-# Build using build.ps1
-# Build the solution using build.ps1
-Write-Host "Building solution..." -ForegroundColor Yellow
-Write-Host ""
-
-& $buildScript -Configuration $Configuration
-if (-not $?) {
-    Write-Host ""
-    Write-Host "BUILD FAILED!" -ForegroundColor Red
-    exit 1
-}
-
-if ($LASTEXITCODE -ne 0) {
-    Write-Host ""
-    Write-Host "BUILD FAILED!" -ForegroundColor Red
-    exit 1
-}
-
-Write-Host ""
-
 # Check if executable exists
-# Ensure the built executable exists
+# If executable doesn't exist, build it
 if (-not (Test-Path $exePath)) {
-    Write-Host "ERROR: Executable not found: $exePath" -ForegroundColor Red
-    Write-Host "Please build the solution first" -ForegroundColor Yellow
-    exit 1
+    Write-Host "Executable not found, building solution..." -ForegroundColor Yellow
+    Write-Host ""
+    
+    # Check if build script exists
+    if (-not (Test-Path $buildScript)) {
+        Write-Host "ERROR: Build script not found: $buildScript" -ForegroundColor Red
+        exit 1
+    }
+
+    # Build using build.ps1
+    & $buildScript -Configuration $Configuration
+    if (-not $?) {
+        Write-Host ""
+        Write-Host "BUILD FAILED!" -ForegroundColor Red
+        exit 1
+    }
+
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host ""
+        Write-Host "BUILD FAILED!" -ForegroundColor Red
+        exit 1
+    }
+
+    Write-Host ""
+    
+    # Verify executable was created
+    if (-not (Test-Path $exePath)) {
+        Write-Host "ERROR: Build completed but executable not found: $exePath" -ForegroundColor Red
+        exit 1
+    }
+} else {
+    Write-Host "Executable found, skipping build" -ForegroundColor Green
+    Write-Host "Executable: $exePath" -ForegroundColor Gray
+    Write-Host ""
 }
 
 # Run the application

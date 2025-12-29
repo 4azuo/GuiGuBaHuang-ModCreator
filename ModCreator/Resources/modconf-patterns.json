@@ -97,7 +97,7 @@
           "DramaDialogue.npcLeft",
           "DramaDialogue.npcRight",
           "DramaDialogue.speaker",
-          "DramaDialogue.backgroud::@Texture2D:texture/fortuious@",
+          "DramaDialogue.backgroud::@Sprite:texture/fortuious@",
           "DramaDialogue.soundsBg::@AudioClip:sounds/bg@",
           "DramaDialogue.soundsEffect::@AudioClip:sounds/effect@",
           "DramaDialogue.title",
@@ -140,6 +140,29 @@
     "Description": "Create skill book items with pricing and worth",
     "Files": [
       {
+        "FileName": "ItemProps.json",
+        "FrozenColumns": 1,
+        "Elements": [
+          "ItemProps.id",
+          "ItemProps.name::[LocalText.key]",
+          "ItemProps.type",
+          "ItemProps.className",
+          "ItemProps.hide",
+          "ItemProps.playerShow",
+          "ItemProps.npcShow",
+          "ItemProps.icon",
+          "ItemProps.level",
+          "ItemProps.desc::[LocalText.key]",
+          "ItemProps.isOverlay",
+          "ItemProps.drop",
+          "ItemProps.dieDrop",
+          "ItemProps.auction",
+          "ItemProps.sale",
+          "ItemProps.worth",
+          "ItemProps.isMultiDrop"
+        ]
+      },
+      {
         "FileName": "ItemSkill.json",
         "FrozenColumns": 1,
         "Elements": [
@@ -153,6 +176,15 @@
           "ItemSkill.contribution",
           "ItemSkill.worth",
           "ItemSkill.sale"
+        ]
+      },
+      {
+        "FileName": "LocalText.json",
+        "FrozenColumns": 2,
+        "Elements": [
+          "LocalText.id",
+          "LocalText.key::item{LocalText.id}",
+          "LocalText.en"
         ]
       }
     ]

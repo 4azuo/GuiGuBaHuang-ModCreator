@@ -8,7 +8,7 @@ namespace ModCreator.Enums
         Folder,
         Texture2D,
         Sprite,
-        TextAsset,
+        // TextAsset,
         AudioClip,
         Other
     }

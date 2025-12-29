@@ -8,8 +8,7 @@ using System.Linq;
 
 namespace ModCreator.Models
 {
-    [SetterAspect]
-    public class PatternFileDisplay : AutoNotifiableObject
+    public class PatternFileDisplay
     {
         public string FileName { get; set; }
         public int FrozenColumns { get; set; }

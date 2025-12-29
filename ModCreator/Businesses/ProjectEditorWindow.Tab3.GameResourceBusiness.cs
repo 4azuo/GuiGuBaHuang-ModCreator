@@ -125,7 +125,7 @@ namespace ModCreator.Businesses
                     GameResourceType.AudioClip,
                     GameResourceType.Sprite,
                     GameResourceType.Texture2D,
-                    GameResourceType.TextAsset,
+                    // GameResourceType.TextAsset,
                     GameResourceType.Other
                 };
 

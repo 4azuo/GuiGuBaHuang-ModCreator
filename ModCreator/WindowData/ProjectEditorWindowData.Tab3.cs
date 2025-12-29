@@ -30,14 +30,14 @@ namespace ModCreator.WindowData
         // Game Resources - Separate collections per type
         public ObservableCollection<GameResourceItem> Texture2DItems { get; set; } = [];
         public ObservableCollection<GameResourceItem> SpriteItems { get; set; } = [];
-        public ObservableCollection<GameResourceItem> TextAssetItems { get; set; } = [];
+        // public ObservableCollection<GameResourceItem> TextAssetItems { get; set; } = [];
         public ObservableCollection<GameResourceItem> AudioClipItems { get; set; } = [];
         public ObservableCollection<GameResourceItem> OtherItems { get; set; } = [];
         
         // Folder filter collections
         public ObservableCollection<GameResourceFolderItem> Texture2DFolders { get; set; } = [];
         public ObservableCollection<GameResourceFolderItem> SpriteFolders { get; set; } = [];
-        public ObservableCollection<GameResourceFolderItem> TextAssetFolders { get; set; } = [];
+        // public ObservableCollection<GameResourceFolderItem> TextAssetFolders { get; set; } = [];
         public ObservableCollection<GameResourceFolderItem> AudioClipFolders { get; set; } = [];
         public ObservableCollection<GameResourceFolderItem> OtherFolders { get; set; } = [];
         
@@ -46,15 +46,15 @@ namespace ModCreator.WindowData
         [NotifyMethod(nameof(OnSelectedFoldersChanged))]
         public string SelectedSpriteFolders { get; set; } = string.Empty;
         [NotifyMethod(nameof(OnSelectedFoldersChanged))]
-        public string SelectedTextAssetFolders { get; set; } = string.Empty;
-        [NotifyMethod(nameof(OnSelectedFoldersChanged))]
+        // public string SelectedTextAssetFolders { get; set; } = string.Empty;
+        // [NotifyMethod(nameof(OnSelectedFoldersChanged))]
         public string SelectedAudioClipFolders { get; set; } = string.Empty;
         [NotifyMethod(nameof(OnSelectedFoldersChanged))]
         public string SelectedOtherFolders { get; set; } = string.Empty;
         
         private List<GameResourceItem> _allTexture2DResources = [];
         private List<GameResourceItem> _allSpriteResources = [];
-        private List<GameResourceItem> _allTextAssetResources = [];
+        // private List<GameResourceItem> _allTextAssetResources = [];
         private List<GameResourceItem> _allAudioClipResources = [];
         private List<GameResourceItem> _allOtherResources = [];
         private List<FileItem> _allImageItems = [];
@@ -367,7 +367,7 @@ namespace ModCreator.WindowData
                 await Task.WhenAll(
                     UpdateFilteredItemsAsync(GameResourceType.Texture2D),
                     UpdateFilteredItemsAsync(GameResourceType.Sprite),
-                    UpdateFilteredItemsAsync(GameResourceType.TextAsset),
+                    // UpdateFilteredItemsAsync(GameResourceType.TextAsset),
                     UpdateFilteredItemsAsync(GameResourceType.AudioClip),
                     UpdateFilteredItemsAsync(GameResourceType.Other)
                 );
@@ -396,10 +396,10 @@ namespace ModCreator.WindowData
                         allResources = _allSpriteResources;
                         selectedFolders = SelectedSpriteFolders;
                         break;
-                    case GameResourceType.TextAsset:
-                        allResources = _allTextAssetResources;
-                        selectedFolders = SelectedTextAssetFolders;
-                        break;
+                    // case GameResourceType.TextAsset:
+                    //     allResources = _allTextAssetResources;
+                    //     selectedFolders = SelectedTextAssetFolders;
+                    //     break;
                     case GameResourceType.AudioClip:
                         allResources = _allAudioClipResources;
                         selectedFolders = SelectedAudioClipFolders;
@@ -441,9 +441,9 @@ namespace ModCreator.WindowData
                         case GameResourceType.Sprite:
                             SpriteItems.ReplaceWith(filtered);
                             break;
-                        case GameResourceType.TextAsset:
-                            TextAssetItems.ReplaceWith(filtered);
-                            break;
+                        // case GameResourceType.TextAsset:
+                        //     TextAssetItems.ReplaceWith(filtered);
+                        //     break;
                         case GameResourceType.AudioClip:
                             AudioClipItems.ReplaceWith(filtered);
                             break;
@@ -551,12 +551,12 @@ namespace ModCreator.WindowData
             // Load each resource type independently and update UI as soon as it completes
             var texture2DTask = LoadAndUpdateResourceTypeAsync(GameResourceType.Texture2D, business);
             var spriteTask = LoadAndUpdateResourceTypeAsync(GameResourceType.Sprite, business);
-            var textAssetTask = LoadAndUpdateResourceTypeAsync(GameResourceType.TextAsset, business);
+            // var textAssetTask = LoadAndUpdateResourceTypeAsync(GameResourceType.TextAsset, business);
             var audioClipTask = LoadAndUpdateResourceTypeAsync(GameResourceType.AudioClip, business);
             var otherTask = LoadAndUpdateResourceTypeAsync(GameResourceType.Other, business);
             
             // Wait for all tasks to complete
-            await Task.WhenAll(texture2DTask, spriteTask, textAssetTask, audioClipTask, otherTask);
+            await Task.WhenAll(texture2DTask, spriteTask, audioClipTask, otherTask);
         }
 
         private async Task LoadAndUpdateResourceTypeAsync(GameResourceType resourceType, Businesses.ProjectEditorWindowTab3GameResourceBusiness business)
@@ -583,11 +583,11 @@ namespace ModCreator.WindowData
                         await UpdateFilteredItemsAsync(resourceType);
                         break;
                     
-                    case GameResourceType.TextAsset:
-                        _allTextAssetResources = resources;
-                        TextAssetFolders.ReplaceWith(folders);
-                        await UpdateFilteredItemsAsync(resourceType);
-                        break;
+                    // case GameResourceType.TextAsset:
+                    //     _allTextAssetResources = resources;
+                    //     TextAssetFolders.ReplaceWith(folders);
+                    //     await UpdateFilteredItemsAsync(resourceType);
+                    //     break;
                     
                     case GameResourceType.AudioClip:
                         _allAudioClipResources = resources;

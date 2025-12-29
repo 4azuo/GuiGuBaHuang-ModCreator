@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 
 namespace ModCreator.Models
 {
-    [SetterAspect]
     public class PatternElement : ValidatedModel
     {
         public ModConfElement Element { get; set; }

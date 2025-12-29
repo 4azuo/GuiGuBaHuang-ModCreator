@@ -4,8 +4,7 @@ using System.Collections.Generic;
 
 namespace ModCreator.Models
 {
-    [SetterAspect]
-    public class RegularPattern : AutoNotifiableObject
+    public class RegularPattern
     {
         public string Name { get; set; }
         public string Description { get; set; }

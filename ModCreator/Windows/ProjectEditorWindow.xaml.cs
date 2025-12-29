@@ -94,12 +94,12 @@ namespace ModCreator.Windows
                 // Calculate totals
                 int totalTextures = WindowData.Texture2DItems.Sum(i => CountItems(i));
                 int totalSprites = WindowData.SpriteItems.Sum(i => CountItems(i));
-                int totalTextAssets = WindowData.TextAssetItems.Sum(i => CountItems(i));
+                // int totalTextAssets = WindowData.TextAssetItems.Sum(i => CountItems(i));
                 int totalAudioClips = WindowData.AudioClipItems.Sum(i => CountItems(i));
                 int totalOther = WindowData.OtherItems.Sum(i => CountItems(i));
-                int total = totalTextures + totalSprites + totalTextAssets + totalAudioClips + totalOther;
+                int total = totalTextures + totalSprites + totalAudioClips + totalOther;
                 
-                WindowData.StatusMessage = $"Loaded {total} game resources (T2D:{totalTextures} Sprite:{totalSprites} Text:{totalTextAssets} Audio:{totalAudioClips} Other:{totalOther})";
+                WindowData.StatusMessage = $"Loaded {total} game resources (T2D:{totalTextures} Sprite:{totalSprites} Audio:{totalAudioClips} Other:{totalOther})";
             }
             catch (Exception ex)
             {

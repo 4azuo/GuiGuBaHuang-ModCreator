@@ -303,8 +303,8 @@ namespace ModCreator.Helpers
             if (typeName.Equals("Texture2D", StringComparison.OrdinalIgnoreCase))
                 return GameResourceType.Texture2D;
             
-            if (typeName.Equals("TextAsset", StringComparison.OrdinalIgnoreCase))
-                return GameResourceType.TextAsset;
+            // if (typeName.Equals("TextAsset", StringComparison.OrdinalIgnoreCase))
+            //     return GameResourceType.TextAsset;
 
             // Fallback to file extension
             var ext = Path.GetExtension(fileName).ToLowerInvariant();
@@ -315,8 +315,8 @@ namespace ModCreator.Helpers
             if (ext == ".png" || ext == ".jpg" || ext == ".jpeg")
                 return GameResourceType.Sprite;
             
-            if (ext == ".txt" || ext == ".json" || ext == ".xml")
-                return GameResourceType.TextAsset;
+            // if (ext == ".txt" || ext == ".json" || ext == ".xml")
+            //     return GameResourceType.TextAsset;
 
             return GameResourceType.Other;
         }
