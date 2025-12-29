@@ -150,7 +150,7 @@
           "ItemProps.hide",
           "ItemProps.playerShow",
           "ItemProps.npcShow",
-          "ItemProps.icon",
+          "ItemProps.icon::@unknown@",
           "ItemProps.level",
           "ItemProps.desc::[LocalText.key]",
           "ItemProps.isOverlay",

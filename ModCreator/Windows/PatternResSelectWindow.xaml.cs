@@ -2,6 +2,7 @@ using ModCreator.Enums;
 using ModCreator.Models;
 using ModCreator.WindowData;
 using System.ComponentModel;
+using System.IO;
 using System.Windows;
 
 namespace ModCreator.Windows
@@ -55,11 +56,11 @@ namespace ModCreator.Windows
         {
             if (WindowData.IsCustomResourceSelected && WindowData.SelectedCustomResource != null)
             {
-                SelectedResourcePath = WindowData.SelectedCustomResource.Name;
+                SelectedResourcePath = Path.GetFileNameWithoutExtension(WindowData.SelectedCustomResource.Name);
             }
             else if (!WindowData.IsCustomResourceSelected && WindowData.SelectedGameResource != null)
             {
-                SelectedResourcePath = WindowData.SelectedGameResource.Name;
+                SelectedResourcePath = Path.GetFileNameWithoutExtension(WindowData.SelectedGameResource.Name);
             }
             else
             {
