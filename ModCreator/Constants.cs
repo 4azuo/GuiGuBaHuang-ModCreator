@@ -36,9 +36,11 @@ namespace ModCreator
         public static string GameFolderPath => SettingHelper.TryGet("gameFolderPath", @"C:/Program Files (x86)/Steam/steamapps/common/鬼谷八荒");
         
         /// <summary>
-        /// Documentation directory (.github/docs)
+        /// Documentation directory (docs, or the former .github/docs)
         /// </summary>
-        public static readonly string DocsDir = Path.GetFullPath(Path.Combine(RootDir, ".github", "docs"));
+        public static readonly string DocsDir = Directory.Exists(Path.Combine(RootDir, "docs"))
+            ? Path.GetFullPath(Path.Combine(RootDir, "docs"))
+            : Path.GetFullPath(Path.Combine(RootDir, ".github", "docs"));
 
         /// <summary>
         /// Resources directory (bin/*/Resources)
