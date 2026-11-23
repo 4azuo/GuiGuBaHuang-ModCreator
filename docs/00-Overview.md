@@ -37,7 +37,7 @@ cd GuiGuBaHuang-ModCreator
 ## Configuration
 
 Edit `ModCreator\Resources\embeded-settings.json`:
-- `rootDir`: Path to GuiGuBaHuang-ModLib
+- `rootDir`: Path to the main repository (GuiGuBaHuang-Taoist)
 - `steamWorkshopDir`: Path to Steam Workshop
 - `WorkplacePath`: Workplace directory (auto-created)
 
