@@ -1,42 +1,36 @@
 # ModCreator
 
-A visual WPF tool for creating and managing mods for the GuiGuBaHuang game. No coding required - intuitive interface for mod creation.
+> [!WARNING]
+> **Development is on hold indefinitely.** ModCreator is not maintained: no new features, no fixes, no support, and no
+> date to resume. It may not work with the current version of the game or of ModLib. To make a mod, use
+> [Fouru's ModLib](https://github.com/4azuo/GuiGuBaHuang-ModLib#create-a-mod-with-modlib) directly, with the mod projects
+> and scripts of [GuiGuBaHuang-Taoist](https://github.com/4azuo/GuiGuBaHuang-Taoist) as the example.
 
-## ✨ Features
+A WPF tool (.NET 9) that was meant to create and edit mod projects of Gui Gu Ba Huang (鬼谷八荒) without code, on top of
+[Fouru's ModLib](https://github.com/4azuo/GuiGuBaHuang-ModLib).
 
-- ✅ **Project Management** - Create, edit, delete, and organize mod projects
-- ✅ **Guidelines** - Built-in documentation and best practices
-- ✅ **ModConf Editor** - Configure mod metadata and settings
-- ✅ **ModImg Manager** - Manage mod images and assets
-- ✅ **ModEvent Editor** - Create and edit game events visually
-- ✅ **User-Friendly** - No coding knowledge required
+## What it has
 
-## 🚀 Installation & Running
+- **Project management**: create, edit, delete and organize mod projects
+- **ModConf editor**: game configs of a mod as JSON, from the samples of every config type
+- **ModImg manager**: the images of a mod
+- **Global variables** of a mod
+- **ModEvent editor**: events of a mod built visually
+- **Guidelines**: the documentation of the main repository, shown in the tool
 
-**Requirements**: .NET 9, Visual Studio 2022+
+Details per feature: [docs/00-Overview.md](docs/00-Overview.md).
 
-### Installation Steps
+## Build (as is)
 
-1. **Clone the main repository** (GuiGuBaHuang-ModLib, not ModCreator)
-   ```powershell
-   cd C:\git
-   git clone https://github.com/4azuo/GuiGuBaHuang-ModLib.git
-   cd GuiGuBaHuang-ModLib
-   git submodule update --init --recursive
-   ```
+ModCreator is the `GuiGuBaHuang-ModCreator` submodule of
+[GuiGuBaHuang-Taoist](https://github.com/4azuo/GuiGuBaHuang-Taoist) and expects that repository around it.
 
-2. **Configure settings**
-   - Edit `GuiGuBaHuang-ModCreator\ModCreator\Resources\embeded-settings.json`
-   - Update paths if needed (default is `C:\git\GuiGuBaHuang-ModLib`)
-
-3. **Run the application**
-   ```powershell
-   cd GuiGuBaHuang-ModCreator
-   .\run.ps1
-   ```
-
-### Build & Run Manually
 ```powershell
-.\build.ps1
+git clone --recursive https://github.com/4azuo/GuiGuBaHuang-Taoist.git
+cd GuiGuBaHuang-Taoist\GuiGuBaHuang-ModCreator
+.\build.ps1          # or .\run.ps1 to build and start it
 .\ModCreator\bin\Release\ModCreator.exe
 ```
+
+Requirements: .NET 9 SDK, Visual Studio 2022+. The paths (repository, game, Steam Workshop) are in
+`ModCreator\Resources\embeded-settings.json`.
