@@ -2,7 +2,7 @@
   "rootDir": "C:\\GitHub\\GuiGuBaHuang-Taoist",
   "modCreatorDir": "C:\\GitHub\\GuiGuBaHuang-Taoist\\GuiGuBaHuang-ModCreator",
   "baseGameResourcesDir": "C:\\Users\\hiros\\Downloads\\BaseGameResources 1.2.111",
-  "translateScriptPath": "C:\\GitHub\\GuiGuBaHuang-Taoist\\Translate\\run.py",
+  "translateScriptPath": "C:\\GitHub\\GuiGuBaHuang-Taoist\\GuiGuBaHuang-ModLib\\Translate\\run.py",
   "steamWorkshopDir": "C:\\Program Files (x86)\\Steam\\steamapps\\workshop\\content\\1468810",
   "gameFolderPath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\鬼谷八荒"
 }

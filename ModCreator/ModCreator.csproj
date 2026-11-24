@@ -121,7 +121,7 @@
 
   <Target Name="CopyModLibDll" AfterTargets="Build">
     <Message Text="Copying ModLib DLL files to template project..." Importance="high" />
-    <Exec Command="xcopy &quot;$(ProjectDir)..\..\3385996759\debug\Mod_flQrxq\ModCode\dll\*.*&quot; &quot;$(ProjectDir)..\ModProject_0hKMNX\ModProject\ModCode\ModMain\CodeArtifacts\&quot; /y /i" />
+    <Exec Command="xcopy &quot;$(ProjectDir)..\..\GuiGuBaHuang-ModLib\3385996759\debug\Mod_flQrxq\ModCode\dll\*.*&quot; &quot;$(ProjectDir)..\ModProject_0hKMNX\ModProject\ModCode\ModMain\CodeArtifacts\&quot; /y /i" />
   </Target>
 
 </Project>

@@ -47,7 +47,7 @@ namespace ModCreator.WindowData
         {
             _allConfigs.Clear();
 
-            var sampleConfsPath = Path.GetFullPath(Path.Combine(Constants.RootDir, "3385996759", "SampleConfs"));
+            var sampleConfsPath = Constants.SampleConfsDir;
 
             if (Directory.Exists(sampleConfsPath))
             {

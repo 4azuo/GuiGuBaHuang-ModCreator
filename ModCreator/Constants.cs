@@ -11,19 +11,30 @@ namespace ModCreator
     public static class Constants
     {
         /// <summary>
-        /// Root directory of the project
+        /// Root directory of the main repository (the mod repository holding the ModLib and ModCreator submodules)
         /// </summary>
-        public static string RootDir => SettingHelper.TryGet("rootDir", @"C:/git/GuiGuBaHuang-ModLib/");
+        public static string RootDir => SettingHelper.TryGet("rootDir", @"C:/git/GuiGuBaHuang-Taoist/");
+
+        /// <summary>
+        /// ModLib repository (submodule GuiGuBaHuang-ModLib of the main repository): sources ModLib/, Workshop project
+        /// 3385996759/ (SampleConfs, build output), docs/
+        /// </summary>
+        public static string ModLibDir => SettingHelper.TryGet("modLibDir", Path.Combine(RootDir, "GuiGuBaHuang-ModLib"));
+
+        /// <summary>
+        /// Templates of every game config type (ModLib project 3385996759)
+        /// </summary>
+        public static string SampleConfsDir => Path.GetFullPath(Path.Combine(ModLibDir, "3385996759", "SampleConfs"));
 
         /// <summary>
         /// Mod Creator directory
         /// </summary>
-        public static string ModCreatorDir => SettingHelper.TryGet("modCreatorDir", @"C:/git/GuiGuBaHuang-ModLib/GuiGuBaHuang-ModCreator/");
+        public static string ModCreatorDir => SettingHelper.TryGet("modCreatorDir", @"C:/git/GuiGuBaHuang-Taoist/GuiGuBaHuang-ModCreator/");
 
         /// <summary>
         /// Base game resources directory
         /// </summary>
-        public static string BaseGameResourcesDir => SettingHelper.TryGet("baseGameResourcesDir", @"C:/git/GuiGuBaHuang-ModLib/GuiGuBaHuang-ModCreator/");
+        public static string BaseGameResourcesDir => SettingHelper.TryGet("baseGameResourcesDir", @"C:/git/GuiGuBaHuang-Taoist/GuiGuBaHuang-ModCreator/");
 
         /// <summary>
         /// Steam Workshop directory
@@ -36,11 +47,12 @@ namespace ModCreator
         public static string GameFolderPath => SettingHelper.TryGet("gameFolderPath", @"C:/Program Files (x86)/Steam/steamapps/common/鬼谷八荒");
         
         /// <summary>
-        /// Documentation directory (docs, or the former .github/docs)
+        /// Documentation directory: the docs of ModLib (guide/: writing a mod with ModLib, the internals, ModConf/),
+        /// else the docs of the main repository
         /// </summary>
-        public static readonly string DocsDir = Directory.Exists(Path.Combine(RootDir, "docs"))
-            ? Path.GetFullPath(Path.Combine(RootDir, "docs"))
-            : Path.GetFullPath(Path.Combine(RootDir, ".github", "docs"));
+        public static readonly string DocsDir = Directory.Exists(Path.Combine(ModLibDir, "docs"))
+            ? Path.GetFullPath(Path.Combine(ModLibDir, "docs"))
+            : Path.GetFullPath(Path.Combine(RootDir, "docs"));
 
         /// <summary>
         /// Resources directory (bin/*/Resources)

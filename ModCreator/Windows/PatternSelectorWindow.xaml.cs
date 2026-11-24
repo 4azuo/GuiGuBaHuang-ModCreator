@@ -83,7 +83,7 @@ namespace ModCreator.Windows
             {
                 if (!string.IsNullOrEmpty(element.RefDocs))
                 {
-                    var sampleConfsPath = Path.GetFullPath(Path.Combine(Constants.RootDir, "3385996759", "SampleConfs"));
+                    var sampleConfsPath = Constants.SampleConfsDir;
                     var filePath = Path.Combine(sampleConfsPath, element.RefDocs);
 
                     if (File.Exists(filePath))

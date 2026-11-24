@@ -38,6 +38,8 @@ cd GuiGuBaHuang-ModCreator
 
 Edit `ModCreator\Resources\embeded-settings.json`:
 - `rootDir`: Path to the main repository (GuiGuBaHuang-Taoist)
+- `modLibDir` (optional): the ModLib repository, default `<rootDir>/GuiGuBaHuang-ModLib` (SampleConfs: `3385996759/SampleConfs`, docs, the ModLib DLLs copied into the template project by the build)
+- `translateScriptPath`: `<rootDir>/GuiGuBaHuang-ModLib/Translate/run.py`
 - `steamWorkshopDir`: Path to Steam Workshop
 - `WorkplacePath`: Workplace directory (auto-created)
 
@@ -63,4 +65,4 @@ Edit `ModCreator\Resources\embeded-settings.json`:
 
 - GitHub: https://github.com/4azuo/GuiGuBaHuang-Taoist
 - Issues: GitHub Issues
-- Docs: `docs/` of this repository (ModCreator); ModLib, configs: [GuiGuBaHuang-ModLib/docs](https://github.com/4azuo/GuiGuBaHuang-ModLib/tree/main/docs); mods, build: [GuiGuBaHuang-Taoist/docs](https://github.com/4azuo/GuiGuBaHuang-Taoist/tree/main/docs)
+- Docs: `docs/` of this repository (ModCreator); ModLib, writing a mod, build, configs: [GuiGuBaHuang-ModLib/docs](https://github.com/4azuo/GuiGuBaHuang-ModLib/tree/main/docs) (`guide/`: writing a mod with ModLib); the Taoist mod: [GuiGuBaHuang-Taoist/docs](https://github.com/4azuo/GuiGuBaHuang-Taoist/tree/main/docs)
