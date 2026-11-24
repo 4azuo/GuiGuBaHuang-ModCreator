@@ -4,6 +4,775 @@
         <name>ModLib</name>
     </assembly>
     <members>
+        <member name="T:ModLib.AutoTest.AutoTestRequest">
+            <summary>
+            Request written by GuiGuBaHuang-ModLib/scripts/game/run-autotest.ps1 to &lt;mod cache&gt;\autotest\request.json.
+            The autotest runs only while this file exists, so players never trigger it.
+            </summary>
+        </member>
+        <member name="P:ModLib.AutoTest.AutoTestRequest.RunId">
+            <summary>Id of the run (folder name of the evidence).</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.AutoTestRequest.OutDir">
+            <summary>Absolute folder where results.json and screenshots are written.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.AutoTestRequest.Save">
+            <summary>Save to load from the title screen (name or folder, empty = first save). Ignored when AutoLoad is false.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.AutoTestRequest.NewCharacter">
+            <summary>
+            True: the pre-test TP-01 creates a new character (trainer on, CrueltyShura) in a free save slot and every
+            scenario runs on it (the save is removed by the restore after the run). False: Save / AutoLoad are used.
+            </summary>
+        </member>
+        <member name="P:ModLib.AutoTest.AutoTestRequest.SlotCharacter">
+            <summary>
+            Games side by side (run-autotest.ps1 -SlotCharacter): every game slot plays its own test character
+            "AutoTest Slot&lt;n&gt;" (kept between runs); created by TP-01 when missing - one game at a time
+            (&lt;mod cache&gt;\autotest-shared\creating.lock), so two games never pick the same free save slot.
+            </summary>
+        </member>
+        <member name="P:ModLib.AutoTest.AutoTestRequest.Window">
+            <summary>
+            Window of the game ("1600x900", empty: as set): the game's own settings (g.data.globle.gameSetting: windowed,
+            size) set and applied at the title screen, kept after the run.
+            </summary>
+        </member>
+        <member name="P:ModLib.AutoTest.AutoTestRequest.AutoLoad">
+            <summary>True: the runner opens the save itself. False: the tester loads it manually.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.AutoTestRequest.Scenarios">
+            <summary>Scenario ids to run (empty = all automatic scenarios).</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.AutoTestRequest.StepDelayMs">
+            <summary>Delay between steps.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.AutoTestRequest.WatchBattles">
+            <summary>Keep watching battles after the automatic scenarios (battle "watch" scenarios).</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.AutoTestRequest.SnapSteps">
+            <summary>Capture the screen before the first step and after every step of each scenario.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.AutoTestRequest.Promo">
+            <summary>
+            Promotion run (GuiGuBaHuang-ModLib/scripts/game/run-promo.ps1): the scenarios run only for their pictures ("promo" of
+            scenarios.json, copied to ModProject/SteamImg): no check panels over the screenshots.
+            </summary>
+        </member>
+        <member name="P:ModLib.AutoTest.AutoTestRequest.KeepAlive">
+            <summary>
+            Games side by side that stay open (run-autotest-parallel.ps1): after its scenarios the game waits in the save
+            for the next request (a request.json with another RunId, run-autotest.ps1 -Attach) instead of being closed;
+            every game scenario starts from the player state recorded when the save was loaded (AutoTestRunner baseline)
+            and its own Scenario.Precondition.
+            </summary>
+        </member>
+        <member name="P:ModLib.AutoTest.AutoTestRequest.OwnerPid">
+            <summary>
+            Process id of the run-autotest.ps1 that wrote the request (0: none, a request of an older script). The request
+            counts only while that process runs: a script killed or closed with its terminal never removes request.json
+            (its finally does not run), and a game started normally afterwards must not run the tests.
+            </summary>
+        </member>
+        <member name="P:ModLib.AutoTest.AutoTestRequest.OwnerStart">
+            <summary>Start time of the OwnerPid process (a reused process id is another process); null: not checked.</summary>
+        </member>
+        <member name="F:ModLib.AutoTest.AutoTestRequest.OWNER_START_TOLERANCE_SEC">
+            <summary>Largest difference between OwnerStart and the start time of the running process.</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRequest.IsOwnerAlive">
+            <summary>True while the run-autotest.ps1 that wrote the request still runs.</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRequest.IsOwnerAlive(System.Int32,System.Nullable{System.DateTime},System.Func{System.Int32,System.Nullable{System.DateTime}})">
+            <summary>
+            Owner check without the process list: <paramref name="processStart"/> returns the start time of a running
+            process, null when no process has that id, DateTime.MinValue when it runs but its start time cannot be read.
+            </summary>
+        </member>
+        <member name="T:ModLib.AutoTest.ScenarioKind">
+            <summary>Execution kind of a scenario.</summary>
+        </member>
+        <member name="F:ModLib.AutoTest.ScenarioKind.Auto">
+            <summary>Fully automatic (runs in the title screen or right after the save is loaded).</summary>
+        </member>
+        <member name="F:ModLib.AutoTest.ScenarioKind.Watch">
+            <summary>Runs automatically when the tester starts a battle during the session.</summary>
+        </member>
+        <member name="F:ModLib.AutoTest.ScenarioKind.Tool">
+            <summary>A tool, not a test (e.g. the effect galleries): runs only when its id is asked (-Scenario).</summary>
+        </member>
+        <member name="T:ModLib.AutoTest.ScenarioScope">
+            <summary>Where an automatic scenario can run.</summary>
+        </member>
+        <member name="F:ModLib.AutoTest.ScenarioScope.Title">
+            <summary>Title screen (before loading the save).</summary>
+        </member>
+        <member name="F:ModLib.AutoTest.ScenarioScope.Game">
+            <summary>Inside the loaded save (map screen).</summary>
+        </member>
+        <member name="F:ModLib.AutoTest.ScenarioScope.Battle">
+            <summary>Inside a battle (Watch scenarios).</summary>
+        </member>
+        <member name="T:ModLib.AutoTest.ScenarioStep">
+            <summary>One step of a scenario: an action run after a delay.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.ScenarioStep.Label">
+            <summary>Short label (used in logs and screenshot names).</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.ScenarioStep.DelayMs">
+            <summary>Delay before the step runs.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.ScenarioStep.Action">
+            <summary>Step body.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.ScenarioStep.Until">
+            <summary>Wait step: polled every PollMs until it returns true (or TimeoutMs elapses -> FAIL).</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.ScenarioStep.TimeoutMs">
+            <summary>Timeout of a wait step.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.ScenarioStep.PollMs">
+            <summary>Polling period of a wait step.</summary>
+        </member>
+        <member name="T:ModLib.AutoTest.Scenario">
+            <summary>An automatic test scenario (definition only, see AutoTestScenarios).</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.Scenario.Id">
+            <summary>Scenario id (same id as in 3161035078/tests/scenarios.json).</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.Scenario.Feature">
+            <summary>Tested feature (event class name).</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.Scenario.Title">
+            <summary>What the scenario checks.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.Scenario.Kind">
+            <summary>Execution kind.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.Scenario.Scope">
+            <summary>Execution scope.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.Scenario.Trigger">
+            <summary>Watch scenarios only: "BattleStart" or "BattleEnd".</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.Scenario.Overlay">
+            <summary>
+            Show the checks of a step in an in-game panel before its screenshot when the step left no UI open
+            (logic checks: the evidence then shows the values computed in the game instead of an empty map).
+            </summary>
+        </member>
+        <member name="P:ModLib.AutoTest.Scenario.KeepPopups">
+            <summary>
+            Keep the message boxes between steps. Default false: before every step the runner clicks the only button of
+            an information box (one button, already in the previous step's screenshot) and "Disable" in the game's
+            tutorial-tips prompt, so they do not cover the next windows. True for scenarios whose next step answers a
+            one-button box itself.
+            </summary>
+        </member>
+        <member name="P:ModLib.AutoTest.Scenario.SnapSteps">
+            <summary>Screenshots before / after the steps (off for tools with thousands of steps: they capture what they need).</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.Scenario.Steps">
+            <summary>Steps executed in order.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.Scenario.Precondition">
+            <summary>
+            Set-up run before the first step of a game scenario, after the common reset of the player to the state of
+            the loaded save (grade, exp, money, lifespan, place, HP / MP / SP, S&amp;M settings): what the scenario needs
+            besides (a grade, a town, items...). The games that stay open run many scenarios in a row in one save.
+            </summary>
+        </member>
+        <member name="M:ModLib.AutoTest.Scenario.Pre(System.Action{ModLib.AutoTest.AutoTestContext})">
+            <summary>Sets the precondition (fluent).</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.Scenario.Step(System.String,System.Action{ModLib.AutoTest.AutoTestContext},System.Int32)">
+            <summary>Appends a step (fluent).</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.Scenario.Wait(System.String,System.Func{ModLib.AutoTest.AutoTestContext,System.Boolean},System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Appends a wait step: until() is called every pollMs (it may also act, e.g. click a dialog) until it
+            returns true; after timeoutMs the step fails. Use it for asynchronous game states (battle loading...).
+            </summary>
+        </member>
+        <member name="T:ModLib.AutoTest.CheckResult">
+            <summary>Result of one check inside a scenario.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.CheckResult.Id">
+            <summary>Check id "&lt;scenario id&gt;-&lt;nn&gt;" (PASS/FAIL checks only), stable while the scenario code does not change.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.CheckResult.Step">
+            <summary>Step label.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.CheckResult.Message">
+            <summary>Check description.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.CheckResult.Status">
+            <summary>PASS, FAIL, INFO or SKIP.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.CheckResult.Time">
+            <summary>Time of the check.</summary>
+        </member>
+        <member name="T:ModLib.AutoTest.ScreenshotInfo">
+            <summary>One evidence screenshot.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.ScreenshotInfo.File">
+            <summary>File name relative to OutDir (screens/...).</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.ScreenshotInfo.Step">
+            <summary>Step label ("before" for the state before the first step).</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.ScreenshotInfo.StepNo">
+            <summary>1-based step number (0 = before the first step).</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.ScreenshotInfo.Kind">
+            <summary>"before", "after" (state after the step) or "extra" (taken inside a step).</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.ScreenshotInfo.Time">
+            <summary>Time of the request.</summary>
+        </member>
+        <member name="T:ModLib.AutoTest.ScenarioResult">
+            <summary>Result of a scenario, serialized into results.json.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.ScenarioResult.Id">
+            <summary>Scenario id.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.ScenarioResult.Feature">
+            <summary>Tested feature.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.ScenarioResult.Title">
+            <summary>Scenario title.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.ScenarioResult.Kind">
+            <summary>Execution kind.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.ScenarioResult.Status">
+            <summary>PASS, FAIL, ERROR, SKIP or RUNNING.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.ScenarioResult.StartedAt">
+            <summary>Start time.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.ScenarioResult.EndedAt">
+            <summary>End time.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.ScenarioResult.Checks">
+            <summary>All checks and notes.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.ScenarioResult.Screenshots">
+            <summary>Screenshots in order: before the first step, after each step, and extra ones taken by a step.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.ScenarioResult.Error">
+            <summary>Exception text when a step crashed.</summary>
+        </member>
+        <member name="T:ModLib.AutoTest.AutoTestContext">
+            <summary>
+            State passed to scenario steps: assertions, notes, screenshots and a bag to share values between steps.
+            </summary>
+        </member>
+        <member name="P:ModLib.AutoTest.AutoTestContext.Result">
+            <summary>Result being filled.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.AutoTestContext.CurrentStep">
+            <summary>Label of the running step.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.AutoTestContext.Bag">
+            <summary>Values shared between the steps of a scenario.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.AutoTestContext.ScreenshotFunc">
+            <summary>Screenshot callback provided by the runner (label -> file name).</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.AutoTestContext.CurrentStepNo">
+            <summary>1-based number of the running step.</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestContext.#ctor(ModLib.AutoTest.ScenarioResult)">
+            <summary>Creates the context of a scenario.</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestContext.Assert(System.Boolean,System.String)">
+            <summary>Records PASS when the condition is true, FAIL otherwise.</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestContext.AssertEqual``1(``0,``0,System.String)">
+            <summary>Records PASS when both values are equal.</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestContext.AssertBetween(System.Double,System.Double,System.Double,System.String)">
+            <summary>Records PASS when min &lt;= value &lt;= max.</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestContext.Info(System.String)">
+            <summary>Records an informative note (does not affect the status).</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestContext.Skip(System.String)">
+            <summary>Records that a check was skipped (precondition not met).</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestContext.Snap(System.String)">
+            <summary>
+            Takes an extra screenshot inside a step (the runner already captures the screen before the first step
+            and after every step). The screen is captured by run-autotest.ps1 a few hundred ms later.
+            </summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestContext.AddScreenshot(System.String,System.Int32,System.String)">
+            <summary>Requests a screenshot and records it (used by the runner for before/after shots).</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestContext.ComputeStatus">
+            <summary>Final status from the recorded checks.</summary>
+        </member>
+        <member name="T:ModLib.AutoTest.AutoTestRunner">
+            <summary>
+            In-game test runner of a mod, driven by scripts/game/run-autotest.ps1 of ModLib (shared by the mods).
+            Loaded only when &lt;mod cache&gt;\autotest\request.json exists (never for normal players).
+            Phases: title screen scenarios -> load the save (automatically or by the tester) -> game scenarios
+            -> optional battle watching. Results and screenshots are written to the request OutDir.
+            The runner never saves the game; use a throwaway test save anyway.
+            A mod declares its runner as a subclass with a Cache attribute, e.g.
+            [Cache("AutoTestEvent", CacheType = CacheAttribute.CType.Global, WorkOn = CacheAttribute.WType.All)]
+            public class AutoTestEvent : AutoTestRunner { ... }, and its scenarios as IScenarioDefinition classes of its
+            assembly. The hooks (ModVersion, OnRequestLoaded, OnNewCharacterRequested, CaptureModState / RestoreModState)
+            add what is specific to the mod.
+            </summary>
+            <summary>
+            Games that stay open (run-autotest-parallel.ps1, AutoTestRequest.KeepAlive): once its scenarios are done the game
+            waits in the save (phase Idle) for the next request - a request.json with another RunId written by
+            run-autotest.ps1 -Attach - and runs it at once, without a restart. Every game scenario starts from the player
+            state recorded when the save was loaded (the baseline: grade, exp, money, lifespan, age, place, HP / MP / SP,
+            bag, the data of the mod: CaptureModState / RestoreModState), then its own Scenario.Precondition.
+            </summary>
+        </member>
+        <member name="T:ModLib.AutoTest.AutoTestRunner.PhaseEnum">
+            <summary>Runner phases.</summary>
+            <summary>Idle: a game that stays open (request.KeepAlive) waits in the save for its next request.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.AutoTestRunner.Instance">
+            <summary>The running runner (set by OnLoadClass), null outside a run.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.AutoTestRunner.TitlePopups">
+            <summary>Popups seen on the title screen before the scenarios (closed by the runner).</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.AutoTestRunner.LastBattleWin">
+            <summary>Result of the last watched battle.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.AutoTestRunner.ModVersion">
+            <summary>Version of the mod, written into results.json ("modVersion").</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.CreateScenarios">
+            <summary>
+            The scenarios: every IScenarioDefinition of the assembly of the runner (the mod) and of ModLib (its tools, e.g.
+            the effect galleries TE-xx, run only when asked by id) by default.
+            </summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.CanFightInTests(WorldUnitBase)">
+            <summary>True when a test may fight this NPC (a mod leaves out its companions...).</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.OnRequestLoaded(ModLib.AutoTest.AutoTestRequest)">
+            <summary>A request was loaded (the mod switches off what would disturb the steps, e.g. dialogs opening by themselves).</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.OnNewCharacterRequested(System.Boolean)">
+            <summary>The run asks for a new character (the pre-test of the mod creates it) or not.</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.CaptureModState(WorldUnitBase)">
+            <summary>
+            Data of the mod for the player when the save is loaded (name -> JSON, null when none), put back before every
+            game scenario by RestoreModState so that a scenario does not leak into the next one.
+            </summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.RestoreModState(WorldUnitBase,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>Puts the data of CaptureModState back; returns the names of what changed.</summary>
+        </member>
+        <member name="F:ModLib.AutoTest.AutoTestRunner.TITLE_SETTLE_MS">
+            <summary>Time given to the title screen popups to appear before the title scenarios start.</summary>
+        </member>
+        <member name="F:ModLib.AutoTest.AutoTestRunner.SHOT_WAIT_MS">
+            <summary>Wait after a screenshot request so run-autotest.ps1 captures the screen before the next action.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.AutoTestRunner.Slot">
+            <summary>
+            Game slot of this game (GuiGuBaHuang-ModLib/scripts/game/new-game-slot.ps1): 1 for the normal game folder, N for a copy started from
+            %LOCALAPPDATA%\ggbh-slotN (several games side by side, each with its own autotest folder).
+            </summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.GetAutoTestFolder(System.String)">
+            <summary>Folder of the request/stop files: &lt;mod cache&gt;\autotest\ (slot N: autotest-slotN\).</summary>
+        </member>
+        <member name="F:ModLib.AutoTest.AutoTestRunner.STALE_REQUEST_FILE">
+            <summary>A request whose script no longer runs is moved to this file (kept for a look, never read).</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.OnCacheHandler">
+            <summary>Loads the runner only when a request file of a running run-autotest.ps1 exists.</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.ReadActiveRequest(System.String)">
+            <summary>
+            The request of <paramref name="folder"/>, null when there is none, it cannot be read (being written) or the
+            run-autotest.ps1 that wrote it no longer runs (AutoTestRequest.OwnerPid): such a stale request is moved to
+            request.stale.json, so a game started normally later plays without the runner.
+            </summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.OnLoadClass(System.Boolean,System.String,ModLib.Attributes.CacheAttribute)">
+            <summary>Reads the request and prepares the output folder.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.AutoTestRunner.DramaTimeoutSec">
+            <summary>Seconds a drama may stay open before the runner closes it (story tests read every drama: longer).</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.OnMonoUpdate">
+            <summary>
+            Every second (real time): closes a drama dialog left open for 5 s (NPC/stalker joining a battle, an opponent
+            escaping...). A drama pauses the game timers, so OnTimeUpdate100ms (the step runner) would never run again;
+            the 5 s let the scenarios that open a drama check it first.
+            </summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.OnTimeUpdate100ms">
+            <summary>Drives the state machine (title -> load -> game -> watch -> done).</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.OnBattleStart(ETypeData)">
+            <summary>Queues battle-start watch scenarios.</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.OnBattleEndHandler(EBattleTypeData.BattleEndHandler)">
+            <summary>Queues battle-end watch scenarios.</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.ApplyWindow">
+            <summary>
+            The window of the request ("1600x900"): the game's own settings (windowed, size) set and applied - the game
+            applies them at start, over Unity's command line and registry. Kept after the run.
+            </summary>
+        </member>
+        <member name="F:ModLib.AutoTest.AutoTestRunner.TEST_FAMILY_NAME">
+            <summary>Family name of the test characters: "AutoTest Slot1", "AutoTest Slot2"... (kept, used again by the next runs).</summary>
+        </member>
+        <member name="F:ModLib.AutoTest.AutoTestRunner.CREATING_LOCK_MAX_SEC">
+            <summary>A creation lock older than this is left by a killed game.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.AutoTestRunner.TestGivenName">
+            <summary>Given name of the test character of this game slot.</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.FindSlotSave(System.Collections.Generic.List{UILoginCacheItem})">
+            <summary>The living test character of this slot ("AutoTest Slot&lt;n&gt;"), null when there is none yet.</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.StartNewCharacter">
+            <summary>
+            No test character for this slot yet: a new one (TP-01), one game at a time - the game picks the first free save
+            slot of the list read from the disk, so the next game waits until this one's new save is written.
+            </summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.FinishNewCharacter">
+            <summary>
+            After the creation: the character named "AutoTest Slot&lt;n&gt;", saved, then the creation lock freed once the
+            save is on the disk. False while it is not there yet (60 s at most).
+            </summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.TryConfirmDialogs">
+            <summary>
+            While a save is loading, clicks the confirmation button of blocking dialogs (e.g. "the archive used
+            mods that were removed"). Returns true when a button was clicked. Clicks at most every 3 s.
+            </summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.NeedsSave">
+            <summary>A save is needed after the title screen: a full run, battle watching or a selected game / battle scenario.</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.OpenUIs">
+            <summary>
+            Game UIs currently open. Compare them by GetInstanceID(): Il2Cpp wrappers are new objects at every read.
+            </summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.IsBaseUI(System.String)">
+            <summary>Screens that stay open (title, map, battle) and transient loading/mask UIs.</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.DismissStalePopups">
+            <summary>
+            Before a step: message boxes left by the previous steps (already in their screenshots) are answered, so they
+            do not cover the next windows - the only button of an information box (OK), and "Disable" of the game's
+            tutorial-tips prompt ("Tips will pop up... Enable this function?", buttons Enable / Disable). Boxes with a
+            real choice (Yes / No) are left to the scenario. Off with Scenario.KeepPopups.
+            </summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.CloseNonBaseUIs(System.String)">
+            <summary>Closes every popup (announcements, dialogs, windows) so a scenario starts from a clean screen.</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.ShowOverlay">
+            <summary>
+            When the step left only the base screen open, shows its checks in an in-game text panel so the screenshot
+            shows the values computed in the game. Returns false when nothing is shown.
+            </summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.CloseLeftoverUIs">
+            <summary>
+            Closes the UIs a scenario opened and left open (failed or aborted steps), so they do not cover the
+            screenshots or break the next scenarios. Mask/loading UIs are left alone.
+            </summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.Mute">
+            <summary>
+            The game muted while the autotest runs (GameHelper.Mute: Unity's master volume, not saved - the game's sound
+            settings are unchanged). Set when the request is loaded and checked again at every phase.
+            </summary>
+        </member>
+        <member name="P:ModLib.AutoTest.AutoTestRunner.OutDir">
+            <summary>
+            Requests a screenshot of the game window into OutDir\screens and returns the relative file name.
+            UnityEngine.ScreenCapture is stripped from the game ("Method unstripping failed"), so the runner writes
+            a request file (&lt;autotest&gt;\snaps\&lt;n&gt;.req containing the target path) that run-autotest.ps1 captures
+            within ~0.3 s (steps wait StepDelayMs before changing the screen).
+            </summary>
+            <summary>Output folder of the running autotest (null outside a run).</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.Record(System.String,System.Int32)">
+            <summary>
+            Requests a recording of the game window by run-autotest.ps1: frames (jpg, ~10 a second) into frameDir for ms
+            milliseconds; the request file (&lt;autotest&gt;\snaps\&lt;n&gt;.rec) is deleted when the recording is done.
+            Returns the request file (null when it could not be written).
+            </summary>
+        </member>
+        <member name="F:ModLib.AutoTest.AutoTestRunner.HEARTBEAT_SEC">
+            <summary>Seconds between two writes of results.json while a scenario waits (heartbeat of the stall watchdog).</summary>
+        </member>
+        <member name="T:ModLib.AutoTest.AutoTestRunner.Baseline">
+            <summary>The player when the save was loaded (null before).</summary>
+        </member>
+        <member name="F:ModLib.AutoTest.AutoTestRunner.Baseline.Mod">
+            <summary>Data of the mod (CaptureModState): name -> JSON, null when none.</summary>
+        </member>
+        <member name="F:ModLib.AutoTest.AutoTestRunner.Baseline.Bag">
+            <summary>The unequipped items: soleID -> (item id, count).</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.KeepsWaiting(System.String)">
+            <summary>A game that stays open waits for its next request after a finished batch (not after an error: the runner restarts it).</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.CaptureBaseline">
+            <summary>Records the player state right after the save was loaded.</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.Prepare(ModLib.AutoTest.Scenario,ModLib.AutoTest.AutoTestContext)">
+            <summary>
+            Before a game scenario: the player back to the baseline (only what differs; a game that stays open ran other
+            scenarios before in the same save), no drama left open, then the scenario's precondition. A failed set-up is
+            a failed check of the scenario (its steps still run).
+            </summary>
+        </member>
+        <member name="M:ModLib.AutoTest.AutoTestRunner.CheckNextRequest">
+            <summary>Idle: a request.json with another RunId is the next batch (read once a second).</summary>
+        </member>
+        <member name="T:ModLib.AutoTest.MockBugSplatServer">
+            <summary>
+            Local stand-in of the BugSplat upload API for TT-06 (127.0.0.1, free port, a background thread): answers the 3
+            requests of CrashReportHelper like BugSplat and S3 do and records every request (the evidence of what a player's
+            game would send). Used through CrashReportHelper.ServerUrlOverride.
+              GET  /api/getCrashUploadUrl       -> {"url": "&lt;base&gt;/upload/crash.zip?X-Amz-Signature=autotest"}
+              PUT  /upload/crash.zip            -> 200, ETag "&lt;ETAG&gt;"
+              POST /api/commitS3CrashUpload     -> {"status": "success", "crashId": 4242}
+            </summary>
+        </member>
+        <member name="F:ModLib.AutoTest.MockBugSplatServer.ETAG">
+            <summary>ETag returned by the upload (the client must send it back as md5).</summary>
+        </member>
+        <member name="F:ModLib.AutoTest.MockBugSplatServer.UPLOAD_PATH">
+            <summary>Path of the presigned upload URL.</summary>
+        </member>
+        <member name="T:ModLib.AutoTest.MockBugSplatServer.Request">
+            <summary>One recorded request.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.MockBugSplatServer.Request.Time">
+            <summary>Time received.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.MockBugSplatServer.Request.Method">
+            <summary>GET, PUT, POST.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.MockBugSplatServer.Request.Path">
+            <summary>Path without query.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.MockBugSplatServer.Request.Query">
+            <summary>Query string without '?'.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.MockBugSplatServer.Request.Headers">
+            <summary>Headers (lower-case names).</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.MockBugSplatServer.Request.Body">
+            <summary>Body bytes.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.MockBugSplatServer.Request.BodyLength">
+            <summary>Body length.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.MockBugSplatServer.Request.Status">
+            <summary>Status answered.</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.MockBugSplatServer.Request.QueryParams">
+            <summary>Query parameters (unescaped).</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.MockBugSplatServer.Request.FormFields">
+            <summary>Fields of a multipart/form-data body.</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.MockBugSplatServer.Request.ZipCallstack">
+            <summary>Text of the Callstack.txt inside a zip body (null when the body is not such a zip).</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.MockBugSplatServer.Request.ZipEntryText(System.String)">
+            <summary>Text of an entry of a zip body (null when missing / not a zip).</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.MockBugSplatServer.Request.ZipEntries">
+            <summary>Names of the zip entries (empty when not a zip).</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.MockBugSplatServer.BaseUrl">
+            <summary>http://127.0.0.1:&lt;port&gt;</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.MockBugSplatServer.UploadUrl">
+            <summary>The presigned URL handed to the client.</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.MockBugSplatServer.Requests">
+            <summary>Copy of the requests received so far.</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.MockBugSplatServer.#ctor">
+            <summary>Starts listening on a free port of 127.0.0.1.</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.MockBugSplatServer.Handle(System.Net.Sockets.TcpClient)">
+            <summary>Serves one request of the connection; false when the client closed it (or asked to).</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.MockBugSplatServer.SaveEvidence(System.String)">
+            <summary>
+            Writes the evidence into a folder: requests.json (method, path, query, headers, sizes, form fields),
+            &lt;n&gt;-upload.zip and &lt;n&gt;-Callstack.txt (what is uploaded), &lt;n&gt;-commit-form.txt (raw form).
+            </summary>
+        </member>
+        <member name="M:ModLib.AutoTest.MockBugSplatServer.Dispose">
+            <summary>Stops listening.</summary>
+        </member>
+        <member name="T:ModLib.AutoTest.IScenarioDefinition">
+            <summary>
+            A scenario file of a mod: one class per scenario (e.g. AutoTest/Scenarios/&lt;Group&gt;/&lt;Id&gt;_&lt;Feature&gt;.cs).
+            Ids must match &lt;mod project&gt;/tests/scenarios.json of the mod repository.
+            </summary>
+        </member>
+        <member name="P:ModLib.AutoTest.IScenarioDefinition.Id">
+            <summary>Scenario id, e.g. "TG-04".</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.IScenarioDefinition.Create">
+            <summary>Builds a new scenario instance (steps included).</summary>
+        </member>
+        <member name="T:ModLib.AutoTest.ScenarioRegistry">
+            <summary>
+            Registry of automatic scenarios: finds every IScenarioDefinition of a mod assembly, so adding a scenario only
+            means adding a file (and an entry in scenarios.json).
+            </summary>
+        </member>
+        <member name="M:ModLib.AutoTest.ScenarioRegistry.Create(System.Reflection.Assembly[])">
+            <summary>
+            Creates all scenarios of the assemblies ordered by id (a mod: its assembly + ModLib's, the tools of ModLib such
+            as the effect galleries TE-xx); fails on duplicated or mismatching ids.
+            </summary>
+        </member>
+        <member name="M:ModLib.AutoTest.ScenarioRegistry.IsScenarioDefinition(System.Type)">
+            <summary>
+            True for a concrete IScenarioDefinition class. A type whose base types cannot be resolved (outside the game, the
+            Il2Cpp proxies of ModLib: BadImageFormatException, TypeLoadException) is not a scenario.
+            </summary>
+        </member>
+        <member name="M:ModLib.AutoTest.ScenarioRegistry.PrefixOrder(System.String)">
+            <summary>
+            Run order of the id prefixes: title, pre-test (new character), game, code-started battles, time-changing,
+            and TZ (ends the character, e.g. one-life) at the very end.
+            </summary>
+        </member>
+        <member name="T:ModLib.AutoTest.Scenarios.EffectGalleryBase">
+            <summary>
+            Effect galleries (tools, not tests: ScenarioKind.Tool, run only when asked with -Scenario). In a battle with the
+            other units stopped and hidden and the HUD hidden, every effect of a kind (Effect/Battle/Skill, Unit, Scenes) is
+            played twice on the player:
+            1. measure: its renderers / particles are sampled every 100 ms: casting time (until something shows), duration
+               (while something shows), size (union of the bounds) and direction (move of the centre);
+            2. record: the camera zoomed to its size and centred on it, the effect played again and recorded by
+               run-autotest.ps1 (a .rec request: frames of the game window for its duration).
+            collect-effects.ps1 then makes GuiGuBaHuang-ModLib/docs/Effects/&lt;kind&gt;/NNNN_&lt;effect&gt;.webp (animated) and index.json (with the
+            measures). The list of effects comes from the game's resources (the ModConf list files are only a fallback and
+            are refreshed from it). Optional range: &lt;autotest folder&gt;\efx-range.txt = "start count".
+            </summary>
+        </member>
+        <member name="F:ModLib.AutoTest.Scenarios.EffectGalleryBase.DUEL_DUNGEON_ID">
+            <summary>Dungeon of the game for a duel on the spot (the one of catching a sneaky NPC).</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.Scenarios.EffectGalleryBase.Folder">
+            <summary>Resource folder (Effect/Battle/Skill...).</summary>
+        </member>
+        <member name="P:ModLib.AutoTest.Scenarios.EffectGalleryBase.ListFile">
+            <summary>ModConf list file (fallback, refreshed by collect-effects.ps1).</summary>
+        </member>
+        <member name="F:ModLib.AutoTest.Scenarios.EffectGalleryBase.MAX_MS">
+            <summary>An effect is measured at most this long.</summary>
+        </member>
+        <member name="F:ModLib.AutoTest.Scenarios.EffectGalleryBase.END_GAP_MS">
+            <summary>Nothing visible this long after it showed: the effect is over.</summary>
+        </member>
+        <member name="F:ModLib.AutoTest.Scenarios.EffectGalleryBase.NOTHING_MS">
+            <summary>Nothing visible after this long: an effect without visible parts.</summary>
+        </member>
+        <member name="F:ModLib.AutoTest.Scenarios.EffectGalleryBase.MAX_PART">
+            <summary>Renderers bigger than this (world units) are screen-wide tints: left out of the size.</summary>
+        </member>
+        <member name="F:ModLib.AutoTest.Scenarios.EffectGalleryBase._psError">
+            <summary>First error reading the particle settings (diagnostic, logged once).</summary>
+        </member>
+        <member name="T:ModLib.AutoTest.Scenarios.EffectGalleryBase.Measure">
+            <summary>Samples of one effect.</summary>
+        </member>
+        <member name="F:ModLib.AutoTest.Scenarios.EffectGalleryBase.Measure.PsDelayMs">
+            <summary>Timing of the particle systems (-1: none): first start delay, end of the longest, a loop.</summary>
+        </member>
+        <member name="F:ModLib.AutoTest.Scenarios.EffectGalleryBase.Measure.PsDurMs">
+            <summary>Timing of the particle systems (-1: none): first start delay, end of the longest, a loop.</summary>
+        </member>
+        <member name="F:ModLib.AutoTest.Scenarios.EffectGalleryBase.Measure.Looping">
+            <summary>Still showing at the end of the measure: a looping effect (the skill removes it).</summary>
+        </member>
+        <member name="F:ModLib.AutoTest.Scenarios.EffectGalleryBase.Measure.Types">
+            <summary>Component types of the effect (diagnostic).</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.Scenarios.EffectGalleryBase.ReadList(System.String@)">
+            <summary>The effects of the kind: the game's resources (in the game), else the ModConf list; cut by efx-range.txt.</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.Scenarios.EffectGalleryBase.Create">
+            <summary>Builds the scenario and its steps.</summary>
+        </member>
+        <member name="F:ModLib.AutoTest.Scenarios.EffectGalleryBase.MAX_CAMERA">
+            <summary>Largest camera size (ortho) when zooming out on a big effect.</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.Scenarios.EffectGalleryBase.Stage(ModLib.AutoTest.AutoTestContext,System.Boolean)">
+            <summary>
+            A clean stage (BattleSceneHelper): the other units stopped and hidden far away, every effect removed, the HUD,
+            the weather, the player's view and the mouse off, the player in the middle of the map with its picture hidden
+            (the effects play on it); restored after the gallery.
+            </summary>
+        </member>
+        <member name="P:ModLib.AutoTest.Scenarios.EffectGalleryBase.Spot">
+            <summary>Where the effects play: on the player (the camera is placed by hand when recording).</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.Scenarios.EffectGalleryBase.ReadParticles">
+            <summary>The timing of the particle systems of the effect (once, when it exists).</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.Scenarios.EffectGalleryBase.SampleMeasure">
+            <summary>One sample; true when the effect is over (or invisible, or too long).</summary>
+        </member>
+        <member name="F:ModLib.AutoTest.Scenarios.EffectGalleryBase.CAMERA_SETTLE_MS">
+            <summary>Wait after the camera is placed, before the effect is created and recorded (the camera settles).</summary>
+        </member>
+        <member name="F:ModLib.AutoTest.Scenarios.EffectGalleryBase.LOOP_RECORD_MS">
+            <summary>Length of the recording of a looping effect: as long as it was measured (it plays until the skill removes it).</summary>
+        </member>
+        <member name="T:ModLib.AutoTest.Scenarios.EffectGalleryBase.RecordPlan">
+            <summary>What the record step plays: the effect, where, and the frames folder and length of its recording.</summary>
+        </member>
+        <member name="F:ModLib.AutoTest.Scenarios.EffectGalleryBase.RecordPlan.Centre">
+            <summary>Camera of the recording: centre and orthographic size.</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.Scenarios.EffectGalleryBase.PlaceCamera(ModLib.AutoTest.AutoTestContext,System.String,System.Int32,System.String)">
+            <summary>The measures written, the camera placed on the effect (null plan: nothing to record).</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.Scenarios.EffectGalleryBase.StartRecorder(ModLib.AutoTest.AutoTestContext,System.String)">
+            <summary>The recording asked (run-autotest.ps1 writes "started" in the frames folder when it captures).</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.Scenarios.EffectGalleryBase.Direction(ModLib.AutoTest.Scenarios.EffectGalleryBase.Measure)">
+            <summary>Direction of the move of the effect (its centre from the first to the last sample).</summary>
+        </member>
+        <member name="M:ModLib.AutoTest.Scenarios.EffectGalleryBase.Create(System.String,UnityEngine.Vector3)">
+            <summary>The effect created alone: its unit commands removed (they would stop the game's timers).</summary>
+        </member>
+        <member name="T:ModLib.AutoTest.Scenarios.TE01_SkillEffects">
+            <summary>TE-01: skill effects (Effect/Battle/Skill).</summary>
+        </member>
+        <member name="T:ModLib.AutoTest.Scenarios.TE02_UnitEffects">
+            <summary>TE-02: unit effects (Effect/Battle/Unit).</summary>
+        </member>
+        <member name="T:ModLib.AutoTest.Scenarios.TE03_SceneEffects">
+            <summary>TE-03: scene effects (Effect/Battle/Scenes).</summary>
+        </member>
         <member name="T:ModLib.Attributes.EventCatIgnAttribute">
             <summary>
             Hides an event method from the ModCreator event list.

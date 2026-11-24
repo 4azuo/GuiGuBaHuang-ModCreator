@@ -119,6 +119,15 @@
     </Reference>
   </ItemGroup>
 
+  <!-- ModLib.xml (XML docs of the ModLib API, embedded): the one of a local ModLib build next to ModCreator (submodules of the
+       same main repository), else the committed copy. Commit the refreshed copy with the ModLib version it documents. -->
+  <PropertyGroup>
+    <ModLibXmlBuilt>$(ProjectDir)..\..\GuiGuBaHuang-ModLib\ModLib\bin\Release\ModLib.xml</ModLibXmlBuilt>
+  </PropertyGroup>
+  <Target Name="CopyModLibXml" BeforeTargets="BeforeBuild" Condition="Exists('$(ModLibXmlBuilt)')">
+    <Copy SourceFiles="$(ModLibXmlBuilt)" DestinationFiles="$(ProjectDir)Resources\ModLib.xml" SkipUnchangedFiles="true" />
+  </Target>
+
   <Target Name="CopyModLibDll" AfterTargets="Build">
     <Message Text="Copying ModLib DLL files to template project..." Importance="high" />
     <Exec Command="xcopy &quot;$(ProjectDir)..\..\GuiGuBaHuang-ModLib\3385996759\debug\Mod_flQrxq\ModCode\dll\*.*&quot; &quot;$(ProjectDir)..\ModProject_0hKMNX\ModProject\ModCode\ModMain\CodeArtifacts\&quot; /y /i" />
